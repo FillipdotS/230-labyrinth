@@ -1,3 +1,6 @@
+# Javadoc
+doc/
+
 # Compiled class file
 *.class
 
@@ -6,6 +9,9 @@
 
 # BlueJ files
 *.ctxt
+
+# Jetbrains Idea files
+.idea/
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
