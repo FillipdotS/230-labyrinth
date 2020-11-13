@@ -1,10 +1,12 @@
 # 230-labyrinth
 
+Use Java 8 to work with this.
+
 ## Style Guide
 Style guide taken from lecture 9 in 230.
 
 #### Tabs or Spaces?
-TODO: Decide in a meeting :^)
+Use tabs, specifically tab characters.
 
 #### General Styling
 Rules marked with _(Soft Rule)_ are soft rules and can be **sometimes** broken.
