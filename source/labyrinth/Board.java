@@ -72,7 +72,7 @@ public class Board {
 				text.setFont(Font.font(15));
 
 				StackPane stack = new StackPane(iv, text);
-
+				//cord
 				int finalX = x;
 				int finalY = y;
 				stack.setOnMouseClicked(event -> {
