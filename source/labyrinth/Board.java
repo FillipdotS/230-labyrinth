@@ -17,6 +17,7 @@ import java.util.Random;
 public class Board {
 	private int width;
 	private int height;
+	//test Narcis 
 	private FloorTile[][] board;
 
 	public Board(int width, int height) {
@@ -120,5 +121,5 @@ public class Board {
 		}
 
 		return toReturn;
-	}
+	}		//Does this work??!!
 }
