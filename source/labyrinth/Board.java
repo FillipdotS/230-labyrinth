@@ -17,7 +17,6 @@ import java.util.Random;
 public class Board {
 	private int width;
 	private int height;
-	//test Narcis 
 	private FloorTile[][] board;
 
 	public Board(int width, int height) {
@@ -73,7 +72,7 @@ public class Board {
 				text.setFont(Font.font(15));
 
 				StackPane stack = new StackPane(iv, text);
-				//cord
+
 				int finalX = x;
 				int finalY = y;
 				stack.setOnMouseClicked(event -> {
@@ -121,5 +120,5 @@ public class Board {
 		}
 
 		return toReturn;
-	}		//Does this work??!!
-}//testing by max
+	}
+}
