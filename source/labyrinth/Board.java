@@ -29,18 +29,21 @@ public class Board {
 		for (int x = 0; x < this.board.length; x++) {
 			for (int y = 0; y < this.board[0].length; y++) {
 				int randomOrientation = new Random().nextInt(5);
-				int randomTile = new Random().nextInt(3);
+				int randomTile = new Random().nextInt(4);
 
 				FloorTile toPlace;
 				switch (randomTile) {
 					case 0:
-						toPlace = new Straight(randomOrientation);
+						toPlace = new FloorTile(randomOrientation, FloorTile.TileType.STRAIGHT);
 						break;
 					case 1:
-						toPlace = new TShape(randomOrientation);
+						toPlace = new FloorTile(randomOrientation, FloorTile.TileType.TSHAPE);
+						break;
+					case 2:
+						toPlace = new FloorTile(randomOrientation, FloorTile.TileType.GOAL);
 						break;
 					default:
-						toPlace = new Corner(randomOrientation);
+						toPlace = new FloorTile(randomOrientation, FloorTile.TileType.CORNER);
 				}
 
 				this.board[x][y] = toPlace;
@@ -61,10 +64,10 @@ public class Board {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				// TODO: This looks terrible, find the proper way of doing it.
-				Image img = new Image(String.valueOf(getClass().getResource(this.board[x][y].imageURL)), TILE_SIZE, TILE_SIZE, false, false);
+				Image img = new Image(String.valueOf(getClass().getResource(this.board[x][y].getImageURL())), TILE_SIZE, TILE_SIZE, false, false);
 
 				ImageView iv = new ImageView(img);
-				iv.setRotate(90 * this.board[x][y].orientation);
+				iv.setRotate(90 * this.board[x][y].getOrientation());
 				//iv.setFitHeight(50);
 				//iv.setFitWidth(50);
 
@@ -76,7 +79,7 @@ public class Board {
 				int finalX = x;
 				int finalY = y;
 				stack.setOnMouseClicked(event -> {
-					System.out.println("This tile's mask is " + Arrays.toString(this.board[finalX][finalY].moveMask));
+					System.out.println("This tile's mask is " + Arrays.toString(this.board[finalX][finalY].getMoveMask()));
 					System.out.println("From this tile you can move to " + Arrays.toString(getMovableFrom(finalX, finalY)));
 				});
 
