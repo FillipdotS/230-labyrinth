@@ -1,8 +1,5 @@
 package source.labyrinth;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 public class FloorTile extends Tile {
 	/**
 	 * The different types of floor tile that an instance of FloorTile can be.
@@ -26,6 +23,8 @@ public class FloorTile extends Tile {
 	private final int orientation;
 	private final Boolean[] moveMask; // Specifically THIS tiles move mask, which has been changed by orientation
 	private final TileType tileType;
+
+	private Boolean isFixed = false;
 
 	public FloorTile(int orientation, TileType tileType) {
 		this.orientation = orientation;
@@ -53,5 +52,13 @@ public class FloorTile extends Tile {
 
 	public String getImageURL() {
 		return this.tileType.imageURL;
+	}
+
+	public Boolean getFixed() {
+		return this.isFixed;
+	}
+
+	public void setFixed(Boolean fixed) {
+		this.isFixed = fixed;
 	}
 }
