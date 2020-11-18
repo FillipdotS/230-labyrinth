@@ -24,11 +24,16 @@ public class FloorTile extends Tile {
 	private final Boolean[] moveMask; // Specifically THIS tiles move mask, which has been changed by orientation
 	private final TileType tileType;
 
+
 	private Boolean isFixed = false;
+	private int isOnFireUntil;
+	private int isFrozeneUntil;
 
 	public FloorTile(int orientation, TileType tileType) {
 		this.orientation = orientation;
 		this.tileType = tileType;
+		this.isFrozeneUntil=-1;
+		this.isOnFireUntil=-1;
 
 		// Shift the array to the right depending on orientation
 		Boolean[] tmpMask = this.tileType.defaultMoveMask.clone();
@@ -56,6 +61,22 @@ public class FloorTile extends Tile {
 
 	public Boolean getFixed() {
 		return this.isFixed;
+	}
+
+	public int getIsFrozeneUntil() {
+		return isFrozeneUntil;
+	}
+
+	public int getIsOnFireUntil() {
+		return isOnFireUntil;
+	}
+
+	public void setIsOnFireUntil(int isOnFireUntil) {
+		this.isOnFireUntil = isOnFireUntil;
+	}
+
+	public void setIsFrozeneUntil(int isFrozeneUntil) {
+		this.isFrozeneUntil = isFrozeneUntil;
 	}
 
 	public void setFixed(Boolean fixed) {
