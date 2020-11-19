@@ -34,6 +34,9 @@ public class LabyrinthApplication extends Application {
 		for (int i = 0; i < b[1].length; i++) {
 			System.out.println(b[1][i]);
 		}
+
+		// ProfileManager test
+		ProfileManager pm = new ProfileManager();
 	}
 
 	public static void main(String[] args) {
