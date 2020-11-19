@@ -65,30 +65,11 @@ public class Board {
 		GridPane gameBoard = new GridPane();
 		gameBoard.setPrefSize(800, 800);
 
-		int TILE_SIZE = 55;
-
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				FloorTile current = this.board[x][y];
 
-				// TODO: This looks terrible, find the proper way of doing it.
-				Image img = new Image(String.valueOf(getClass().getResource(current.getImageURL())), TILE_SIZE, TILE_SIZE, false, false);
-
-				ImageView iv = new ImageView(img);
-				iv.setRotate(90 * current.getOrientation());
-
-				Text text = new Text("(" + x + ", " + y + ")");
-				text.setFont(Font.font(15));
-
-				StackPane stack = new StackPane(iv, text);
-
-				// Show indicator that tile is fixed
-				if (current.getFixed()) {
-					Image fixedImage = new Image(String.valueOf(getClass().getResource("../resources/img/fixed_marker.png")), TILE_SIZE, TILE_SIZE, false, false);
-					ImageView fixedImageView = new ImageView(fixedImage);
-					fixedImageView.setOpacity(0.5);
-					stack.getChildren().addAll(fixedImageView);
-				}
+				StackPane stack = current.getStackPane(x,y);
 
 				int finalX = x;
 				int finalY = y;

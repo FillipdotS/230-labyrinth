@@ -1,5 +1,11 @@
 package source.labyrinth;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
 public class FloorTile extends Tile {
 	/**
 	 * The different types of floor tile that an instance of FloorTile can be.
@@ -23,7 +29,7 @@ public class FloorTile extends Tile {
 	private final int orientation;
 	private final Boolean[] moveMask; // Specifically THIS tiles move mask, which has been changed by orientation
 	private final TileType tileType;
-
+	private int TILE_SIZE = 55;
 
 	private Boolean isFixed = false;
 	private int isOnFireUntil;
@@ -81,6 +87,26 @@ public class FloorTile extends Tile {
 
 	public void setFixed(Boolean fixed) {
 		this.isFixed = fixed;
+	}
+
+	public StackPane getStackPane (int x, int y) {
+		Image img = new Image(String.valueOf(getClass().getResource(this.getImageURL())), TILE_SIZE, TILE_SIZE, false, false);
+
+		ImageView iv = new ImageView(img);
+		iv.setRotate(90 * this.getOrientation());
+
+		Text text = new Text("(" + x + ", " + y + ")");
+		text.setFont(Font.font(15));
+
+		StackPane stack = new StackPane(iv, text);
+
+		if (this.getFixed()) {
+			Image fixedImage = new Image(String.valueOf(getClass().getResource("../resources/img/fixed_marker.png")), TILE_SIZE, TILE_SIZE, false, false);
+			ImageView fixedImageView = new ImageView(fixedImage);
+			fixedImageView.setOpacity(0.5);
+			stack.getChildren().addAll(fixedImageView);
+		}
+		return stack;
 	}
 
 	/**
