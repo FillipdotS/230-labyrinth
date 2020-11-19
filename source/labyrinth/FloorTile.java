@@ -82,4 +82,19 @@ public class FloorTile extends Tile {
 	public void setFixed(Boolean fixed) {
 		this.isFixed = fixed;
 	}
+
+	/**
+	 * Get a string that represents this tile and it's state completely.
+	 * Example: "0,STRAIGHT,true,11,15"
+	 * In order: orientation, tile type, is permanently fixed, is on fire until, is frozen until
+	 * @return Single line string representing this FloorTile.
+	 */
+	public String exportSelf() {
+		String self = Integer.toString(this.orientation);
+		self += "," + this.tileType.name();
+		self += "," + this.isFixed;
+		self += "," + this.isOnFireUntil;
+		self += "," + this.isFrozenUntil;
+		return self;
+	}
 }

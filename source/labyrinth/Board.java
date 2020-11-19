@@ -163,4 +163,22 @@ public class Board {
 
 		return toReturn;
 	}
+
+	/**
+	 * Get a string (with newlines) that represents the current state of the board. The first line will contain
+	 * two numbers representing the width and height of the board. The rest of the lines are tile-specific.
+	 * @return A large string (with newlines) that represents the current state of the board.
+	 */
+	public String exportSelf() {
+		String toReturn = this.width + "," + this.height;
+
+		for (int x = 0; x < this.width; x++) {
+			for (int y = 0; y < this.height; y++) {
+				toReturn += System.lineSeparator();
+				toReturn += this.board[x][y].exportSelf();
+			}
+		}
+
+		return toReturn;
+	}
 }
