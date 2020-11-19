@@ -27,12 +27,12 @@ public class FloorTile extends Tile {
 
 	private Boolean isFixed = false;
 	private int isOnFireUntil;
-	private int isFrozeneUntil;
+	private int isFrozenUntil;
 
 	public FloorTile(int orientation, TileType tileType) {
 		this.orientation = orientation;
 		this.tileType = tileType;
-		this.isFrozeneUntil=-1;
+		this.isFrozenUntil=-1;
 		this.isOnFireUntil=-1;
 
 		// Shift the array to the right depending on orientation
@@ -63,8 +63,8 @@ public class FloorTile extends Tile {
 		return this.isFixed;
 	}
 
-	public int getIsFrozeneUntil() {
-		return isFrozeneUntil;
+	public int getIsFrozenUntil() {
+		return isFrozenUntil;
 	}
 
 	public int getIsOnFireUntil() {
@@ -75,8 +75,8 @@ public class FloorTile extends Tile {
 		this.isOnFireUntil = isOnFireUntil;
 	}
 
-	public void setIsFrozeneUntil(int isFrozeneUntil) {
-		this.isFrozeneUntil = isFrozeneUntil;
+	public void setIsFrozenUntil(int isFrozeneUntil) {
+		this.isFrozenUntil = isFrozenUntil;
 	}
 
 	public void setFixed(Boolean fixed) {
