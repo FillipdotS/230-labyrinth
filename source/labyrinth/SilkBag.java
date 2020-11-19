@@ -8,7 +8,7 @@ public class SilkBag {
         return tiles.remove((int)Math.random() * (tiles.size()));
     }
     public void returnTile(FloorTile tile){
-        tile.setIsFrozeneUntil(-1);
+        tile.setIsFrozenUntil(-1);
         tile.setIsOnFireUntil(-1);
         this.tiles.add(tile);
     }

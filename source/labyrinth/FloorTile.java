@@ -75,7 +75,7 @@ public class FloorTile extends Tile {
 		this.isOnFireUntil = isOnFireUntil;
 	}
 
-	public void setIsFrozenUntil(int isFrozeneUntil) {
+	public void setIsFrozenUntil(int isFrozenUntil) {
 		this.isFrozenUntil = isFrozenUntil;
 	}
 
