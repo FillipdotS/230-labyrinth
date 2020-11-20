@@ -22,10 +22,20 @@ public class LabyrinthApplication extends Application {
 		primaryStage.show();
 
 		// temp code, make a board and show it
-		Board board = new Board(7, 7);
+		Board board = new Board(7, 3);
 		Pane p = (Pane) scene.lookup("#putBoardHere");
 		GridPane g = board.renderBoard();
 		p.getChildren().add(g);
+
+		FloorTile testTile = new FloorTile(0, FloorTile.TileType.CORNER);
+		board.insertFloorTile(testTile, 0, 0);
+		board.insertFloorTile(testTile, 2, 0);
+		board.insertFloorTile(testTile, 3, 0);
+		board.insertFloorTile(testTile, 1, 0);
+		board.insertFloorTile(testTile, 2, 6);
+		board.insertFloorTile(testTile, 3, 2);
+		p.getChildren().clear();
+		p.getChildren().add(board.renderBoard());
 
 		Boolean[][] b = board.getInsertablePositions();
 		System.out.println("This board can be inserted into these columns: ");

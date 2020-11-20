@@ -1,5 +1,6 @@
 package source.labyrinth;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -51,10 +52,6 @@ public class Board {
 			}
 		}
 		this.board[0][0].setFixed(true);
-		this.board[0][2].setFixed(true);
-		this.board[2][0].setFixed(true);
-		this.board[6][0].setFixed(true);
-		this.board[0][6].setFixed(true);
 	}
 
 	/**
@@ -143,6 +140,54 @@ public class Board {
 		}
 
 		return toReturn;
+	}
+
+	/**
+	 * Insert a new tile into the board, based on direction and insertion point.
+	 * @param newTile The FloorTile to insert
+	 * @param insertionDirection Integer between 0-3 representing the 4 directions
+	 * @param insertionPoint Where in the board to insert tile, starts at 0 up to width/height - 1
+	 * @throws IllegalArgumentException
+	 */
+	public void insertFloorTile(FloorTile newTile, int insertionDirection, int insertionPoint)  throws IllegalArgumentException {
+		// If the insertionDirection is 0 or 2, we are inserting into a column, 1 or 3, into a row
+		Boolean columnInsert = insertionDirection % 2 == 0;
+
+		// Quick error check
+		if (insertionDirection < 0 || insertionDirection > 3) {
+			throw new IllegalArgumentException("insertionDirection was out of bounds.");
+		}
+		if (insertionPoint < 0 || (columnInsert && insertionPoint > this.width) || (!columnInsert && insertionPoint > this.height)) {
+			throw new IllegalArgumentException("insertionPoint was out of bounds.");
+		}
+
+		// TODO: Give the tiles back to the silk bag before the start of every loop
+		// TODO: Maybe find a better way instead of 4 slightly different loops?
+		if (columnInsert) {
+			if (insertionDirection == 0) {
+				for (int i = this.height - 1; i > 0; i--) {
+					this.board[insertionPoint][i] = this.board[insertionPoint][i - 1];
+				}
+				this.board[insertionPoint][0] = newTile;
+			} else {
+				for (int i = 0; i < this.height - 1; i++) {
+					this.board[insertionPoint][i] = this.board[insertionPoint][i + 1];
+				}
+				this.board[insertionPoint][this.height - 1] = newTile;
+			}
+		} else {
+			if (insertionDirection == 3) {
+				for (int i = this.width - 1; i > 0; i--) {
+					this.board[i][insertionPoint] = this.board[i - 1][insertionPoint];
+				}
+				this.board[0][insertionPoint] = newTile;
+			} else {
+				for (int i = 0; i < this.width - 1; i++) {
+					this.board[i][insertionPoint] = this.board[i + 1][insertionPoint];
+				}
+				this.board[this.height - 1][insertionPoint] = newTile;
+			}
+		}
 	}
 
 	/**
