@@ -1,5 +1,6 @@
 package source.labyrinth;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -51,10 +52,6 @@ public class Board {
 			}
 		}
 		this.board[0][0].setFixed(true);
-		this.board[0][2].setFixed(true);
-		this.board[2][0].setFixed(true);
-		this.board[6][0].setFixed(true);
-		this.board[0][6].setFixed(true);
 	}
 
 	/**
@@ -65,30 +62,11 @@ public class Board {
 		GridPane gameBoard = new GridPane();
 		gameBoard.setPrefSize(800, 800);
 
-		int TILE_SIZE = 55;
-
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				FloorTile current = this.board[x][y];
 
-				// TODO: This looks terrible, find the proper way of doing it.
-				Image img = new Image(String.valueOf(getClass().getResource(current.getImageURL())), TILE_SIZE, TILE_SIZE, false, false);
-
-				ImageView iv = new ImageView(img);
-				iv.setRotate(90 * current.getOrientation());
-
-				Text text = new Text("(" + x + ", " + y + ")");
-				text.setFont(Font.font(15));
-
-				StackPane stack = new StackPane(iv, text);
-
-				// Show indicator that tile is fixed
-				if (current.getFixed()) {
-					Image fixedImage = new Image(String.valueOf(getClass().getResource("../resources/img/fixed_marker.png")), TILE_SIZE, TILE_SIZE, false, false);
-					ImageView fixedImageView = new ImageView(fixedImage);
-					fixedImageView.setOpacity(0.5);
-					stack.getChildren().addAll(fixedImageView);
-				}
+				StackPane stack = current.getStackPane(x,y);
 
 				int finalX = x;
 				int finalY = y;
@@ -158,6 +136,58 @@ public class Board {
 					// If a tile is fixed, set both the relevant column and row to false
 					toReturn[0][x] = toReturn[1][y] = false;
 				}
+			}
+		}
+
+		return toReturn;
+	}
+
+	/**
+	 * Insert a new tile into the board, based on direction and insertion point.
+	 * @param newTile The FloorTile to insert
+	 * @param insertionDirection Integer between 0-3 representing the 4 directions
+	 * @param insertionPoint Where in the board to insert tile, starts at 0 up to width/height - 1
+	 * @throws IllegalArgumentException
+	 */
+	public void insertFloorTile(FloorTile newTile, int insertionDirection, int insertionPoint)  throws IllegalArgumentException {
+		// If the insertionDirection is 0 or 2, we are inserting into a column, 1 or 3, into a row
+		Boolean columnInsert = insertionDirection % 2 == 0;
+		int inc = insertionDirection % 3 == 0 ? -1: 1;
+		int start = insertionDirection % 3 == 0 ? (columnInsert ? this.height - 1: this.width - 1): 0;
+		int fin = insertionDirection % 3 == 0 ? 0: (columnInsert ? this.height - 1: this.width - 1);
+
+		// Quick error check
+		if (insertionDirection < 0 || insertionDirection > 3) {
+			throw new IllegalArgumentException("insertionDirection was out of bounds.");
+		}
+		if (insertionPoint < 0 || (columnInsert && insertionPoint > this.width) || (!columnInsert && insertionPoint > this.height)) {
+			throw new IllegalArgumentException("insertionPoint was out of bounds.");
+		}
+
+		// TODO: Give the tiles back to the silk bag before the start of every loop
+		if (columnInsert) {
+			for (int i = start; i != fin; i += inc) {
+				this.board[insertionPoint][i] = this.board[insertionPoint][i + inc];
+			}
+		} else {
+			for (int i = start; i != fin; i += inc) {
+				this.board[i][insertionPoint] = this.board[i + inc][insertionPoint];
+			}
+		}
+	}
+
+	/**
+	 * Get a string (with newlines) that represents the current state of the board. The first line will contain
+	 * two numbers representing the width and height of the board. The rest of the lines are tile-specific.
+	 * @return A large string (with newlines) that represents the current state of the board.
+	 */
+	public String exportSelf() {
+		String toReturn = this.width + "," + this.height;
+
+		for (int x = 0; x < this.width; x++) {
+			for (int y = 0; y < this.height; y++) {
+				toReturn += System.lineSeparator();
+				toReturn += this.board[x][y].exportSelf();
 			}
 		}
 

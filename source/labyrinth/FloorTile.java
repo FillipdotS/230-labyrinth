@@ -1,5 +1,11 @@
 package source.labyrinth;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
 public class FloorTile extends Tile {
 	/**
 	 * The different types of floor tile that an instance of FloorTile can be.
@@ -23,12 +29,17 @@ public class FloorTile extends Tile {
 	private final int orientation;
 	private final Boolean[] moveMask; // Specifically THIS tiles move mask, which has been changed by orientation
 	private final TileType tileType;
+	private int TILE_SIZE = 55;
 
 	private Boolean isFixed = false;
+	private int isOnFireUntil;
+	private int isFrozenUntil;
 
 	public FloorTile(int orientation, TileType tileType) {
 		this.orientation = orientation;
 		this.tileType = tileType;
+		this.isFrozenUntil=-1;
+		this.isOnFireUntil=-1;
 
 		// Shift the array to the right depending on orientation
 		Boolean[] tmpMask = this.tileType.defaultMoveMask.clone();
@@ -58,7 +69,58 @@ public class FloorTile extends Tile {
 		return this.isFixed;
 	}
 
+	public int getIsFrozenUntil() {
+		return isFrozenUntil;
+	}
+
+	public int getIsOnFireUntil() {
+		return isOnFireUntil;
+	}
+
+	public void setIsOnFireUntil(int isOnFireUntil) {
+		this.isOnFireUntil = isOnFireUntil;
+	}
+
+	public void setIsFrozenUntil(int isFrozenUntil) {
+		this.isFrozenUntil = isFrozenUntil;
+	}
+
 	public void setFixed(Boolean fixed) {
 		this.isFixed = fixed;
+	}
+
+	public StackPane getStackPane (int x, int y) {
+		Image img = new Image(String.valueOf(getClass().getResource(this.getImageURL())), TILE_SIZE, TILE_SIZE, false, false);
+
+		ImageView iv = new ImageView(img);
+		iv.setRotate(90 * this.getOrientation());
+
+		Text text = new Text("(" + x + ", " + y + ")");
+		text.setFont(Font.font(15));
+
+		StackPane stack = new StackPane(iv, text);
+
+		if (this.getFixed()) {
+			Image fixedImage = new Image(String.valueOf(getClass().getResource("../resources/img/fixed_marker.png")), TILE_SIZE, TILE_SIZE, false, false);
+			ImageView fixedImageView = new ImageView(fixedImage);
+			fixedImageView.setOpacity(0.5);
+			stack.getChildren().addAll(fixedImageView);
+		}
+		return stack;
+	}
+
+	/**
+	 * Get a string that represents this tile and it's state completely.
+	 * Example: "0,STRAIGHT,true,11,15"
+	 * In order: orientation, tile type, is permanently fixed, is on fire until, is frozen until
+	 * @return Single line string representing this FloorTile.
+	 */
+	public String exportSelf() {
+		String self = Integer.toString(this.orientation);
+		self += "," + this.tileType.name();
+		self += "," + this.isFixed;
+		self += "," + this.isOnFireUntil;
+		self += "," + this.isFrozenUntil;
+		return self;
 	}
 }

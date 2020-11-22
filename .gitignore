@@ -1,3 +1,6 @@
+# Profile file
+source/resources/profiles/profiles.txt
+
 # Build
 out/
 
