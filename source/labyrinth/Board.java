@@ -152,6 +152,9 @@ public class Board {
 	public void insertFloorTile(FloorTile newTile, int insertionDirection, int insertionPoint)  throws IllegalArgumentException {
 		// If the insertionDirection is 0 or 2, we are inserting into a column, 1 or 3, into a row
 		Boolean columnInsert = insertionDirection % 2 == 0;
+		int inc = insertionDirection % 3 == 0 ? -1: 1;
+		int start = insertionDirection % 3 == 0 ? (columnInsert ? this.height - 1: this.width - 1): 0;
+		int fin = insertionDirection % 3 == 0 ? 0: (columnInsert ? this.height - 1: this.width - 1);
 
 		// Quick error check
 		if (insertionDirection < 0 || insertionDirection > 3) {
@@ -162,30 +165,13 @@ public class Board {
 		}
 
 		// TODO: Give the tiles back to the silk bag before the start of every loop
-		// TODO: Maybe find a better way instead of 4 slightly different loops?
 		if (columnInsert) {
-			if (insertionDirection == 0) {
-				for (int i = this.height - 1; i > 0; i--) {
-					this.board[insertionPoint][i] = this.board[insertionPoint][i - 1];
-				}
-				this.board[insertionPoint][0] = newTile;
-			} else {
-				for (int i = 0; i < this.height - 1; i++) {
-					this.board[insertionPoint][i] = this.board[insertionPoint][i + 1];
-				}
-				this.board[insertionPoint][this.height - 1] = newTile;
+			for (int i = start; i != fin; i += inc) {
+				this.board[insertionPoint][i] = this.board[insertionPoint][i + inc];
 			}
 		} else {
-			if (insertionDirection == 3) {
-				for (int i = this.width - 1; i > 0; i--) {
-					this.board[i][insertionPoint] = this.board[i - 1][insertionPoint];
-				}
-				this.board[0][insertionPoint] = newTile;
-			} else {
-				for (int i = 0; i < this.width - 1; i++) {
-					this.board[i][insertionPoint] = this.board[i + 1][insertionPoint];
-				}
-				this.board[this.height - 1][insertionPoint] = newTile;
+			for (int i = start; i != fin; i += inc) {
+				this.board[i][insertionPoint] = this.board[i + inc][insertionPoint];
 			}
 		}
 	}
