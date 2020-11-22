@@ -20,7 +20,7 @@ public class Profile {
 	 * @param id ID for profile
 	 */
 	public Profile(String name, int id) {
-		this(name, 1, 0, 0, 0);
+		this(name, id, 0, 0, 0);
 	}
 
 	/**
@@ -28,9 +28,9 @@ public class Profile {
 	 * any updates to this profile won't be saved permanently.
 	 * @param name Name of profile
 	 * @param id ID for profile
-	 * @param totalPlayed
-	 * @param wins
-	 * @param losses
+	 * @param totalPlayed Total games played
+	 * @param wins Total wins
+	 * @param losses Total losses
 	 */
 	public Profile(String name, int id, int totalPlayed, int wins, int losses) {
 		this.name = name;
