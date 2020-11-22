@@ -20,7 +20,7 @@ public class Profile {
 	 * @param id ID for profile
 	 */
 	public Profile(String name, int id) {
-		this(name, id, 0, 0, 0);
+		this(name, 1, 0, 0, 0);
 	}
 
 	/**
