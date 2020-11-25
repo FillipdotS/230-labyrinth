@@ -62,10 +62,8 @@ public class ProfileManager {
 			return false;
 		}
 
-		/**
-		 * Add the new profile to the beginning of the ArrayList ONLY because it will then appear at the
-		 * top of the table in the profile menu when a user creates a new one.
-		 */
+		// Add the new profile to the beginning of the ArrayList ONLY because it will then appear at the
+		// top of the table in the profile menu when a user creates a new one.
 		profiles.add(0, new Profile(newName, nextID));
 		nextID++;
 

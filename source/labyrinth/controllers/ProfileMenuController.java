@@ -15,7 +15,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import source.labyrinth.Profile;
 import source.labyrinth.ProfileManager;
 
@@ -37,10 +36,10 @@ public class ProfileMenuController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("Created ProfileMenuController");
 
-		nameCol.setCellValueFactory(new PropertyValueFactory<Profile, String>("name"));
-		totalCol.setCellValueFactory(new PropertyValueFactory<Profile, Integer>("totalPlayed"));
-		winCol.setCellValueFactory(new PropertyValueFactory<Profile, Integer>("wins"));
-		lossCol.setCellValueFactory(new PropertyValueFactory<Profile, Integer>("losses"));
+		nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+		totalCol.setCellValueFactory(new PropertyValueFactory<>("totalPlayed"));
+		winCol.setCellValueFactory(new PropertyValueFactory<>("wins"));
+		lossCol.setCellValueFactory(new PropertyValueFactory<>("losses"));
 
 		tableView.getItems().setAll(pm.getProfiles());
 	}
@@ -52,9 +51,6 @@ public class ProfileMenuController implements Initializable {
 		String potentialError = null;
 
 		if (newName.isEmpty()) {
-			System.out.println("No name was given.");
-			potentialError = "Profile name cannot be empty!";
-		} else if (newName.isEmpty()) {
 			System.out.println("No name was given.");
 			potentialError = "Profile name cannot be empty!";
 		} else if (newName.trim().isEmpty()) {
