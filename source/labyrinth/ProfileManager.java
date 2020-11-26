@@ -116,4 +116,7 @@ public class ProfileManager {
 
 		System.out.println("Loaded " + profiles.size() + " profiles. nextID is " + this.nextID);
 	}
+	private ArrayList<Profile> getArrayList(){
+	    return  profiles;
+    }
 }
