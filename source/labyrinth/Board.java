@@ -169,10 +169,12 @@ public class Board {
 			for (int i = start; i != fin; i += inc) {
 				this.board[insertionPoint][i] = this.board[insertionPoint][i + inc];
 			}
+			this.board[insertionPoint][fin]=newTile;
 		} else {
 			for (int i = start; i != fin; i += inc) {
 				this.board[i][insertionPoint] = this.board[i + inc][insertionPoint];
 			}
+			this.board[fin][insertionPoint]=newTile;
 		}
 	}
 
