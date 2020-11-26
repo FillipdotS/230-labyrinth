@@ -1,11 +1,7 @@
 package source.labyrinth;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.util.Arrays;
@@ -56,17 +52,18 @@ public class Board {
 
 	/**
 	 * Get a JavaFX GridPane representing the board in it's current state.
+	 * @param tileRenderSize Size at which each tile in the board will be rendered at.
 	 * @return GridPane representing the Board
 	 */
-	public GridPane renderBoard() {
+	public GridPane renderBoard(int tileRenderSize) {
 		GridPane gameBoard = new GridPane();
-		gameBoard.setPrefSize(800, 800);
+		//gameBoard.setPrefSize(800, 800);
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				FloorTile current = this.board[x][y];
-
-				StackPane stack = current.getStackPane(x,y);
+				StackPane stack = current.renderTile(tileRenderSize);
+				stack.getChildren().add(new Text("(" + x + ", " + y + ")"));
 
 				int finalX = x;
 				int finalY = y;
