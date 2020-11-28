@@ -12,14 +12,13 @@ import java.util.Scanner;
 public class LevelReader {
 
     private static final int TOTAL_NUM_OF_PLAYERS = 4;
-    private static final int TOTAL_NUM_OF_SILK_BAG_TILES = 7;
 
     /**
      *
      * @param filename the name of the file.
      * @return the selected level once read.
      */
-    public static Board readDataFile(String filename) {
+    public static LevelData readDataFile(String filename) {
         Scanner in = null;
         try {
             in = new Scanner(new File(filename));
@@ -38,47 +37,70 @@ public class LevelReader {
      *         the four player starting positions.
      *
      */
-    public static Board level(Scanner in) {
-        int width = 0;
-        int height =0;
+    public static LevelData level(Scanner in) {
+        LevelData levelData = new LevelData();
+
+        in.useDelimiter("(\\p{javaWhitespace}|,)+");
+        int width = in.nextInt();
+        int height = in.nextInt();
+        in.nextLine();
+
+        Board levelBoard = new Board(width, height);
+        levelData.setBoard(levelBoard);
 
         while(in.hasNext()) {
-            in.useDelimiter("(\\p{javaWhitespace}|,)+");
-            width = in.nextInt();
-            height = in.nextInt();
-            in.nextLine();
             int numOfFixedTiles = in.nextInt();
             in.nextLine();
-            int[] fixedTileStartPosX = new int[numOfFixedTiles];
-            int[] fixedStartTilePosY = new int[numOfFixedTiles];
-            String[] tileType = new String[numOfFixedTiles];
-            int[] orientation = new int[numOfFixedTiles];
 
-            for(int i = 0; i < numOfFixedTiles; i++ ) {
-                fixedTileStartPosX[i] = in.nextInt();
-                fixedStartTilePosY[i] = in.nextInt();
-                tileType[i] = in.next();
-                orientation[i] = in.nextInt();
+            for(int i = 0; i < numOfFixedTiles; i++) {
+                int xPos = in.nextInt();
+                int yPos = in.nextInt();
+                String type = in.next();
+                int orientation = in.nextInt();
+
+                FloorTile fixedTile = new FloorTile(orientation, FloorTile.TileType.valueOf(type));
+                levelBoard.setTileAt(fixedTile, xPos, yPos);
+
                 in.nextLine();
             }
-            int[] playerStartPosX = new int[TOTAL_NUM_OF_PLAYERS];
-            int[] playerStartPosY = new int[TOTAL_NUM_OF_PLAYERS];
+
+            int[][] playerStartingPositions = new int[4][2];
             for(int i = 0; i < TOTAL_NUM_OF_PLAYERS; i++) {
-                playerStartPosX[i] = in.nextInt();
-                playerStartPosY[i] = in.nextInt();
+                playerStartingPositions[i][0] = in.nextInt();
+                playerStartingPositions[i][1] = in.nextInt();
                 in.nextLine();
             }
-            int[] totalTileType= new int[TOTAL_NUM_OF_SILK_BAG_TILES];
-            String[] tileTypeInSilkBag = new String[TOTAL_NUM_OF_SILK_BAG_TILES];
-            for(int i = 0; i < TOTAL_NUM_OF_SILK_BAG_TILES; i++) {
-                    tileTypeInSilkBag[i] = in.next();
-                    System.out.println(tileTypeInSilkBag[i]);
-                    totalTileType[i] = in.nextInt();
-                    System.out.println(totalTileType[i]);
-            }
 
-        } Board levelBoard = new Board(width,height);
-            return levelBoard;
+            // Straight FloorTile
+            levelData.setStraightAmount(in.nextInt());
+            in.nextLine();
+
+            // TShape FloorTile
+            levelData.setTshapeAmount(in.nextInt());
+            in.nextLine();
+
+            // Corner FloorTile
+            levelData.setCornerAmount(in.nextInt());
+            in.nextLine();
+
+            // Ice Action
+            levelData.setIceAmount(in.nextInt());
+            in.nextLine();
+
+            // Fire Action
+            levelData.setFireAmount(in.nextInt());
+            in.nextLine();
+
+            // DoubleMove Action
+            levelData.setDoubleAmount(in.nextInt());
+            in.nextLine();
+
+            // Backtrack Action
+            levelData.setBacktrackAmount(in.nextInt());
+            in.nextLine();
+        }
+
+        return levelData;
     }
 }
 /*
