@@ -41,7 +41,7 @@ public class LevelReader {
         LevelData levelData = new LevelData();
 
         in.useDelimiter("(\\p{javaWhitespace}|,)+");
-
+        in.nextLine();
         int width = in.nextInt();
         int height = in.nextInt();
         in.nextLine();
