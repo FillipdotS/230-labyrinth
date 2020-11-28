@@ -93,6 +93,20 @@ public class ProfileManager {
 		return null;
 	}
 
+	/**
+	 * Get a profile by id. Null if no profile found.
+	 * @param id ID to search
+	 * @return Relevant Profile or null
+	 */
+	public Profile getProfileById(int id) {
+		for (Profile p : profiles) {
+			if (p.getID() == id) {
+				return p;
+			}
+		}
+		return null;
+	}
+
 	private void buildProfiles(Scanner mainIn) {
 		this.nextID = mainIn.nextInt();
 
