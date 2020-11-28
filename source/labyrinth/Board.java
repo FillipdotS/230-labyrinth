@@ -176,6 +176,16 @@ public class Board {
 	}
 
 	/**
+	 * Specifically set a FloorTile at some position. This should only be used when setting up the board.
+	 * @param tile The FloorTile to set it to.
+	 * @param x X-position
+	 * @param y Y-position
+	 */
+	public void setTileAt(FloorTile tile, int x, int y) {
+		this.board[x][y] = tile;
+	}
+
+	/**
 	 * Get a string (with newlines) that represents the current state of the board. The first line will contain
 	 * two numbers representing the width and height of the board. The rest of the lines are tile-specific.
 	 * @return A large string (with newlines) that represents the current state of the board.
