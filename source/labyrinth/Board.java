@@ -208,8 +208,6 @@ public class Board {
 			for (int j = y > 0 ? (y - 1) : 0; j < ((y < (this.height - 1))? (y + 2): this.height); j++) {
 				System.out.println(i+" "+j);
 			}
-			System.out.println(" ");
 		}
-		System.out.println("*");
 	}
 }

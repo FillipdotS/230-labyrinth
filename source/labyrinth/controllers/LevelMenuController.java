@@ -1,21 +1,53 @@
 package source.labyrinth.controllers;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class LevelMenuController implements Initializable {
+	@FXML private VBox vboxLevels;
+
+	public static String selectedLevel;
+	public static HBox selectedHBox;
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		getLevels().forEach((value) -> {
+			HBox levelHBox = new HBox(new Text(value.substring(0,value.length()-4)));
+			levelHBox.setPrefHeight(30);
+			levelHBox.setAlignment(Pos.CENTER_LEFT);
+			levelHBox.setStyle("-fx-border-color: black");
+			levelHBox.setOnMouseClicked(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent event) {
+					System.out.println(value);
+					if (LevelMenuController.selectedHBox != null)LevelMenuController.selectedHBox.setStyle("-fx-border-color: black");
+					LevelMenuController.selectedHBox=levelHBox;
+					LevelMenuController.selectedLevel=value;
+					levelHBox.setStyle("-fx-border-color: black;-fx-background-color: #c4ffd5;");
+				}
+			});
+			vboxLevels.getChildren().addAll(levelHBox);
+		});
 
 		System.out.println("Created LevelMenuController");
 	}
@@ -33,5 +65,14 @@ public class LevelMenuController implements Initializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private ArrayList<String> getLevels(){
+		File actual = new File("./source/resources/levels");
+		ArrayList<String> levels=new ArrayList<String>();
+		for (File f : actual.listFiles()){
+			levels.add(f.getName());
+		}
+		return levels;
 	}
 }
