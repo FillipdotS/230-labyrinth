@@ -42,14 +42,6 @@ public class LevelReader {
 
         in.useDelimiter("(\\p{javaWhitespace}|,)+");
 
-        int player1ID = in.nextInt();
-        in.nextLine();
-        int player2ID = in.nextInt();
-        in.nextLine();
-        int player3ID = in.nextInt();
-        in.nextLine();
-        int player4ID = in.nextInt();
-        in.nextLine();
         int width = in.nextInt();
         int height = in.nextInt();
         in.nextLine();
