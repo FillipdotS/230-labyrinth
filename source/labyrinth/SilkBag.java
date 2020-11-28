@@ -8,7 +8,7 @@ import java.util.LinkedList;
  * @author Erik Miller
  */
 public class SilkBag {
-    private  LinkedList<Tile> tiles;
+    private LinkedList<Tile> tiles = new LinkedList<>();
 
     /**
      * gives random Tile
