@@ -16,6 +16,7 @@ import java.util.ResourceBundle;
 public class LevelMenuController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+
 		System.out.println("Created LevelMenuController");
 	}
 

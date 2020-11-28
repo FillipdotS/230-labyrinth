@@ -192,4 +192,14 @@ public class Board {
 
 		return toReturn;
 	}
+
+	public void setOnFire(int x, int y) {
+		for (int i = x > 0 ? (x - 1) : 0; i < ((x < (this.width - 1))? (x + 2): this.width); i++) {
+			for (int j = y > 0 ? (y - 1) : 0; j < ((y < (this.height - 1))? (y + 2): this.height); j++) {
+				System.out.println(i+" "+j);
+			}
+			System.out.println(" ");
+		}
+		System.out.println("*");
+	}
 }
