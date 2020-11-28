@@ -12,8 +12,8 @@ import java.util.Random;
  * @author Fillip Serov
  */
 public class Board {
-	private int width;
-	private int height;
+	private final int width;
+	private final int height;
 	private FloorTile[][] board;
 
 	public Board(int width, int height) {
@@ -21,33 +21,20 @@ public class Board {
 		this.height = height;
 
 		this.board = new FloorTile[width][height];
+	}
 
-		// temp code, just fill up the board with random things to test it out
-		for (int x = 0; x < this.board.length; x++) {
-			for (int y = 0; y < this.board[0].length; y++) {
-				int randomOrientation = new Random().nextInt(5);
-				int randomTile = new Random().nextInt(4);
+	/**
+	 * @return Width of this Board.
+	 */
+	public int getWidth() {
+		return this.width;
+	}
 
-				FloorTile toPlace;
-				switch (randomTile) {
-					case 0:
-						toPlace = new FloorTile(randomOrientation, FloorTile.TileType.STRAIGHT);
-						break;
-					case 1:
-						toPlace = new FloorTile(randomOrientation, FloorTile.TileType.TSHAPE);
-						break;
-					case 2:
-						toPlace = new FloorTile(randomOrientation, FloorTile.TileType.GOAL);
-						break;
-					default:
-						toPlace = new FloorTile(randomOrientation, FloorTile.TileType.CORNER);
-				}
-
-
-				this.board[x][y] = toPlace;
-			}
-		}
-		this.board[0][0].setFixed(true);
+	/**
+	 * @return Height of this Board.
+	 */
+	public int getHeight() {
+		return this.height;
 	}
 
 	/**
@@ -173,6 +160,15 @@ public class Board {
 			}
 			this.board[fin][insertionPoint]=newTile;
 		}
+	}
+
+	/**
+	 * @param x X-position
+	 * @param y Y-position
+	 * @return FloorTile if there is one, null otherwise.
+	 */
+	public FloorTile getTileAt(int x, int y) {
+		return this.board[x][y] != null ? this.board[x][y] : null;
 	}
 
 	/**
