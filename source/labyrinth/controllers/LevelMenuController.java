@@ -44,25 +44,26 @@ public class LevelMenuController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		renderLevels();
-		renderPlayers();
+		renderPlayersChoiceBox();
 
 		addPlayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				numberOfPlayers = numberOfPlayers==4?4:numberOfPlayers+1;
-				renderPlayers();
+				renderPlayersChoiceBox();
 			}
 		});
 		removePlayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				numberOfPlayers = numberOfPlayers==2?2:numberOfPlayers-1;
-				renderPlayers();
+				renderPlayersChoiceBox();
 			}
 		});
 
 		System.out.println("Created LevelMenuController");
 	}
+
 	private  void renderLevels(){
 		vboxLevels.getChildren().clear();
 		getLevels().forEach((value) -> {
@@ -84,7 +85,7 @@ public class LevelMenuController implements Initializable {
 		});
 	}
 
-	private void renderPlayers(){
+	private void renderPlayersChoiceBox(){
 		vboxPlayes.getChildren().clear();
 		ProfileManager p = new ProfileManager();
 		profiles = p.getProfiles();
@@ -97,7 +98,11 @@ public class LevelMenuController implements Initializable {
 			pChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 				@Override
 				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-					System.out.println(pChoiceBox.getItems().get((newValue.intValue())));
+						String s = pChoiceBox.getItems().get((newValue.intValue())).toString();
+						System.out.println(s);
+						vboxPlayes.getChildren().forEach( (box) ->{
+							if (pChoiceBox != box){};
+						});
 					}
 				}
 			);
