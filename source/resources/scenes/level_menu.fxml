@@ -35,6 +35,7 @@
                               <Button mnemonicParsing="false" prefWidth="120.0" text="Remove Player" />
                            </items>
                         </SplitPane>
+                        <VBox fx:id="vboxPlayes" prefHeight="151.0" prefWidth="242.0" />
                      </children></VBox>
                </children>
             </VBox>

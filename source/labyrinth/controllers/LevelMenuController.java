@@ -1,5 +1,7 @@
 package source.labyrinth.controllers;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -9,13 +11,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import source.labyrinth.Profile;
+import source.labyrinth.ProfileManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,9 +29,14 @@ import java.util.ResourceBundle;
 
 public class LevelMenuController implements Initializable {
 	@FXML private VBox vboxLevels;
+	@FXML private VBox vboxPlayes;
 
 	public static String selectedLevel;
 	public static HBox selectedHBox;
+	public static int numberOfPlayers =  2;
+	public static String[] profilesChosen;
+	public static ArrayList<Profile> profiles;
+	public static ArrayList<String> profileNames;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -48,6 +57,24 @@ public class LevelMenuController implements Initializable {
 			});
 			vboxLevels.getChildren().addAll(levelHBox);
 		});
+
+		ProfileManager p = new ProfileManager();
+		profiles = p.getProfiles();
+		profileNames = new ArrayList<String>();
+		profiles.forEach(profile -> profileNames.add(profile.getName()));
+		for (int i=1; i <= numberOfPlayers; i++) {
+			ChoiceBox pChoiceBox = new ChoiceBox();
+			pChoiceBox.getItems().addAll(profileNames);
+			pChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+						System.out.println(pChoiceBox.getItems().get((newValue.intValue())));
+					}
+				}
+
+			);
+			vboxPlayes.getChildren().addAll(pChoiceBox);
+		}
 
 		System.out.println("Created LevelMenuController");
 	}
