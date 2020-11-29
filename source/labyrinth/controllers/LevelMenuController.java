@@ -30,16 +30,41 @@ import java.util.ResourceBundle;
 public class LevelMenuController implements Initializable {
 	@FXML private VBox vboxLevels;
 	@FXML private VBox vboxPlayes;
+	@FXML private Button addPlayerButton;
+	@FXML private Button removePlayerButton;
 
-	public static String selectedLevel;
-	public static HBox selectedHBox;
-	public static int numberOfPlayers =  2;
-	public static String[] profilesChosen;
-	public static ArrayList<Profile> profiles;
-	public static ArrayList<String> profileNames;
+
+	private static String selectedLevel;
+	private static HBox selectedHBox;
+	private static int numberOfPlayers =  2;
+	private static ArrayList<String> profilesChosen;
+	private static ArrayList<Profile> profiles;
+	private static ArrayList<String> profileNames;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		renderLevels();
+		renderPlayers();
+
+		addPlayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				numberOfPlayers = numberOfPlayers==4?4:numberOfPlayers+1;
+				renderPlayers();
+			}
+		});
+		removePlayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				numberOfPlayers = numberOfPlayers==2?2:numberOfPlayers-1;
+				renderPlayers();
+			}
+		});
+
+		System.out.println("Created LevelMenuController");
+	}
+	private  void renderLevels(){
+		vboxLevels.getChildren().clear();
 		getLevels().forEach((value) -> {
 			HBox levelHBox = new HBox(new Text(value.substring(0,value.length()-4)));
 			levelHBox.setPrefHeight(30);
@@ -49,34 +74,35 @@ public class LevelMenuController implements Initializable {
 				@Override
 				public void handle(MouseEvent event) {
 					System.out.println(value);
-					if (LevelMenuController.selectedHBox != null)LevelMenuController.selectedHBox.setStyle("-fx-border-color: black");
-					LevelMenuController.selectedHBox=levelHBox;
-					LevelMenuController.selectedLevel=value;
+					if (selectedHBox != null)LevelMenuController.getSelectedHBox().setStyle("-fx-border-color: black");
+					setSelectedHBox(levelHBox);
+					setSelectedLevel(value);
 					levelHBox.setStyle("-fx-border-color: black;-fx-background-color: #c4ffd5;");
 				}
 			});
 			vboxLevels.getChildren().addAll(levelHBox);
 		});
+	}
 
+	private void renderPlayers(){
+		vboxPlayes.getChildren().clear();
 		ProfileManager p = new ProfileManager();
 		profiles = p.getProfiles();
 		profileNames = new ArrayList<String>();
 		profiles.forEach(profile -> profileNames.add(profile.getName()));
 		for (int i=1; i <= numberOfPlayers; i++) {
 			ChoiceBox pChoiceBox = new ChoiceBox();
+			pChoiceBox.setPrefWidth(250);
 			pChoiceBox.getItems().addAll(profileNames);
 			pChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 				@Override
 				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-						System.out.println(pChoiceBox.getItems().get((newValue.intValue())));
+					System.out.println(pChoiceBox.getItems().get((newValue.intValue())));
 					}
 				}
-
 			);
 			vboxPlayes.getChildren().addAll(pChoiceBox);
 		}
-
-		System.out.println("Created LevelMenuController");
 	}
 
 	@FXML
@@ -102,4 +128,28 @@ public class LevelMenuController implements Initializable {
 		}
 		return levels;
 	}
+
+	public static HBox getSelectedHBox() {return selectedHBox;}
+
+	public static void setSelectedHBox(HBox selectedHBox) {LevelMenuController.selectedHBox = selectedHBox;}
+
+	public static String getSelectedLevel() {return selectedLevel;}
+
+	public static void setSelectedLevel(String selectedLevel) {LevelMenuController.selectedLevel = selectedLevel;}
+
+	public static int getNumberOfPlayers() {return numberOfPlayers;}
+
+	public static void setNumberOfPlayers(int numberOfPlayers) {LevelMenuController.numberOfPlayers = numberOfPlayers;}
+
+	public static ArrayList<String> getProfilesChosen() {return profilesChosen;}
+
+	public static void setProfilesChosen(ArrayList<String> profilesChosen) {LevelMenuController.profilesChosen = profilesChosen;}
+
+	public static ArrayList<Profile> getProfiles() {return profiles;}
+
+	public static void setProfiles(ArrayList<Profile> profiles) {LevelMenuController.profiles = profiles;}
+
+	public static ArrayList<String> getProfileNames() {return profileNames;}
+
+	public static void setProfileNames(ArrayList<String> profileNames) {LevelMenuController.profileNames = profileNames;}
 }

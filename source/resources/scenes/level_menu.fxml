@@ -31,8 +31,8 @@
                      <children>
                         <SplitPane dividerPositions="0.30634390651085147" prefHeight="37.0" prefWidth="242.0">
                            <items>
-                              <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Add" />
-                              <Button mnemonicParsing="false" prefWidth="120.0" text="Remove Player" />
+                              <Button fx:id="addPlayerButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Add" />
+                              <Button fx:id="removePlayerButton" mnemonicParsing="false" prefWidth="120.0" text="Remove Player" />
                            </items>
                         </SplitPane>
                         <VBox fx:id="vboxPlayes" prefHeight="151.0" prefWidth="242.0" />
