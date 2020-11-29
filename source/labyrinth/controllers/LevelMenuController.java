@@ -37,7 +37,7 @@ public class LevelMenuController implements Initializable {
 	private static String selectedLevel;
 	private static HBox selectedHBox;
 	private static int numberOfPlayers =  2;
-	private static ArrayList<String> profilesChosen;
+	private static ArrayList<Object> profilesChosen = new ArrayList<Object>();
 	private static ArrayList<Profile> profiles;
 	private static ArrayList<String> profileNames;
 
@@ -57,6 +57,7 @@ public class LevelMenuController implements Initializable {
 			@Override
 			public void handle(MouseEvent event) {
 				numberOfPlayers = numberOfPlayers==2?2:numberOfPlayers-1;
+				if(profilesChosen.size() > numberOfPlayers) profilesChosen.remove(numberOfPlayers);
 				renderPlayersChoiceBox();
 			}
 		});
@@ -91,25 +92,33 @@ public class LevelMenuController implements Initializable {
 		profiles = p.getProfiles();
 		profileNames = new ArrayList<String>();
 		profiles.forEach(profile -> profileNames.add(profile.getName()));
-		for (int i=1; i <= numberOfPlayers; i++) {
+		for (int i=0; i < numberOfPlayers; i++) {
 			ChoiceBox pChoiceBox = new ChoiceBox();
 			pChoiceBox.setPrefWidth(250);
 			pChoiceBox.getItems().addAll(profileNames);
+
+			profilesChosen.forEach(prof -> pChoiceBox.getItems().remove(prof));
+			if (profilesChosen.size() > i)pChoiceBox.getItems().addAll(profilesChosen.get(i));
+			if (profilesChosen.size() > i) pChoiceBox.getSelectionModel().select(profilesChosen.get(i));
+
 			pChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 				@Override
 				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-						String s = pChoiceBox.getItems().get((newValue.intValue())).toString();
-						System.out.println(s);
-						vboxPlayes.getChildren().forEach( (box) ->{
-							if (pChoiceBox != box){};
-						});
+						Object obj = pChoiceBox.getItems().get((newValue.intValue()));
+						System.out.println(obj.toString());
+						System.out.println(oldValue);
+						if (oldValue!=(Integer)(-1)) profilesChosen.remove(pChoiceBox.getItems().get((oldValue.intValue())));
+						profilesChosen.add(pChoiceBox.getItems().get((newValue.intValue())));
+						renderPlayersChoiceBox();
 					}
 				}
 			);
 			vboxPlayes.getChildren().addAll(pChoiceBox);
 		}
+
 	}
 
+	
 	@FXML
 	public void returnToMainMenu(ActionEvent event) {
 		System.out.println("Going back to main menu...");
@@ -145,10 +154,6 @@ public class LevelMenuController implements Initializable {
 	public static int getNumberOfPlayers() {return numberOfPlayers;}
 
 	public static void setNumberOfPlayers(int numberOfPlayers) {LevelMenuController.numberOfPlayers = numberOfPlayers;}
-
-	public static ArrayList<String> getProfilesChosen() {return profilesChosen;}
-
-	public static void setProfilesChosen(ArrayList<String> profilesChosen) {LevelMenuController.profilesChosen = profilesChosen;}
 
 	public static ArrayList<Profile> getProfiles() {return profiles;}
 
