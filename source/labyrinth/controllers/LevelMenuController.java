@@ -157,6 +157,10 @@ public class LevelMenuController implements Initializable {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		} else {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("Choose a level!");
+			alert.showAndWait();
 		}
 	}
 
