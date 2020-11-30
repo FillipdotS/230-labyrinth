@@ -60,6 +60,7 @@ public class LevelReader {
                 int orientation = in.nextInt();
 
                 FloorTile fixedTile = new FloorTile(orientation, FloorTile.TileType.valueOf(type));
+                fixedTile.setFixed(true);
                 levelBoard.setTileAt(fixedTile, xPos, yPos);
 
                 in.nextLine();
