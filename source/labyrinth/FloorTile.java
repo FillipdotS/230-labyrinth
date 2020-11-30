@@ -43,9 +43,7 @@ public class FloorTile extends Tile {
 		Boolean[] tmpMask = this.tileType.defaultMoveMask.clone();
 		for (int i = 0; i < orientation; i++) {
 			Boolean tmp = tmpMask[3];
-			for (int j = 3; j > 0; j--) {
-				tmpMask[j] = tmpMask[j - 1];
-			}
+			System.arraycopy(tmpMask, 0, tmpMask, 1, 3);
 			tmpMask[0] = tmp;
 		}
 		this.moveMask = tmpMask;
