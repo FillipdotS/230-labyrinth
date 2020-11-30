@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import source.labyrinth.ProfileManager;
 
 import java.io.IOException;
 
@@ -21,6 +22,9 @@ public class MainMenuController extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Main Menu");
 		primaryStage.show();
+
+		// Setup profiles
+		ProfileManager.performSetup();
 	}
 
 	@FXML

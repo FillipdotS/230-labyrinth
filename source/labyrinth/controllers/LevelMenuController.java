@@ -13,7 +13,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -29,10 +28,9 @@ import java.util.ResourceBundle;
 
 public class LevelMenuController implements Initializable {
 	@FXML private VBox vboxLevels;
-	@FXML private VBox vboxPlayes;
+	@FXML private VBox vboxPlayers;
 	@FXML private Button addPlayerButton;
 	@FXML private Button removePlayerButton;
-
 
 	private static String selectedLevel;
 	private static HBox selectedHBox;
@@ -49,14 +47,14 @@ public class LevelMenuController implements Initializable {
 		addPlayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				numberOfPlayers = numberOfPlayers==4?4:numberOfPlayers+1;
+				numberOfPlayers = numberOfPlayers == 4 ? 4 : numberOfPlayers + 1;
 				renderPlayersChoiceBox();
 			}
 		});
 		removePlayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				numberOfPlayers = numberOfPlayers==2?2:numberOfPlayers-1;
+				numberOfPlayers = numberOfPlayers == 2 ? 2 : numberOfPlayers - 1;
 				if(profilesChosen.size() > numberOfPlayers) profilesChosen.remove(numberOfPlayers);
 				renderPlayersChoiceBox();
 			}
@@ -65,7 +63,7 @@ public class LevelMenuController implements Initializable {
 		System.out.println("Created LevelMenuController");
 	}
 
-	private  void renderLevels(){
+	private void renderLevels(){
 		vboxLevels.getChildren().clear();
 		getLevels().forEach((value) -> {
 			HBox levelHBox = new HBox(new Text(value.substring(0,value.length()-4)));
@@ -87,12 +85,13 @@ public class LevelMenuController implements Initializable {
 	}
 
 	private void renderPlayersChoiceBox(){
-		vboxPlayes.getChildren().clear();
-		ProfileManager p = new ProfileManager();
-		profiles = p.getProfiles();
+		vboxPlayers.getChildren().clear();
+
+		profiles = ProfileManager.getProfiles();
 		profileNames = new ArrayList<>();
 		profiles.forEach(profile -> profileNames.add(profile.getName()));
-		for (int i=0; i < numberOfPlayers; i++) {
+
+		for (int i = 0; i < numberOfPlayers; i++) {
 			ChoiceBox pChoiceBox = new ChoiceBox();
 			pChoiceBox.setPrefWidth(250);
 			pChoiceBox.getItems().addAll(profileNames);
@@ -113,7 +112,7 @@ public class LevelMenuController implements Initializable {
 					}
 				}
 			);
-			vboxPlayes.getChildren().addAll(pChoiceBox);
+			vboxPlayers.getChildren().addAll(pChoiceBox);
 		}
 
 	}
