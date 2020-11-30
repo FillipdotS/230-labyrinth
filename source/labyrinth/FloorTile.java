@@ -135,8 +135,8 @@ public class FloorTile extends Tile {
 
 		StackPane stack = new StackPane(iv);
 
-		if (this.getFixed()) {
-			Image fixedImage = new Image(String.valueOf(getClass().getResource("../resources/img/fixed_marker.png")), renderSize, renderSize, false, false);
+		if (isFixed) {
+			Image fixedImage = new Image(String.valueOf(getClass().getResource("../resources/img/fixed_tile.png")), renderSize, renderSize, false, false);
 			ImageView fixedImageView = new ImageView(fixedImage);
 			fixedImageView.setOpacity(0.5);
 			stack.getChildren().addAll(fixedImageView);
