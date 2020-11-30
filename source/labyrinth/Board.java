@@ -50,7 +50,7 @@ public class Board {
 			for (int y = 0; y < height; y++) {
 				FloorTile current = this.board[x][y];
 				StackPane stack = current.renderTile(tileRenderSize);
-				stack.getChildren().add(new Text("(" + x + ", " + y + ")"));
+				//stack.getChildren().add(new Text("(" + x + ", " + y + ")"));
 
 				int finalX = x;
 				int finalY = y;

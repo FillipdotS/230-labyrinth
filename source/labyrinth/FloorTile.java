@@ -136,23 +136,31 @@ public class FloorTile extends Tile {
 		StackPane stack = new StackPane(iv);
 
 		if (isFixed) {
-			Image fixedImage = new Image(String.valueOf(getClass().getResource("../resources/img/fixed_tile.png")), renderSize, renderSize, false, false);
+			Image fixedImage = new Image("source/resources/img/fixed_tile.png", renderSize, renderSize, false, false);
 			ImageView fixedImageView = new ImageView(fixedImage);
 			stack.getChildren().addAll(fixedImageView);
 		}
 
 		if (isFrozenUntil > LevelController.getCurrentTime()) {
-			Image fixedImage = new Image(String.valueOf(getClass().getResource("../resources/img/frozen_tile.png")), renderSize, renderSize, false, false);
+			Image fixedImage = new Image("source/resources/img/frozen_tile.png", renderSize, renderSize, false, false);
 			ImageView fixedImageView = new ImageView(fixedImage);
 			fixedImageView.setOpacity(0.5);
 			stack.getChildren().addAll(fixedImageView);
 		}
 
 		if (isOnFireUntil > LevelController.getCurrentTime()) {
-			Image fixedImage = new Image(String.valueOf(getClass().getResource("../resources/img/fire_tile.png")), renderSize, renderSize, false, false);
+			Image fixedImage = new Image("source/resources/img/fire_tile.png", renderSize, renderSize, false, false);
 			ImageView fixedImageView = new ImageView(fixedImage);
 			fixedImageView.setOpacity(0.5);
 			stack.getChildren().addAll(fixedImageView);
+		}
+
+		if (this.getPlayer() != null) {
+			String playerImageURL = "source/resources/img/player_" + this.getPlayer().getIdInGame() + ".png";
+			Image playerImage = new Image(playerImageURL, renderSize, renderSize, false, false);
+			ImageView playerImageView = new ImageView(playerImage);
+			playerImageView.setOpacity(0.75);
+			stack.getChildren().add(playerImageView);
 		}
 
 		return stack;
