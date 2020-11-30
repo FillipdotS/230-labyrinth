@@ -138,6 +138,12 @@ public class FloorTile extends Tile {
 		if (isFixed) {
 			Image fixedImage = new Image(String.valueOf(getClass().getResource("../resources/img/fixed_tile.png")), renderSize, renderSize, false, false);
 			ImageView fixedImageView = new ImageView(fixedImage);
+			stack.getChildren().addAll(fixedImageView);
+		}
+
+		if (isFrozenUntil > LevelController.getCurrentTime()) {
+			Image fixedImage = new Image(String.valueOf(getClass().getResource("../resources/img/frozen_tile.png")), renderSize, renderSize, false, false);
+			ImageView fixedImageView = new ImageView(fixedImage);
 			fixedImageView.setOpacity(0.5);
 			stack.getChildren().addAll(fixedImageView);
 		}
