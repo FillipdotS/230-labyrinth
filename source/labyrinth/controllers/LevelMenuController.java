@@ -141,14 +141,14 @@ public class LevelMenuController implements Initializable {
 			}
 			LevelController.setNextLevelProfiles(prof);
 			LevelController.setNextLevelToLoad(selectedLevel);
-			
+
 			System.out.println("level: " + selectedLevel);
 			for (String s : prof) {
 				System.out.println("player " + s);
 			}
 
 			try {
-				Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/board.fxml"));
+				Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level.fxml"));
 				Scene profileMenuScene = new Scene(profileMenuParent);
 				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 				window.setScene(profileMenuScene);
