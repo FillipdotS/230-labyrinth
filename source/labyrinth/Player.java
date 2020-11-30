@@ -1,5 +1,7 @@
 package source.labyrinth;
 
+import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 
 /**
@@ -23,6 +25,25 @@ public class Player {
 		this.pastPositions = new int[2][2];
 		this.hasBeenBacktracked = false;
 		this.availableActions = new ArrayList<>();
+	}
+
+	/**
+	 * @param player Player number, 0 to 3
+	 * @return JavaFX Color
+	 */
+	public static Color getPlayerColor(int player) {
+		switch (player) {
+			case 0:
+				return Color.BLUE;
+			case 1:
+				return Color.RED;
+			case 2:
+				return Color.GREEN;
+			case 3:
+				return Color.PURPLE;
+			default:
+				return Color.GREY;
+		}
 	}
 
 	/**

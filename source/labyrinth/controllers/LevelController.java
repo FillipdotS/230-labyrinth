@@ -4,10 +4,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import source.labyrinth.*;
@@ -22,6 +20,9 @@ import java.util.ResourceBundle;
  * @author Fillip Serov
  */
 public class LevelController implements Initializable {
+	// The amount of "time" it takes for all players to complete one turn. (i.e. 3 players = 3)
+	private static int timeForFullLoop;
+
 	// The start of every players turn will add one to this. When we apply fire/ice we can set the
 	// "unfreeze" time to be "currentTime + amount of players". Static so other classes can easily access it.
 	private static int currentTime;
@@ -35,7 +36,7 @@ public class LevelController implements Initializable {
 
 	private Text[] playerActionAmountLabels = new Text[4];
 
-	// private Player[] players;
+	private Player[] players;
 	private SilkBag silkBag;
 	private int currentPlayer; // 0 to 3, player that is doing their turn
 	private Board board;
@@ -49,15 +50,30 @@ public class LevelController implements Initializable {
 		return currentTime;
 	}
 
+	/**
+	 * Get the amount of time it takes for all players to complete a turn in this specific game, as this will
+	 * change depending on the amount of players.
+	 * @return int showing the time it takes for all players to do a one turn.
+	 */
+	public static int getTimeForFullLoop() {
+		return timeForFullLoop;
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("Created LevelController");
+
+		timeForFullLoop = nextLevelProfiles.length;
 
 		silkBag = new SilkBag();
 		currentPlayer = 0;
 		tileRenderSize = 55;
 
-		LevelData ld = LevelReader.readDataFile("source/resources/levels/example_level.txt");
+		LevelData ld = LevelReader.readDataFile("source/resources/levels/" + nextLevelToLoad);
+
+		//
+		// Board Setup
+		//
 
 		board = ld.getBoard();
 		boardContainer.setPrefHeight(board.getHeight() * tileRenderSize);
@@ -84,41 +100,40 @@ public class LevelController implements Initializable {
 			}
 		}
 
+		// TODO: Fill up SilkBag with Action Tiles somewhere here
+
+		//
+		// Player Setup
+		//
+
+		players = new Player[nextLevelProfiles.length];
+		for (int i = 0; i < nextLevelProfiles.length; i++) {
+			Profile associatedProfile = null;
+			if (nextLevelProfiles[i] != null) {
+				associatedProfile = ProfileManager.getProfileByName(nextLevelProfiles[i]);
+			}
+
+			Player newPlayer = new Player(associatedProfile);
+			players[i] = newPlayer;
+		}
+
 		// Populating leftVBox with player info
 		leftVBox.getChildren().clear();
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < this.players.length; i++) {
 			VBox playerVBox = new VBox();
 			HBox playerNameAndIcon = new HBox();
 			HBox playerActionTileAmount = new HBox();
 
-			Color playerColor;
+			Circle playerIcon = new Circle(10);
+			playerIcon.setFill(Player.getPlayerColor(i));
 
-			switch (i) {
-				case 0:
-					playerColor = Color.BLUE;
-					break;
-				case 1:
-					playerColor = Color.RED;
-					break;
-				case 2:
-					playerColor = Color.GREEN;
-					break;
-				case 3:
-					playerColor = Color.PURPLE;
-					break;
-				default:
-					playerColor = Color.GREY;
+			Label playerLabel = new Label("Player " + (i + 1));
+			if (this.players[i].getAssociatedProfile() != null) {
+				playerLabel.setText(this.players[i].getAssociatedProfile().getName());
 			}
 
-			Circle playerIcon = new Circle(10);
-			playerIcon.setFill(playerColor);
+			playerNameAndIcon.getChildren().addAll(playerIcon, playerLabel);
 
-			// TODO: Change this to profile name if it exists for this player
-			Label playerName = new Label("Player " + (i + 1));
-
-			playerNameAndIcon.getChildren().addAll(playerIcon, playerName);
-
-			// TODO: Change to actually depend on the amount of action tiles that a player has
 			Text actionText = new Text("0 Action Tiles");
 			playerActionAmountLabels[i] = actionText;
 			playerActionTileAmount.getChildren().add(actionText);
