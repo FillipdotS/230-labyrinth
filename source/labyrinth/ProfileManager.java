@@ -6,33 +6,40 @@ import java.util.Scanner;
 
 /**
  * ProfileManager deals with profiles: retrieving them from file, saving them, adding / deleting them.
+ * It is entirely static so there is no need to create an instance of it.
  * @author Fillip Serov
  */
-public class ProfileManager {
-	private final File profilesFile = new File("source/resources/profiles/profiles.txt");
+public final class ProfileManager {
+	private static final File profilesFile = new File("source/resources/profiles/profiles.txt");
 
-	private int nextID; // If a new profile is created it will be given this id, which is then incremented
-	private ArrayList<Profile> profiles = new ArrayList<Profile>();
+	private static int nextID; // A new profile will be given this id, which is then incremented
+	private static ArrayList<Profile> profiles;
 
 	/**
-	 * Create a ProfileManager that will automatically load all player profiles and be ready to work with them.
+	 * performSetup will read the profile data from file. Since the entire class is static, this only has to
+	 * be done once when the game is launched.
 	 */
-	public ProfileManager() {
-		Scanner in;
-		try {
-			in = new Scanner(profilesFile);
-			buildProfiles(in);
-		} catch (FileNotFoundException e) {
-			System.out.println("Profiles file wasn't found.");
-			e.printStackTrace();
-			System.exit(0);
+	public static void performSetup() {
+		// If this is the first time we call this
+		if (profiles == null) {
+			profiles = new ArrayList<>();
+
+			Scanner in;
+			try {
+				in = new Scanner(profilesFile);
+				buildProfiles(in);
+			} catch (FileNotFoundException e) {
+				System.out.println("Profiles file wasn't found.");
+				e.printStackTrace();
+				System.exit(0);
+			}
 		}
 	}
 
-	public void writeProfilesToFile() {
+	public static void writeProfilesToFile() {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(profilesFile));
-			bw.write(Integer.toString(this.nextID));
+			bw.write(Integer.toString(nextID));
 			bw.newLine();
 
 			for (Profile p : profiles) {
@@ -57,7 +64,7 @@ public class ProfileManager {
 	 * @param newName Name for the new profile (must be unique).
 	 * @return true if the given name is unique and the profile was created, false otherwise.
 	 */
-	public Boolean createNewProfile(String newName) {
+	public static Boolean createNewProfile(String newName) {
 		if (getProfileByName(newName) != null) {
 			return false;
 		}
@@ -75,7 +82,7 @@ public class ProfileManager {
 	 * Get all profiles as an ArrayList.
 	 * @return ArrayList of all profiles.
 	 */
-	public ArrayList<Profile> getProfiles() {
+	public static ArrayList<Profile> getProfiles() {
 		return profiles;
 	}
 
@@ -84,7 +91,7 @@ public class ProfileManager {
 	 * @param name Name to search
 	 * @return Relevant Profile or null
 	 */
-	public Profile getProfileByName(String name) {
+	public static Profile getProfileByName(String name) {
 		for (Profile p : profiles) {
 			if (p.getName().equals(name)) {
 				return p;
@@ -98,7 +105,7 @@ public class ProfileManager {
 	 * @param id ID to search
 	 * @return Relevant Profile or null
 	 */
-	public Profile getProfileById(int id) {
+	public static Profile getProfileById(int id) {
 		for (Profile p : profiles) {
 			if (p.getID() == id) {
 				return p;
@@ -107,8 +114,8 @@ public class ProfileManager {
 		return null;
 	}
 
-	private void buildProfiles(Scanner mainIn) {
-		this.nextID = mainIn.nextInt();
+	private static void buildProfiles(Scanner mainIn) {
+		nextID = mainIn.nextInt();
 
 		// Prevent crash on empty profile files
 		if (mainIn.hasNextLine()) {
@@ -128,9 +135,6 @@ public class ProfileManager {
 			profiles.add(new Profile(profileName, id, totalPlayed, totalWins, totalLosses));
 		}
 
-		System.out.println("Loaded " + profiles.size() + " profiles. nextID is " + this.nextID);
+		System.out.println("Loaded " + profiles.size() + " profiles. nextID is " + nextID);
 	}
-	private ArrayList<Profile> getArrayList(){
-	    return  profiles;
-    }
 }
