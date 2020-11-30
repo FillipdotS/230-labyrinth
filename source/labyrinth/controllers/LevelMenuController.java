@@ -37,7 +37,7 @@ public class LevelMenuController implements Initializable {
 	private static String selectedLevel;
 	private static HBox selectedHBox;
 	private static int numberOfPlayers =  2;
-	private static ArrayList<Object> profilesChosen = new ArrayList<Object>();
+	private static ArrayList<Object> profilesChosen = new ArrayList<>();
 	private static ArrayList<Profile> profiles;
 	private static ArrayList<String> profileNames;
 
@@ -90,7 +90,7 @@ public class LevelMenuController implements Initializable {
 		vboxPlayes.getChildren().clear();
 		ProfileManager p = new ProfileManager();
 		profiles = p.getProfiles();
-		profileNames = new ArrayList<String>();
+		profileNames = new ArrayList<>();
 		profiles.forEach(profile -> profileNames.add(profile.getName()));
 		for (int i=0; i < numberOfPlayers; i++) {
 			ChoiceBox pChoiceBox = new ChoiceBox();
@@ -107,7 +107,7 @@ public class LevelMenuController implements Initializable {
 						Object obj = pChoiceBox.getItems().get((newValue.intValue()));
 						System.out.println(obj.toString());
 						System.out.println(oldValue);
-						if (oldValue!=(Integer)(-1)) profilesChosen.remove(pChoiceBox.getItems().get((oldValue.intValue())));
+						if (!oldValue.equals(-1)) profilesChosen.remove(pChoiceBox.getItems().get((oldValue.intValue())));
 						profilesChosen.add(pChoiceBox.getItems().get((newValue.intValue())));
 						renderPlayersChoiceBox();
 					}
@@ -118,7 +118,7 @@ public class LevelMenuController implements Initializable {
 
 	}
 
-	
+
 	@FXML
 	public void returnToMainMenu(ActionEvent event) {
 		System.out.println("Going back to main menu...");
@@ -134,12 +134,12 @@ public class LevelMenuController implements Initializable {
 		}
 	}
 
-	private ArrayList<String> getLevels(){
+	private ArrayList<String> getLevels() {
 		File actual = new File("./source/resources/levels");
-		ArrayList<String> levels=new ArrayList<String>();
-		for (File f : actual.listFiles()){
+		ArrayList<String> levels=new ArrayList<>();
+		for (File f : actual.listFiles()) {
 			levels.add(f.getName());
-		}
+			}
 		return levels;
 	}
 
@@ -151,15 +151,5 @@ public class LevelMenuController implements Initializable {
 
 	public static void setSelectedLevel(String selectedLevel) {LevelMenuController.selectedLevel = selectedLevel;}
 
-	public static int getNumberOfPlayers() {return numberOfPlayers;}
 
-	public static void setNumberOfPlayers(int numberOfPlayers) {LevelMenuController.numberOfPlayers = numberOfPlayers;}
-
-	public static ArrayList<Profile> getProfiles() {return profiles;}
-
-	public static void setProfiles(ArrayList<Profile> profiles) {LevelMenuController.profiles = profiles;}
-
-	public static ArrayList<String> getProfileNames() {return profileNames;}
-
-	public static void setProfileNames(ArrayList<String> profileNames) {LevelMenuController.profileNames = profileNames;}
 }
