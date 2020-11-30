@@ -11,6 +11,7 @@ import java.util.ArrayList;
  */
 public class Player {
 	private final Profile associatedProfile;
+	private final int idInGame;
 
 	private int[][] pastPositions;
 	private Boolean hasBeenBacktracked;
@@ -20,7 +21,8 @@ public class Player {
 	/**
 	 * @param profile The profile this player is assigned to. If no profile, give null.
 	 */
-	public Player(Profile profile) {
+	public Player(int idInGame, Profile profile) {
+		this.idInGame = idInGame;
 		this.associatedProfile = profile;
 
 		this.pastPositions = new int[2][2];
@@ -45,6 +47,10 @@ public class Player {
 			default:
 				return Color.GREY;
 		}
+	}
+
+	public int getIdInGame() {
+		return this.idInGame;
 	}
 
 	/**

@@ -115,7 +115,7 @@ public class LevelController implements Initializable {
 				associatedProfile = ProfileManager.getProfileByName(nextLevelProfiles[i]);
 			}
 
-			Player newPlayer = new Player(associatedProfile);
+			Player newPlayer = new Player(i, associatedProfile);
 
 			int[] startingPosition = ld.getPlayerStartingPositions()[i];
 			newPlayer.setStandingOn(this.board.getTileAt(startingPosition[0], startingPosition[1]));
