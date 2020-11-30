@@ -22,7 +22,7 @@
          <items>
             <HBox alignment="CENTER" maxHeight="200.0" prefHeight="195.0" prefWidth="158.0">
                <children>
-                  <Button mnemonicParsing="false" text="Quit">
+                  <Button mnemonicParsing="false" onAction="#goToLevelMenu" text="Exit">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>

@@ -1,15 +1,22 @@
 package source.labyrinth.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import source.labyrinth.*;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -154,6 +161,22 @@ public class LevelController implements Initializable {
 
 		// When everything is done, render the board for the first time
 		boardContainer.getChildren().add(board.renderBoard((tileRenderSize)));
+	}
+
+	@FXML
+	public void goToLevelMenu(ActionEvent event) {
+		System.out.println("Going to level menu...");
+		try {
+			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level_menu.fxml"));
+			Scene profileMenuScene = new Scene(profileMenuParent);
+			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+			window.setScene(profileMenuScene);
+			window.setTitle("Level Select");
+			window.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
