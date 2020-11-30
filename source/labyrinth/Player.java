@@ -15,6 +15,7 @@ public class Player {
 	private int[][] pastPositions;
 	private Boolean hasBeenBacktracked;
 	private ArrayList<ActionTile> availableActions;
+	private FloorTile standingOn;
 
 	/**
 	 * @param profile The profile this player is assigned to. If no profile, give null.
@@ -44,6 +45,24 @@ public class Player {
 			default:
 				return Color.GREY;
 		}
+	}
+
+	/**
+	 * @return The FloorTile this player is standing on
+	 */
+	public FloorTile getStandingOn() {
+		return standingOn;
+	}
+
+	/**
+	 * @param standingOn The new FloorTile to hold this player.
+	 */
+	public void setStandingOn(FloorTile standingOn) {
+		if (this.standingOn != null) {
+			this.standingOn.setPlayer(null); // Wipe the reference on the previous position
+		}
+		this.standingOn = standingOn;
+		this.standingOn.setPlayer(this);
 	}
 
 	/**

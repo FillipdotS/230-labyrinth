@@ -32,6 +32,7 @@ public class FloorTile extends Tile {
 	private Boolean isFixed = false;
 	private int isOnFireUntil;
 	private int isFrozenUntil;
+	private Player player;
 
 	public FloorTile(int orientation, TileType tileType) {
 		this.orientation = orientation;
@@ -63,6 +64,20 @@ public class FloorTile extends Tile {
 		isOnFireUntil = LevelController.getCurrentTime() + 2 * LevelController.getTimeForFullLoop();
 	}
 
+	/**
+	 * @return Player standing on this FloorTile
+	 */
+	public Player getPlayer() {
+		return player;
+	}
+
+	/**
+	 * This method exists only for the Player to set it to null when they moves. Should NOT be used otherwise.
+	 * @param player Player that now stands on this FloorTile
+	 */
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
 
 	public int getOrientation() {
 		return this.orientation;
