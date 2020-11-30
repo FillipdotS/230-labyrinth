@@ -71,6 +71,7 @@ public class LevelReader {
                 playerStartingPositions[i][1] = in.nextInt();
                 in.nextLine();
             }
+            levelData.setPlayerStartingPositions(playerStartingPositions);
 
             // Straight FloorTile
             levelData.setStraightAmount(in.nextInt());
