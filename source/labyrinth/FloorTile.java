@@ -3,6 +3,7 @@ package source.labyrinth;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import source.labyrinth.controllers.LevelController;
 
 public class FloorTile extends Tile {
 	/**
@@ -50,12 +51,27 @@ public class FloorTile extends Tile {
 		this.moveMask = tmpMask;
 	}
 
+	/**
+	 * freezes tile for a loop
+	 */
+	public void freeze() {
+		isFrozenUntil = LevelController.getCurrentTime() + LevelController.getTimeForFullLoop();
+	}
+
+	/**
+	 * sets tile on fire for 2 loops
+	 */
+	public void setOnFire() {
+		isOnFireUntil = LevelController.getCurrentTime() + 2 * LevelController.getTimeForFullLoop();
+	}
+
+
 	public int getOrientation() {
 		return this.orientation;
 	}
 
 	public Boolean[] getMoveMask() {
-		return this.moveMask;
+		return (LevelController.getCurrentTime() >= isOnFireUntil) ? this.moveMask : new Boolean[] {false,false,false,false};
 	}
 
 	public String getImageURL() {
@@ -64,6 +80,14 @@ public class FloorTile extends Tile {
 
 	public Boolean getFixed() {
 		return this.isFixed;
+	}
+
+	/**
+	 * is tile fixer now
+	 * @return Boolean show if tile is currently fixed
+	 */
+	public Boolean isCurrentlyFixed() {
+		return isFixed || LevelController.getCurrentTime() < isFrozenUntil;
 	}
 
 	public int getIsFrozenUntil() {
