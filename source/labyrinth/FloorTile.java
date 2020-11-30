@@ -148,6 +148,13 @@ public class FloorTile extends Tile {
 			stack.getChildren().addAll(fixedImageView);
 		}
 
+		if (isOnFireUntil > LevelController.getCurrentTime()) {
+			Image fixedImage = new Image(String.valueOf(getClass().getResource("../resources/img/fire_tile.png")), renderSize, renderSize, false, false);
+			ImageView fixedImageView = new ImageView(fixedImage);
+			fixedImageView.setOpacity(0.5);
+			stack.getChildren().addAll(fixedImageView);
+		}
+
 		return stack;
 	}
 
