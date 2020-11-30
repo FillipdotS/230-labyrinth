@@ -74,6 +74,7 @@ public class LevelController implements Initializable {
 		//
 		// Board Setup
 		//
+		System.out.println("Setting up board...");
 
 		board = ld.getBoard();
 		boardContainer.setPrefHeight(board.getHeight() * tileRenderSize);
@@ -105,6 +106,7 @@ public class LevelController implements Initializable {
 		//
 		// Player Setup
 		//
+		System.out.println("Setting up players...");
 
 		players = new Player[nextLevelProfiles.length];
 		for (int i = 0; i < nextLevelProfiles.length; i++) {
@@ -114,6 +116,10 @@ public class LevelController implements Initializable {
 			}
 
 			Player newPlayer = new Player(associatedProfile);
+
+			int[] startingPosition = ld.getPlayerStartingPositions()[i];
+			newPlayer.setStandingOn(this.board.getTileAt(startingPosition[0], startingPosition[1]));
+
 			players[i] = newPlayer;
 		}
 
@@ -146,6 +152,7 @@ public class LevelController implements Initializable {
 			leftVBox.getChildren().add(playerVBox);
 		}
 
+		// When everything is done, render the board for the first time
 		boardContainer.getChildren().add(board.renderBoard((tileRenderSize)));
 	}
 
