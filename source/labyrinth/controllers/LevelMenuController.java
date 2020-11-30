@@ -36,28 +36,22 @@ public class LevelMenuController implements Initializable {
 	private static HBox selectedHBox;
 	private static int numberOfPlayers =  2;
 	private static ArrayList<Object> profilesChosen = new ArrayList<>();
-	private static ArrayList<Profile> profiles;
 	private static ArrayList<String> profileNames;
+	private ProfileManager profileManager = new ProfileManager();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		renderLevels();
 		renderPlayersChoiceBox();
 
-		addPlayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				numberOfPlayers = numberOfPlayers == 4 ? 4 : numberOfPlayers + 1;
-				renderPlayersChoiceBox();
-			}
+		addPlayerButton.setOnMouseClicked(event -> {
+			numberOfPlayers = numberOfPlayers==4?4:numberOfPlayers+1;
+			renderPlayersChoiceBox();
 		});
-		removePlayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				numberOfPlayers = numberOfPlayers == 2 ? 2 : numberOfPlayers - 1;
-				if(profilesChosen.size() > numberOfPlayers) profilesChosen.remove(numberOfPlayers);
-				renderPlayersChoiceBox();
-			}
+		removePlayerButton.setOnMouseClicked(event -> {
+			numberOfPlayers = numberOfPlayers==2?2:numberOfPlayers-1;
+			if(profilesChosen.size() > numberOfPlayers) profilesChosen.remove(numberOfPlayers);
+			renderPlayersChoiceBox();
 		});
 
 		System.out.println("Created LevelMenuController");
@@ -70,15 +64,12 @@ public class LevelMenuController implements Initializable {
 			levelHBox.setPrefHeight(30);
 			levelHBox.setAlignment(Pos.CENTER_LEFT);
 			levelHBox.setStyle("-fx-border-color: black");
-			levelHBox.setOnMouseClicked(new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent event) {
-					System.out.println(value);
-					if (selectedHBox != null)LevelMenuController.getSelectedHBox().setStyle("-fx-border-color: black");
-					setSelectedHBox(levelHBox);
-					setSelectedLevel(value);
-					levelHBox.setStyle("-fx-border-color: black;-fx-background-color: #c4ffd5;");
-				}
+			levelHBox.setOnMouseClicked(event -> {
+				System.out.println(value);
+				if (selectedHBox != null)LevelMenuController.getSelectedHBox().setStyle("-fx-border-color: black");
+				setSelectedHBox(levelHBox);
+				setSelectedLevel(value);
+				levelHBox.setStyle("-fx-border-color: black;-fx-background-color: #c4ffd5;");
 			});
 			vboxLevels.getChildren().addAll(levelHBox);
 		});
@@ -100,16 +91,13 @@ public class LevelMenuController implements Initializable {
 			if (profilesChosen.size() > i)pChoiceBox.getItems().addAll(profilesChosen.get(i));
 			if (profilesChosen.size() > i) pChoiceBox.getSelectionModel().select(profilesChosen.get(i));
 
-			pChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-				@Override
-				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-						Object obj = pChoiceBox.getItems().get((newValue.intValue()));
-						System.out.println(obj.toString());
-						System.out.println(oldValue);
-						if (!oldValue.equals(-1)) profilesChosen.remove(pChoiceBox.getItems().get((oldValue.intValue())));
-						profilesChosen.add(pChoiceBox.getItems().get((newValue.intValue())));
-						renderPlayersChoiceBox();
-					}
+			pChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+					Object obj = pChoiceBox.getItems().get((newValue.intValue()));
+					System.out.println(obj.toString());
+					System.out.println(oldValue);
+					if (!oldValue.equals(-1)) profilesChosen.remove(pChoiceBox.getItems().get((oldValue.intValue())));
+					profilesChosen.add(pChoiceBox.getItems().get((newValue.intValue())));
+					renderPlayersChoiceBox();
 				}
 			);
 			vboxPlayers.getChildren().addAll(pChoiceBox);
@@ -140,6 +128,23 @@ public class LevelMenuController implements Initializable {
 			levels.add(f.getName());
 			}
 		return levels;
+	}
+
+	@FXML
+	public void playGame(ActionEvent event) {
+		System.out.println("Going to board ...");
+		
+		try {
+			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/board.fxml"));
+			Scene profileMenuScene = new Scene(profileMenuParent);
+			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+			window.setScene(profileMenuScene);
+			window.setTitle("Level Select");
+			window.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static HBox getSelectedHBox() {return selectedHBox;}

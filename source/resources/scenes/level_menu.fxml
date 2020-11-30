@@ -15,7 +15,7 @@
          <left>
             <VBox prefHeight="400.0" prefWidth="80.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#returnToMainMenu" text="Back" />
+                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#returnToMainMenu" prefHeight="39.0" prefWidth="82.0" text="Back" />
                </children>
             </VBox>
          </left>
@@ -36,6 +36,7 @@
                            </items>
                         </SplitPane>
                         <VBox fx:id="vboxPlayers" prefHeight="151.0" prefWidth="242.0" />
+                        <Button alignment="CENTER" mnemonicParsing="false" onAction="#playGame" prefHeight="49.0" prefWidth="242.0" text="PLAY" />
                      </children></VBox>
                </children>
             </VBox>
