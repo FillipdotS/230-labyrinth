@@ -78,7 +78,7 @@ public class LevelMenuController implements Initializable {
 	private void renderPlayersChoiceBox(){
 		vboxPlayers.getChildren().clear();
 
-		profiles = ProfileManager.getProfiles();
+		ArrayList<Profile> profiles = ProfileManager.getProfiles();
 		profileNames = new ArrayList<>();
 		profiles.forEach(profile -> profileNames.add(profile.getName()));
 
@@ -132,18 +132,31 @@ public class LevelMenuController implements Initializable {
 
 	@FXML
 	public void playGame(ActionEvent event) {
-		System.out.println("Going to board ...");
-		
-		try {
-			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/board.fxml"));
-			Scene profileMenuScene = new Scene(profileMenuParent);
-			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+		if (selectedLevel != null) {
+			System.out.println("Going to board ...");
+			profilesChosen.forEach(obj -> System.out.println(obj.toString()));
+			String[] prof = new String[numberOfPlayers];
+			for (int i = 0; i < prof.length; i++) {
+				if (profilesChosen.size() > i) prof[i] = profilesChosen.get(i).toString();
+			}
+			LevelController.setNextLevelProfiles(prof);
+			LevelController.setNextLevelToLoad(selectedLevel);
+			
+			System.out.println("level: " + selectedLevel);
+			for (String s : prof) {
+				System.out.println("player " + s);
+			}
 
-			window.setScene(profileMenuScene);
-			window.setTitle("Level Select");
-			window.show();
-		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/board.fxml"));
+				Scene profileMenuScene = new Scene(profileMenuParent);
+				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+				window.setScene(profileMenuScene);
+				window.setTitle("Level Select");
+				window.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
