@@ -7,7 +7,7 @@ package source.labyrinth;
  * @author Fillip Serov
  */
 public class Profile {
-	private String name;
+	private final String name;
 	private final int id;
 	private int totalPlayed;
 	private int wins;
@@ -42,10 +42,6 @@ public class Profile {
 
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public int getID() {
