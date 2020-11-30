@@ -26,6 +26,9 @@ public class LevelController implements Initializable {
 	// "unfreeze" time to be "currentTime + amount of players". Static so other classes can easily access it.
 	private static int currentTime;
 
+	private static String nextLevelToLoad; // Level file name
+	private static String[] nextLevelProfiles; // The length of this
+
 	@FXML private VBox boardContainer;
 	@FXML private VBox leftVBox;
 	@FXML private HBox bottomContainer;
@@ -137,5 +140,22 @@ public class LevelController implements Initializable {
 	 */
 	public void exportToSave() {
 		// TODO: Actually implement it
+	}
+
+	/**
+	 * Next time the level scene is loaded, it will build from this level file.
+	 * @param nextLevelToLoad Level Name
+	 */
+	public static void setNextLevelToLoad(String nextLevelToLoad) {
+		LevelController.nextLevelToLoad = nextLevelToLoad;
+	}
+
+	/**
+	 * Next time the level scene is loaded, it will use these profiles. The length of this array is also
+	 * the amount of players to use.
+	 * @param nextLevelProfiles Profiles (given as strings) to use in this game.
+	 */
+	public static void setNextLevelProfiles(String[] nextLevelProfiles) {
+		LevelController.nextLevelProfiles = nextLevelProfiles;
 	}
 }
