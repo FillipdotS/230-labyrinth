@@ -106,3 +106,18 @@ public class LevelReader {
         return levelData;
     }
 }
+/*
+
+                        int straight = in.nextInt();
+                        in.nextLine();
+                        int tShape = in.nextInt();
+                        in.nextLine();
+                        int corner = in.nextInt();
+                        in.nextLine();
+                        int ice = in.nextInt();
+                        in.nextLine();
+                        int fire = in.nextInt();
+                        in.nextLine();
+                        int doublemove = in.nextInt();
+                        in.nextLine();
+                        int backtrack = in.nextInt();*/
