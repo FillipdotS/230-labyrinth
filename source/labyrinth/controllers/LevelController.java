@@ -116,7 +116,7 @@ public class LevelController implements Initializable {
 		System.out.println("Setting up players...");
 
 		players = new Player[nextLevelProfiles.length];
-		for (int i = 0; i < nextLevelProfiles.length; i++) {
+		for (int i = 0; i < players.length; i++) {
 			Profile associatedProfile = null;
 			if (nextLevelProfiles[i] != null) {
 				associatedProfile = ProfileManager.getProfileByName(nextLevelProfiles[i]);
@@ -160,7 +160,7 @@ public class LevelController implements Initializable {
 		}
 
 		// When everything is done, render the board for the first time
-		boardContainer.getChildren().add(board.renderBoard((tileRenderSize)));
+		boardContainer.getChildren().add(board.renderBoard(tileRenderSize));
 	}
 
 	@FXML

@@ -25,6 +25,7 @@ public class FloorTile extends Tile {
 		}
 	}
 
+	private final double playerToTileScaling = 0.6f;
 	private final int orientation;
 	private final Boolean[] moveMask; // Specifically THIS tiles move mask, which has been changed by orientation
 	private final TileType tileType;
@@ -157,9 +158,8 @@ public class FloorTile extends Tile {
 
 		if (this.getPlayer() != null) {
 			String playerImageURL = "source/resources/img/player_" + this.getPlayer().getIdInGame() + ".png";
-			Image playerImage = new Image(playerImageURL, renderSize, renderSize, false, false);
+			Image playerImage = new Image(playerImageURL, renderSize * playerToTileScaling, renderSize * playerToTileScaling, false, false);
 			ImageView playerImageView = new ImageView(playerImage);
-			playerImageView.setOpacity(0.75);
 			stack.getChildren().add(playerImageView);
 		}
 

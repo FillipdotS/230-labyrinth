@@ -1,5 +1,6 @@
 package source.labyrinth;
 
+import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -44,6 +45,7 @@ public class Board {
 	 */
 	public GridPane renderBoard(int tileRenderSize) {
 		GridPane gameBoard = new GridPane();
+		gameBoard.setAlignment(Pos.CENTER);
 		//gameBoard.setPrefSize(800, 800);
 
 		for (int x = 0; x < width; x++) {
