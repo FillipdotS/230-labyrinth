@@ -15,7 +15,7 @@
       <VBox fx:id="boardContainer" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: DARKGREY;" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
-      <HBox fx:id="bottomContainer" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: GREY;" BorderPane.alignment="CENTER" />
+      <HBox fx:id="bottomContainer" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: GREY;" BorderPane.alignment="CENTER" />
    </bottom>
    <left>
       <SplitPane dividerPositions="0.15422885572139303" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">

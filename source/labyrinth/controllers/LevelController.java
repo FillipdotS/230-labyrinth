@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -46,13 +48,12 @@ public class LevelController implements Initializable {
 	@FXML private VBox leftVBox;
 	@FXML private HBox bottomContainer;
 
-	private Text[] playerActionAmountLabels = new Text[4];
-
+	private VBox[] playerSubInfoVBoxes;
 	private Player[] players;
 	private int currentPlayer; // 0 to 3, player that is doing their turn
 	private Board board;
 	private int tileRenderSize; // Changed by zoom in/zoom out buttons
-	private FloorTile floorTileToInsert = new FloorTile(0, FloorTile.TileType.STRAIGHT);
+	private FloorTile floorTileToInsert;
 
 	/**
 	 * Get the current game time as an int. Will always be >0.
@@ -137,6 +138,7 @@ public class LevelController implements Initializable {
 		System.out.println("Setting up players...");
 
 		players = new Player[nextLevelProfiles.length];
+		playerSubInfoVBoxes = new VBox[players.length];
 		for (int i = 0; i < players.length; i++) {
 			Profile associatedProfile = null;
 			if (nextLevelProfiles[i] != null) {
@@ -158,7 +160,8 @@ public class LevelController implements Initializable {
 		}
 
 		// When everything is done, render the board for the first time
-		boardContainer.getChildren().add(renderBoard());
+		renderBoard();
+		drawingPhase();
 	}
 
 	@FXML
@@ -185,7 +188,68 @@ public class LevelController implements Initializable {
 		// TODO: Actually implement it
 	}
 
-	private GridPane renderBoard() {
+	private void drawingPhase() {
+		updateSubInfoVBoxes();
+		bottomContainer.getChildren().clear();
+
+		Button drawButton = new Button("Draw a tile from the silk bag to start your turn");
+		drawButton.setOnMouseClicked(event -> {
+			// TODO: Account for ActionTiles
+			placementPhase((FloorTile) SilkBag.getRandomTile());
+		});
+
+		bottomContainer.getChildren().add(drawButton);
+	}
+
+	private void placementPhase(FloorTile nextFloorTileToInsert) {
+		this.floorTileToInsert = nextFloorTileToInsert;
+		bottomContainer.getChildren().clear();
+
+		bottomContainer.getChildren().add(nextFloorTileToInsert.renderTile(tileRenderSize));
+		renderBoard();
+	}
+
+	private void endPlacementPhase(int insertionDirection, int insertionPoint) {
+		this.board.insertFloorTile(this.floorTileToInsert, insertionDirection, insertionPoint);
+		this.floorTileToInsert = null;
+		renderBoard();
+		playActionPhase();
+	}
+
+	private void playActionPhase() {
+		movementPhase();
+	}
+
+	private void movementPhase() {
+		int[] playerPos = getPlayerXYPosition(currentPlayer);
+	}
+
+	private void endTurn() {
+		// Go up by one or rotate back to 0
+		currentPlayer = (currentPlayer < players.length - 1) ? currentPlayer + 1 : 0;
+		currentTime++;
+
+		drawingPhase();
+	}
+
+	/**
+	 * A dirty hacky method to very slowly find a Player somewhere in a Board. TODO: Replace
+	 * @param playerID
+	 * @return
+	 */
+	private int[] getPlayerXYPosition(int playerID) {
+		for (int x = 0; x < this.board.getWidth(); x++) {
+			for (int y = 0; y < this.board.getHeight(); y++) {
+				FloorTile ft = this.board.getTileAt(x, y);
+				if (ft.getPlayer() != null && ft.getPlayer().getIdInGame() == playerID) {
+					return new int[] {x, y};
+				}
+			}
+		}
+		return null;
+	}
+
+	private void renderBoard() {
 		// Clear the old render
 		boardContainer.getChildren().clear();
 
@@ -195,52 +259,53 @@ public class LevelController implements Initializable {
 		Boolean[][] insertableMask = this.board.getInsertablePositions();
 		Image insertionImage = new Image("source/resources/img/insert_arrow.png", tileRenderSize, tileRenderSize, false, false);
 
-		// Put column buttons (start at 1 since 0,0 is the empty top left spot)
-		for (int x = 1; x <= this.board.getWidth(); x++) {
-			if (insertableMask[0][x - 1]) {
-				int finalX = x - 1;
+		// If we are in the placement phase (i.e. we have a FloorTile), show some additional buttons
+		if (floorTileToInsert != null) {
+			// TODO: Game will soft lock if there are no rows/columns that can be inserted into
 
-				ImageView topOfColumn = new ImageView(insertionImage);
-				topOfColumn.setRotate(180);
-				topOfColumn.setOnMouseClicked(event -> {
-					System.out.println("Inserting at direction " + "0" + " at insertion point " + finalX);
-					this.board.insertFloorTile(floorTileToInsert, 0, finalX);
-					boardContainer.getChildren().add(renderBoard());
-				});
-				renderedBoard.add(topOfColumn, x, 0);
+			// Put column buttons (start at 1 since 0,0 is the empty top left spot)
+			for (int x = 1; x <= this.board.getWidth(); x++) {
+				if (insertableMask[0][x - 1]) {
+					int finalX = x - 1;
 
-				ImageView bottomOfColumn = new ImageView(insertionImage);
-				bottomOfColumn.setOnMouseClicked(event -> {
-					System.out.println("Inserting at direction " + "2" + " at insertion point " + finalX);
-					this.board.insertFloorTile(floorTileToInsert, 2, finalX);
-					boardContainer.getChildren().add(renderBoard());
-				});
-				renderedBoard.add(bottomOfColumn, x, this.board.getHeight() + 1);
+					ImageView topOfColumn = new ImageView(insertionImage);
+					topOfColumn.setRotate(180);
+					topOfColumn.setOnMouseClicked(event -> {
+						System.out.println("Inserting at direction " + "0" + " at insertion point " + finalX);
+						endPlacementPhase(0, finalX);
+					});
+					renderedBoard.add(topOfColumn, x, 0);
+
+					ImageView bottomOfColumn = new ImageView(insertionImage);
+					bottomOfColumn.setOnMouseClicked(event -> {
+						System.out.println("Inserting at direction " + "2" + " at insertion point " + finalX);
+						endPlacementPhase(2, finalX);
+					});
+					renderedBoard.add(bottomOfColumn, x, this.board.getHeight() + 1);
+				}
 			}
-		}
 
-		// Put row buttons (start at 1)
-		for (int y = 1; y <= this.board.getHeight(); y++) {
-			if (insertableMask[1][y - 1]) {
-				int finalY = y - 1;
+			// Put row buttons (start at 1)
+			for (int y = 1; y <= this.board.getHeight(); y++) {
+				if (insertableMask[1][y - 1]) {
+					int finalY = y - 1;
 
-				ImageView leftRow = new ImageView(insertionImage);
-				leftRow.setRotate(90);
-				leftRow.setOnMouseClicked(event -> {
-					System.out.println("Inserting at direction " + "3" + " at insertion point " + finalY);
-					this.board.insertFloorTile(floorTileToInsert, 3, finalY);
-					boardContainer.getChildren().add(renderBoard());
-				});
-				renderedBoard.add(leftRow, 0, y);
+					ImageView leftRow = new ImageView(insertionImage);
+					leftRow.setRotate(90);
+					leftRow.setOnMouseClicked(event -> {
+						System.out.println("Inserting at direction " + "3" + " at insertion point " + finalY);
+						endPlacementPhase(3, finalY);
+					});
+					renderedBoard.add(leftRow, 0, y);
 
-				ImageView rightRow = new ImageView(insertionImage);
-				rightRow.setRotate(-90);
-				rightRow.setOnMouseClicked(event -> {
-					System.out.println("Inserting at direction " + "1" + " at insertion point " + finalY);
-					this.board.insertFloorTile(floorTileToInsert, 1, finalY);
-					boardContainer.getChildren().add(renderBoard());
-				});
-				renderedBoard.add(rightRow, this.board.getWidth() + 1,  y);
+					ImageView rightRow = new ImageView(insertionImage);
+					rightRow.setRotate(-90);
+					rightRow.setOnMouseClicked(event -> {
+						System.out.println("Inserting at direction " + "1" + " at insertion point " + finalY);
+						endPlacementPhase(1, finalY);
+					});
+					renderedBoard.add(rightRow, this.board.getWidth() + 1, y);
+				}
 			}
 		}
 
@@ -264,7 +329,20 @@ public class LevelController implements Initializable {
 
 		// renderedBoard.setGridLinesVisible(true);
 
-		return renderedBoard;
+		boardContainer.getChildren().add(renderedBoard);
+	}
+
+	private void updateSubInfoVBoxes() {
+		for (int i = 0; i < playerSubInfoVBoxes.length; i++) {
+			playerSubInfoVBoxes[i].getChildren().clear();
+			playerSubInfoVBoxes[i].getChildren().add(new Text("0 Action Tiles"));
+			if (i == currentPlayer) {
+				Text yourTurn = new Text("Your Turn");
+				yourTurn.setFill(Color.GREEN);
+				yourTurn.setStyle("-fx-font-weight: bold");
+				playerSubInfoVBoxes[i].getChildren().add(yourTurn);
+			}
+		}
 	}
 
 	/**
@@ -275,7 +353,9 @@ public class LevelController implements Initializable {
 	private VBox createPlayerInfoVBox(int playerID) {
 		VBox playerVBox = new VBox();
 		HBox playerNameAndIcon = new HBox();
-		HBox playerActionTileAmount = new HBox();
+		VBox playerSubInfoHBox = new VBox();
+
+		playerSubInfoVBoxes[playerID] = playerSubInfoHBox;
 
 		Circle playerIcon = new Circle(10);
 		playerIcon.setFill(Player.getPlayerColor(playerID));
@@ -287,13 +367,9 @@ public class LevelController implements Initializable {
 
 		playerNameAndIcon.getChildren().addAll(playerIcon, playerLabel);
 
-		Text actionText = new Text("0 Action Tiles");
-		playerActionAmountLabels[playerID] = actionText;
-		playerActionTileAmount.getChildren().add(actionText);
-
 		playerNameAndIcon.setAlignment(Pos.BOTTOM_CENTER);
-		playerActionTileAmount.setAlignment(Pos.TOP_CENTER);
-		playerVBox.getChildren().addAll(playerNameAndIcon, playerActionTileAmount);
+		playerSubInfoHBox.setAlignment(Pos.TOP_CENTER);
+		playerVBox.getChildren().addAll(playerNameAndIcon, playerSubInfoHBox);
 		playerVBox.setPrefHeight(200);
 
 		return playerVBox;
