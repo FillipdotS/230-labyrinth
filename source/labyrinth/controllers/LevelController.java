@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -54,6 +55,7 @@ public class LevelController implements Initializable {
 	private Board board;
 	private int tileRenderSize; // Changed by zoom in/zoom out buttons
 	private FloorTile floorTileToInsert;
+	private ActionTile.TileType a;
 
 	/**
 	 * Get the current game time as an int. Will always be >0.
@@ -217,6 +219,13 @@ public class LevelController implements Initializable {
 	}
 
 	private void playActionPhase() {
+		bottomContainer.getChildren().clear();
+//		bottomContainer.getChildren().add();
+		Button drawButton = new Button("freese");
+		drawButton.setOnMouseClicked(event -> {
+			// TODO: Account for ActionTiles
+			placementPhase((FloorTile) SilkBag.getRandomTile());
+		});
 		movementPhase();
 	}
 
@@ -319,6 +328,18 @@ public class LevelController implements Initializable {
 				int finalX = x;
 				int finalY = y;
 				stack.setOnMouseClicked(event -> {
+					if (board.canSetOnFire(finalX,finalY)) {
+						board.setOnFire(finalX,finalY);
+						//TODO: call end of the phase
+					} else {
+						Alert alert = new Alert(Alert.AlertType.ERROR);
+						alert.setContentText("can't aplly fire if player in area");
+						alert.showAndWait();
+					}
+					if (true) {
+						board.setFreezeOn(finalX,finalY);
+						//TODO: call end of the phase
+					}
 					System.out.println("This tile's mask is " + Arrays.toString(this.board.getTileAt(finalX, finalY).getMoveMask()));
 					System.out.println("From this tile you can move to " + Arrays.toString(this.board.getMovableFrom(finalX, finalY)));
 				});

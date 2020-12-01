@@ -174,8 +174,27 @@ public class Board {
 	public void setOnFire(int x, int y) {
 		for (int i = x > 0 ? (x - 1) : 0; i < ((x < (this.width - 1))? (x + 2): this.width); i++) {
 			for (int j = y > 0 ? (y - 1) : 0; j < ((y < (this.height - 1))? (y + 2): this.height); j++) {
-				System.out.println(i+" "+j);
+				this.board[i][j].setOnFire();
 			}
 		}
 	}
+
+	public void setFreezeOn(int x, int y) {
+		for (int i = x > 0 ? (x - 1) : 0; i < ((x < (this.width - 1))? (x + 2): this.width); i++) {
+			for (int j = y > 0 ? (y - 1) : 0; j < ((y < (this.height - 1))? (y + 2): this.height); j++) {
+				this.board[i][j].freeze();
+			}
+		}
+	}
+
+	public boolean canSetOnFire(int x, int y) {
+		boolean canSet = true;
+		for (int i = x > 0 ? (x - 1) : 0; i < ((x < (this.width - 1))? (x + 2): this.width); i++) {
+			for (int j = y > 0 ? (y - 1) : 0; j < ((y < (this.height - 1))? (y + 2): this.height); j++) {
+				canSet= (this.board[i][j].getPlayer() == null) && canSet;
+			}
+		}
+		return canSet;
+	}
+
 }
