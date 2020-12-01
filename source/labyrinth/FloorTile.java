@@ -10,10 +10,10 @@ public class FloorTile extends Tile {
 	 * The different types of floor tile that an instance of FloorTile can be.
 	 */
 	public enum TileType {
-		STRAIGHT(new Boolean[]{true, false, true, false}, "../resources/img/tile_straight.png"),
-		CORNER(new Boolean[]{true, true, false, false}, "../resources/img/tile_corner.png"),
-		TSHAPE(new Boolean[]{false, true, true, true},"../resources/img/tile_tshape.png"),
-		GOAL(new Boolean[]{true, true, true, true},"../resources/img/tile_goal.png");
+		STRAIGHT(new Boolean[]{true, false, true, false}, "source/resources/img/tile_straight.png"),
+		CORNER(new Boolean[]{true, true, false, false}, "source/resources/img/tile_corner.png"),
+		TSHAPE(new Boolean[]{false, true, true, true},"source/resources/img/tile_tshape.png"),
+		GOAL(new Boolean[]{true, true, true, true},"source/resources/img/tile_goal.png");
 
 		// Each tile type has their default move mask, and a string to their image.
 		private final Boolean[] defaultMoveMask;
@@ -129,7 +129,7 @@ public class FloorTile extends Tile {
 	 * @return StackPane representing the FloorTile.
 	 */
 	public StackPane renderTile(int renderSize) {
-		Image img = new Image(String.valueOf(getClass().getResource(this.getImageURL())), renderSize, renderSize, false, false);
+		Image img = new Image(this.getImageURL(), renderSize, renderSize, false, false);
 
 		ImageView iv = new ImageView(img);
 		iv.setRotate(90 * this.getOrientation());
