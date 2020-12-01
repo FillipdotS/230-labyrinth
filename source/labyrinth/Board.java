@@ -118,7 +118,7 @@ public class Board {
 		// TODO: This is inefficient, once we know a row/column is fixed no other tiles there should be checked.
 		for (int x = 0; x < this.width; x++) {
 			for (int y = 0; y < this.height; y++) {
-				if (this.board[x][y].getFixed()) {
+				if (this.board[x][y].isCurrentlyFixed()) {
 					// If a tile is fixed, set both the relevant column and row to false
 					toReturn[0][x] = toReturn[1][y] = false;
 				}
