@@ -71,6 +71,23 @@ public class LevelController implements Initializable {
 		return timeForFullLoop;
 	}
 
+	/**
+	 * Next time the level scene is loaded, it will build from this level file.
+	 * @param nextLevelToLoad Level Name
+	 */
+	public static void setNextLevelToLoad(String nextLevelToLoad) {
+		LevelController.nextLevelToLoad = nextLevelToLoad;
+	}
+
+	/**
+	 * Next time the level scene is loaded, it will use these profiles. The length of this array is also
+	 * the amount of players to use.
+	 * @param nextLevelProfiles Profiles (given as strings) to use in this game.
+	 */
+	public static void setNextLevelProfiles(String[] nextLevelProfiles) {
+		LevelController.nextLevelProfiles = nextLevelProfiles;
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("Created LevelController");
@@ -137,30 +154,7 @@ public class LevelController implements Initializable {
 		// Populating leftVBox with player info
 		leftVBox.getChildren().clear();
 		for (int i = 0; i < this.players.length; i++) {
-			VBox playerVBox = new VBox();
-			HBox playerNameAndIcon = new HBox();
-			HBox playerActionTileAmount = new HBox();
-
-			Circle playerIcon = new Circle(10);
-			playerIcon.setFill(Player.getPlayerColor(i));
-
-			Label playerLabel = new Label("Player " + (i + 1));
-			if (this.players[i].getAssociatedProfile() != null) {
-				playerLabel.setText(this.players[i].getAssociatedProfile().getName());
-			}
-
-			playerNameAndIcon.getChildren().addAll(playerIcon, playerLabel);
-
-			Text actionText = new Text("0 Action Tiles");
-			playerActionAmountLabels[i] = actionText;
-			playerActionTileAmount.getChildren().add(actionText);
-
-			playerNameAndIcon.setAlignment(Pos.BOTTOM_CENTER);
-			playerActionTileAmount.setAlignment(Pos.TOP_CENTER);
-			playerVBox.getChildren().addAll(playerNameAndIcon, playerActionTileAmount);
-			playerVBox.setPrefHeight(200);
-
-			leftVBox.getChildren().add(playerVBox);
+			leftVBox.getChildren().add(createPlayerInfoVBox(i));
 		}
 
 		// When everything is done, render the board for the first time
@@ -189,23 +183,6 @@ public class LevelController implements Initializable {
 	 */
 	public void exportToSave() {
 		// TODO: Actually implement it
-	}
-
-	/**
-	 * Next time the level scene is loaded, it will build from this level file.
-	 * @param nextLevelToLoad Level Name
-	 */
-	public static void setNextLevelToLoad(String nextLevelToLoad) {
-		LevelController.nextLevelToLoad = nextLevelToLoad;
-	}
-
-	/**
-	 * Next time the level scene is loaded, it will use these profiles. The length of this array is also
-	 * the amount of players to use.
-	 * @param nextLevelProfiles Profiles (given as strings) to use in this game.
-	 */
-	public static void setNextLevelProfiles(String[] nextLevelProfiles) {
-		LevelController.nextLevelProfiles = nextLevelProfiles;
 	}
 
 	private GridPane renderBoard() {
@@ -288,5 +265,37 @@ public class LevelController implements Initializable {
 		// renderedBoard.setGridLinesVisible(true);
 
 		return renderedBoard;
+	}
+
+	/**
+	 * @param playerID ID for a player in this game, 0-3
+	 * @return A VBox containing information about the player (Their color, profile name if they have one, and action
+	 * tile amount).
+	 */
+	private VBox createPlayerInfoVBox(int playerID) {
+		VBox playerVBox = new VBox();
+		HBox playerNameAndIcon = new HBox();
+		HBox playerActionTileAmount = new HBox();
+
+		Circle playerIcon = new Circle(10);
+		playerIcon.setFill(Player.getPlayerColor(playerID));
+
+		Label playerLabel = new Label("Player " + (playerID + 1));
+		if (this.players[playerID].getAssociatedProfile() != null) {
+			playerLabel.setText(this.players[playerID].getAssociatedProfile().getName());
+		}
+
+		playerNameAndIcon.getChildren().addAll(playerIcon, playerLabel);
+
+		Text actionText = new Text("0 Action Tiles");
+		playerActionAmountLabels[playerID] = actionText;
+		playerActionTileAmount.getChildren().add(actionText);
+
+		playerNameAndIcon.setAlignment(Pos.BOTTOM_CENTER);
+		playerActionTileAmount.setAlignment(Pos.TOP_CENTER);
+		playerVBox.getChildren().addAll(playerNameAndIcon, playerActionTileAmount);
+		playerVBox.setPrefHeight(200);
+
+		return playerVBox;
 	}
 }
