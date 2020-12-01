@@ -154,13 +154,17 @@ public class Board {
 
 
 		if (columnInsert) {
-			if (this.board[insertionPoint][start].getPlayer() != null) this.board[insertionPoint][start].getPlayer().setStandingOn(newTile);
+			if (this.board[insertionPoint][start].getPlayer() != null) {
+				this.board[insertionPoint][start].getPlayer().setStandingOn(newTile);
+			};
 			for (int i = start; i != fin; i += inc) {
 				this.board[insertionPoint][i] = this.board[insertionPoint][i + inc];
 			}
 			this.board[insertionPoint][fin]=newTile;
 		} else {
-			if (this.board[start][insertionPoint].getPlayer() != null) this.board[start][insertionPoint].getPlayer().setStandingOn(newTile);
+			if (this.board[start][insertionPoint].getPlayer() != null) {
+				this.board[start][insertionPoint].getPlayer().setStandingOn(newTile);
+			}
 			for (int i = start; i != fin; i += inc) {
 				this.board[i][insertionPoint] = this.board[i + inc][insertionPoint];
 			}
