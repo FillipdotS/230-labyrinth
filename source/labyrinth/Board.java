@@ -112,13 +112,12 @@ public class Board {
 			throw new IllegalArgumentException("insertionPoint was out of bounds.");
 		}
 
-		// TODO: Give the tiles back to the silk bag before the start of every loop
-
 
 		if (columnInsert) {
 			if (this.board[insertionPoint][start].getPlayer() != null) {
 				this.board[insertionPoint][start].getPlayer().setStandingOn(newTile);
 			};
+			SilkBag.addTile(this.board[insertionPoint][start]);
 			for (int i = start; i != fin; i += inc) {
 				this.board[insertionPoint][i] = this.board[insertionPoint][i + inc];
 			}
@@ -127,12 +126,12 @@ public class Board {
 			if (this.board[start][insertionPoint].getPlayer() != null) {
 				this.board[start][insertionPoint].getPlayer().setStandingOn(newTile);
 			}
+			SilkBag.addTile(this.board[start][insertionPoint]);
 			for (int i = start; i != fin; i += inc) {
 				this.board[i][insertionPoint] = this.board[i + inc][insertionPoint];
 			}
 			this.board[fin][insertionPoint]=newTile;
 		}
-
 	}
 
 	/**
