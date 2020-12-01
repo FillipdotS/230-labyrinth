@@ -2,30 +2,37 @@ package source.labyrinth;
 import java.util.LinkedList;
 
 /**
- * SilkBag
- * Stores floor and action tiles
- * Gives out random tile and returns tile
- * @author Erik Miller
+ * SilkBag stores Tiles (FloorTiles and ActionTiles), to be retrieved randomly.
+ * @author Erik Miller, Fillip Serov
  */
 public class SilkBag {
-    private LinkedList<Tile> tiles = new LinkedList<>();
+	private static LinkedList<Tile> tiles = new LinkedList<>();
 
-    /**
-     * gives random Tile
-     * @return Tile
-     */
-    public Tile getRandomTile() {
-        return tiles.remove((int)(Math.random() * (tiles.size())));
-    }
+	/**
+	 * Empty the SilkBag completely. Use this when starting a new game and you need a fresh bag.
+	 */
+	public void emptyBag() {
+		tiles.clear();
+	}
 
-    /**
-     * returns tile from board to silkBag
-     * @param tile
-     */
-    public void returnTile(FloorTile tile) {
-        tile.setIsFrozenUntil(-1);
-        tile.setIsOnFireUntil(-1);
-        this.tiles.add(tile);
-    }
+	/**
+	 * Gives a random Tile
+	 * @return Tile A random Tile
+	 */
+	public static Tile getRandomTile() {
+		return tiles.remove((int)(Math.random() * (tiles.size())));
+	}
 
+	/**
+	 * Give a tile back to the SilkBag. If it's a FloorTile, reset it's fire / ice status as well.
+	 * @param tile Tile to return back to the bag
+	 */
+	public static void addTile(Tile tile) {
+		if (tile instanceof FloorTile) {
+			FloorTile ft = (FloorTile)tile;
+			ft.setIsFrozenUntil(-1);
+			ft.setIsOnFireUntil(-1);
+		}
+		tiles.add(tile);
+	}
 }

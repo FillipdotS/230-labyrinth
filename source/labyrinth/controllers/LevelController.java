@@ -49,7 +49,6 @@ public class LevelController implements Initializable {
 	private Text[] playerActionAmountLabels = new Text[4];
 
 	private Player[] players;
-	private SilkBag silkBag;
 	private int currentPlayer; // 0 to 3, player that is doing their turn
 	private Board board;
 	private int tileRenderSize; // Changed by zoom in/zoom out buttons
@@ -78,7 +77,6 @@ public class LevelController implements Initializable {
 
 		timeForFullLoop = nextLevelProfiles.length;
 
-		silkBag = new SilkBag();
 		currentPlayer = 0;
 		tileRenderSize = 55;
 
@@ -95,13 +93,13 @@ public class LevelController implements Initializable {
 
 		// Create all the floor tiles and add them to the silk bag.
 		for (int i = 0; i < ld.getStraightAmount(); i++) {
-			silkBag.returnTile(new FloorTile(new Random().nextInt(5), FloorTile.TileType.STRAIGHT));
+			SilkBag.addTile(new FloorTile(new Random().nextInt(5), FloorTile.TileType.STRAIGHT));
 		}
 		for (int i = 0; i < ld.getCornerAmount(); i++) {
-			silkBag.returnTile(new FloorTile(new Random().nextInt(5), FloorTile.TileType.CORNER));
+			SilkBag.addTile(new FloorTile(new Random().nextInt(5), FloorTile.TileType.CORNER));
 		}
 		for (int i = 0; i < ld.getTshapeAmount(); i++) {
-			silkBag.returnTile(new FloorTile(new Random().nextInt(5), FloorTile.TileType.TSHAPE));
+			SilkBag.addTile(new FloorTile(new Random().nextInt(5), FloorTile.TileType.TSHAPE));
 		}
 
 		// IMPORTANT: Before we create and add action tiles to the bag, we use the silk bag to fill up
@@ -109,7 +107,7 @@ public class LevelController implements Initializable {
 		for (int x = 0; x < this.board.getWidth(); x++) {
 			for (int y = 0; y < this.board.getHeight(); y++) {
 				if (this.board.getTileAt(x, y) == null) {
-					this.board.setTileAt((FloorTile)silkBag.getRandomTile(), x, y);
+					this.board.setTileAt((FloorTile)SilkBag.getRandomTile(), x, y);
 				}
 			}
 		}
