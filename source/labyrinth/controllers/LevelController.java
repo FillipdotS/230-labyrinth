@@ -9,7 +9,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -18,6 +22,7 @@ import source.labyrinth.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -48,6 +53,7 @@ public class LevelController implements Initializable {
 	private int currentPlayer; // 0 to 3, player that is doing their turn
 	private Board board;
 	private int tileRenderSize; // Changed by zoom in/zoom out buttons
+	private FloorTile floorTileToInsert = new FloorTile(0, FloorTile.TileType.STRAIGHT);
 
 	/**
 	 * Get the current game time as an int. Will always be >0.
@@ -84,8 +90,8 @@ public class LevelController implements Initializable {
 		System.out.println("Setting up board...");
 
 		board = ld.getBoard();
-		boardContainer.setPrefHeight(board.getHeight() * tileRenderSize);
-		boardContainer.setPrefWidth(board.getWidth() * tileRenderSize);
+		boardContainer.setPrefHeight((board.getHeight() * tileRenderSize) + (2 * tileRenderSize));
+		boardContainer.setPrefWidth((board.getWidth() * tileRenderSize) + (2 * tileRenderSize));
 
 		// Create all the floor tiles and add them to the silk bag.
 		for (int i = 0; i < ld.getStraightAmount(); i++) {
@@ -160,7 +166,7 @@ public class LevelController implements Initializable {
 		}
 
 		// When everything is done, render the board for the first time
-		boardContainer.getChildren().add(board.renderBoard(tileRenderSize));
+		boardContainer.getChildren().add(renderBoard());
 	}
 
 	@FXML
@@ -202,5 +208,87 @@ public class LevelController implements Initializable {
 	 */
 	public static void setNextLevelProfiles(String[] nextLevelProfiles) {
 		LevelController.nextLevelProfiles = nextLevelProfiles;
+	}
+
+	private GridPane renderBoard() {
+		// Clear the old render
+		boardContainer.getChildren().clear();
+
+		GridPane renderedBoard = new GridPane();
+		renderedBoard.setAlignment(Pos.CENTER);
+
+		Boolean[][] insertableMask = this.board.getInsertablePositions();
+		Image insertionImage = new Image("source/resources/img/insert_arrow.png", tileRenderSize, tileRenderSize, false, false);
+
+		// Put column buttons (start at 1 since 0,0 is the empty top left spot)
+		for (int x = 1; x <= this.board.getWidth(); x++) {
+			if (insertableMask[0][x - 1]) {
+				int finalX = x - 1;
+
+				ImageView topOfColumn = new ImageView(insertionImage);
+				topOfColumn.setRotate(180);
+				topOfColumn.setOnMouseClicked(event -> {
+					System.out.println("Inserting at direction " + "0" + " at insertion point " + finalX);
+					this.board.insertFloorTile(floorTileToInsert, 0, finalX);
+					boardContainer.getChildren().add(renderBoard());
+				});
+				renderedBoard.add(topOfColumn, x, 0);
+
+				ImageView bottomOfColumn = new ImageView(insertionImage);
+				bottomOfColumn.setOnMouseClicked(event -> {
+					System.out.println("Inserting at direction " + "2" + " at insertion point " + finalX);
+					this.board.insertFloorTile(floorTileToInsert, 2, finalX);
+					boardContainer.getChildren().add(renderBoard());
+				});
+				renderedBoard.add(bottomOfColumn, x, this.board.getHeight() + 1);
+			}
+		}
+
+		// Put row buttons (start at 1)
+		for (int y = 1; y <= this.board.getHeight(); y++) {
+			if (insertableMask[1][y - 1]) {
+				int finalY = y - 1;
+
+				ImageView leftRow = new ImageView(insertionImage);
+				leftRow.setRotate(90);
+				leftRow.setOnMouseClicked(event -> {
+					System.out.println("Inserting at direction " + "3" + " at insertion point " + finalY);
+					this.board.insertFloorTile(floorTileToInsert, 3, finalY);
+					boardContainer.getChildren().add(renderBoard());
+				});
+				renderedBoard.add(leftRow, 0, y);
+
+				ImageView rightRow = new ImageView(insertionImage);
+				rightRow.setRotate(-90);
+				rightRow.setOnMouseClicked(event -> {
+					System.out.println("Inserting at direction " + "1" + " at insertion point " + finalY);
+					this.board.insertFloorTile(floorTileToInsert, 1, finalY);
+					boardContainer.getChildren().add(renderBoard());
+				});
+				renderedBoard.add(rightRow, this.board.getWidth() + 1,  y);
+			}
+		}
+
+		// The actual board render
+		for (int x = 0; x < this.board.getWidth(); x++) {
+			for (int y = 0; y < this.board.getHeight(); y++) {
+				FloorTile current = this.board.getTileAt(x, y);
+				StackPane stack = current.renderTile(tileRenderSize);
+				stack.getChildren().add(new Text("(" + x + ", " + y + ")"));
+
+				int finalX = x;
+				int finalY = y;
+				stack.setOnMouseClicked(event -> {
+					System.out.println("This tile's mask is " + Arrays.toString(this.board.getTileAt(finalX, finalY).getMoveMask()));
+					System.out.println("From this tile you can move to " + Arrays.toString(this.board.getMovableFrom(finalX, finalY)));
+				});
+
+				renderedBoard.add(stack, x + 1, y + 1);
+			}
+		}
+
+		// renderedBoard.setGridLinesVisible(true);
+
+		return renderedBoard;
 	}
 }

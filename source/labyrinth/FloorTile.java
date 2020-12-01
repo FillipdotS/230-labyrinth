@@ -135,6 +135,7 @@ public class FloorTile extends Tile {
 		iv.setRotate(90 * this.getOrientation());
 
 		StackPane stack = new StackPane(iv);
+		stack.setStyle("-fx-border-width: 1px; -fx-border-color: darkgrey");
 
 		if (isFixed) {
 			Image fixedImage = new Image("source/resources/img/fixed_tile.png", renderSize, renderSize, false, false);

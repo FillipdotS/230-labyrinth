@@ -1,12 +1,6 @@
 package source.labyrinth;
 
-import javafx.geometry.Pos;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
-
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * The Board class will store the layout of the current level.
@@ -36,38 +30,6 @@ public class Board {
 	 */
 	public int getHeight() {
 		return this.height;
-	}
-
-	/**
-	 * Get a JavaFX GridPane representing the board in it's current state.
-	 * @param tileRenderSize Size at which each tile in the board will be rendered at.
-	 * @return GridPane representing the Board
-	 */
-	public GridPane renderBoard(int tileRenderSize) {
-		GridPane gameBoard = new GridPane();
-		gameBoard.setAlignment(Pos.CENTER);
-		//gameBoard.setPrefSize(800, 800);
-
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				FloorTile current = this.board[x][y];
-				StackPane stack = current.renderTile(tileRenderSize);
-				//stack.getChildren().add(new Text("(" + x + ", " + y + ")"));
-
-				int finalX = x;
-				int finalY = y;
-				stack.setOnMouseClicked(event -> {
-					System.out.println("This tile's mask is " + Arrays.toString(this.board[finalX][finalY].getMoveMask()));
-					System.out.println("From this tile you can move to " + Arrays.toString(getMovableFrom(finalX, finalY)));
-				});
-
-				gameBoard.add(stack, x, y);
-			}
-		}
-
-		gameBoard.setGridLinesVisible(true);
-
-		return gameBoard;
 	}
 
 	/**
