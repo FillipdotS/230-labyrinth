@@ -13,4 +13,10 @@ public class ActionTile extends Tile {
             this.imageURL = imageURL;
         }
     }
+
+    private final ActionType actionType;
+
+    public ActionTile(ActionType actionType) {
+        this.actionType = actionType;
+    }
 }
