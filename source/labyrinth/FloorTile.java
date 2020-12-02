@@ -27,10 +27,10 @@ public class FloorTile extends Tile {
 	}
 
 	private final double playerToTileScaling = 0.6f;
-	private final int orientation;
-	private final Boolean[] moveMask; // Specifically THIS tiles move mask, which has been changed by orientation
 	private final TileType tileType;
 
+	private Boolean[] moveMask; // Specifically THIS tiles move mask, which has been changed by orientation
+	private int orientation;
 	private Boolean isFixed = false;
 	private int isOnFireUntil;
 	private int isFrozenUntil;
@@ -42,14 +42,24 @@ public class FloorTile extends Tile {
 		this.isFrozenUntil=-1;
 		this.isOnFireUntil=-1;
 
-		// Shift the array to the right depending on orientation
-		Boolean[] tmpMask = this.tileType.defaultMoveMask.clone();
-		for (int i = 0; i < orientation; i++) {
-			Boolean tmp = tmpMask[3];
-			System.arraycopy(tmpMask, 0, tmpMask, 1, 3);
-			tmpMask[0] = tmp;
+		this.moveMask = calculateMoveMask();
+	}
+
+	/**
+	 * Rotate this tile, updating it's move mask as well.
+	 * @param rotation Either 1 or (-1)
+	 */
+	public void rotateBy(int rotation) {
+		if (this.orientation + rotation > 3) {
+			// Rotating from 3 upwards returns us to 0
+			this.orientation = 0;
+		} else if (this.orientation + rotation < 0) {
+			// Rotating from 0 downwards returns us to 3
+			this.orientation = 3;
+		} else {
+			this.orientation += rotation;
 		}
-		this.moveMask = tmpMask;
+		this.moveMask = calculateMoveMask();
 	}
 
 	/**
@@ -181,5 +191,20 @@ public class FloorTile extends Tile {
 		self += "," + this.isOnFireUntil;
 		self += "," + this.isFrozenUntil;
 		return self;
+	}
+
+	/**
+	 * Using the floor tiles orientation and default move mask of it's TileType, get an accurate move mask.
+	 * @return This FloorTiles move mask with orientation accounted for
+	 */
+	private Boolean[] calculateMoveMask() {
+		// Shift the array to the right depending on orientation
+		Boolean[] toReturn = this.tileType.defaultMoveMask.clone();
+		for (int i = 0; i < orientation; i++) {
+			Boolean tmp = toReturn[3];
+			System.arraycopy(toReturn, 0, toReturn, 1, 3);
+			toReturn[0] = tmp;
+		}
+		return toReturn;
 	}
 }
