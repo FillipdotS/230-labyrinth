@@ -60,6 +60,7 @@ public class LevelController implements Initializable {
 	private Player[] players;
 	private int currentPlayer; // 0 to 3, player that is doing their turn
 	private Board board;
+	GridPane renderedBoard;
 	private int tileRenderSize; // Changed by zoom in/zoom out buttons
 	private FloorTile floorTileToInsert;
 	private TurnPhases currentTurnPhase;
@@ -258,10 +259,10 @@ public class LevelController implements Initializable {
 			stack.getChildren().add(numOfTiles);
 
 			stack.setOnMouseClicked(event -> {
-				System.out.println("reeeee");
 				this.usedAction = at;
 				renderActionMenu();
-				handleClickATChoice(at);
+				renderBoard();
+				handleClickATChoice();
 			});
 			//bottomContainer.getChildren().add(stack);
 			atHBox.getChildren().add(stack);
@@ -321,8 +322,43 @@ public class LevelController implements Initializable {
 		return null;
 	}
 
-	private void handleClickATChoice(ActionTile.ActionType at) {
-		System.out.println(at);
+	private void handleClickATChoice() {
+		System.out.println(usedAction);
+
+		if (usedAction == ActionTile.ActionType.DOUBLEMOVE) {
+			showWay();
+		}
+
+	}
+
+	private void showWay() {
+		int[] pos = getPlayerXYPosition(currentPlayer);
+		Boolean[] moveMask = board.getMovableFrom(pos[0],pos[1]);
+		for (int i = 0; i < moveMask.length; i++) {
+			if (moveMask[i]) {
+				if (i % 2 == 0) {
+					setAsWay(pos[0],(pos[1]-1+i));
+				} else {
+					setAsWay((pos[0]+2-i),pos[1]);
+				}
+			}
+		}
+	}
+
+	private void setAsWay(int x, int y) {
+		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png",tileRenderSize,tileRenderSize,false,false));
+		chosen.setOpacity(0.5);
+		StackPane wayTile = getStackPaneTileByXY(x,y);
+		wayTile.getChildren().add(chosen);
+	}
+
+	private StackPane getStackPaneTileByXY(int col, int row) {
+		for (Node node : renderedBoard.getChildren()) {
+			if (GridPane.getColumnIndex(node) == col+1 && GridPane.getRowIndex(node) == row+1) {
+				return (StackPane) node;
+			}
+		}
+		return null;
 	}
 
 	private void handleActionClickOn(int x, int y) {
@@ -352,6 +388,7 @@ public class LevelController implements Initializable {
 				break;
 			case DOUBLEMOVE:
 				System.out.println("doublemmove");
+
 				break;
 		}
 	}
@@ -369,7 +406,7 @@ public class LevelController implements Initializable {
 		// Clear the old render
 		boardContainer.getChildren().clear();
 
-		GridPane renderedBoard = new GridPane();
+		renderedBoard = new GridPane();
 		renderedBoard.setAlignment(Pos.CENTER);
 
 		Boolean[][] insertableMask = this.board.getInsertablePositions();
