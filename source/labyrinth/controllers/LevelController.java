@@ -215,10 +215,13 @@ public class LevelController implements Initializable {
 	private void placementPhase(FloorTile nextFloorTileToInsert) {
 		currentTurnPhase = TurnPhases.PLACEMENT;
 		this.floorTileToInsert = nextFloorTileToInsert;
-		bottomContainer.getChildren().clear();
-
-		bottomContainer.getChildren().add(nextFloorTileToInsert.renderTile(tileRenderSize));
+		renderPlacementMenu();
 		renderBoard();
+	}
+
+	private void renderPlacementMenu() {
+		bottomContainer.getChildren().clear();
+		bottomContainer.getChildren().add(floorTileToInsert.renderTile(tileRenderSize));
 	}
 
 	private void endPlacementPhase(int insertionDirection, int insertionPoint) {
@@ -230,31 +233,47 @@ public class LevelController implements Initializable {
 
 	private void playActionPhase() {
 		currentTurnPhase = TurnPhases.PLAYACTION;
+		renderActionMenu();
+	}
+
+	private void renderActionMenu() {
 		bottomContainer.getChildren().clear();
+		HBox atHBox = new HBox();
 
 		// If this player has ActionTiles, show them in the bottom container
- 		for (ActionTile.ActionType at : ActionTile.ActionType.values()) {
-			VBox actionVBox = new VBox();
-
+		for (ActionTile.ActionType at : ActionTile.ActionType.values()) {
 			ImageView iv = new ImageView(new Image(at.imageURL, 70, 70, false, false));
-			iv.setOnMouseClicked(event -> {
-				this.usedAction = at;
-				System.out.println(at);
-			});
-
+			StackPane stack = new StackPane(iv);
+			if (at == usedAction){
+				ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png",70,70,false,false));
+				chosen.setOpacity(0.5);
+				stack.getChildren().addAll(chosen);
+			}
 			// This will always down cast, so no Math.Floor needed (3.99f -> 4)
 			int thisAmount = (int)players[currentPlayer].getActionAmount(at);
+			Text numOfTiles = new Text(Float.toString(thisAmount));
+			numOfTiles.setStyle("-fx-font-weight: bold");
+			stack.setAlignment(Pos.TOP_LEFT);
+			numOfTiles.setFill(players[currentPlayer].getActionAmount(at) < 1? Color.RED: Color.GREEN);
+			stack.getChildren().add(numOfTiles);
 
-			actionVBox.getChildren().addAll(iv, new Text(Float.toString(thisAmount)));
-
-			bottomContainer.getChildren().add(actionVBox);
+			stack.setOnMouseClicked(event -> {
+				System.out.println("reeeee");
+				this.usedAction = at;
+				renderActionMenu();
+				handleClickATChoice(at);
+			});
+			//bottomContainer.getChildren().add(stack);
+			atHBox.getChildren().add(stack);
 		}
 
- 		Button skipButton = new Button("Skip");
- 		skipButton.setOnMouseClicked(event -> {
- 			movementPhase();
+		Button skipButton = new Button("Skip");
+		skipButton.setPrefSize(70, 70);
+		skipButton.setOnMouseClicked(event -> {
+			movementPhase();
 		});
- 		bottomContainer.getChildren().add(skipButton);
+		atHBox.getChildren().add(skipButton);
+		bottomContainer.getChildren().add(atHBox);
 	}
 
 	private void movementPhase() {
@@ -302,6 +321,10 @@ public class LevelController implements Initializable {
 		return null;
 	}
 
+	private void handleClickATChoice(ActionTile.ActionType at) {
+		System.out.println(at);
+	}
+
 	private void handleActionClickOn(int x, int y) {
 		switch (usedAction) {
 			case FIRE:
@@ -326,6 +349,9 @@ public class LevelController implements Initializable {
 					// TODO: Perform a backtrack on the clicked player
 					movementPhase();
 				}
+				break;
+			case DOUBLEMOVE:
+				System.out.println("doublemmove");
 				break;
 		}
 	}
