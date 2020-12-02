@@ -1,5 +1,7 @@
 package source.labyrinth;
 
+import sun.plugin2.message.GetAppletMessage;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,11 +14,11 @@ public class MessageOfTheDay {
 
     public static void main(String[] args) throws IOException {
         sendGET(GET_URL);
-        solvePuzzle();
+        System.out.println(solvePuzzle("XMKVXXRKMYPNMLFF"));
     }
 
-    private static String sendGET(String getUrl) throws IOException {
-        URL obj = new URL(GET_URL);
+    private static String sendGET(String getURL) throws IOException {
+        URL obj = new URL(getURL);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
 
@@ -38,19 +40,36 @@ public class MessageOfTheDay {
         } else {
             System.out.println("GET request not worked");
         }
-
-
-
         return "";
     }
 
     private static String solvePuzzle(String puzzle) {
         String answer = "";
-        char[] result = new char[puzzle.length()];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = (char) (puzzle.charAt(i));
+        int len = puzzle.length();
+        int x = 0;
+
+        if (puzzle.charAt(x) % 2 == 0) {
+            for (x = 0; x < len; x++) {
+                int shift = puzzle.charAt(x);
+                char c = (char) (puzzle.charAt(x) + shift);
+                if(c > 'z') {
+                    answer += (char)(puzzle.charAt(x) - (26-shift));
+                } else {
+                    answer += (char)(puzzle.charAt(x) + shift);
+                }
+            }
+        } else {
+            for (x = 0; x < len; x--) {
+                int shift = puzzle.charAt(x);
+                char c = (char) (puzzle.charAt(x) + shift);
+                if(c > 'z') {
+                    answer += (char)(puzzle.charAt(x) - (26-shift));
+                } else {
+                    answer += (char)(puzzle.charAt(x) + shift);
+                }
+            }
         }
-        answer = "CS-230";
+        answer = "CS-230" + answer;
 
         return answer;
     }
@@ -58,13 +77,15 @@ public class MessageOfTheDay {
 
 
     public static String getPuzzleMessage() {
+        //String key = "";
         try {
             String puzzle = sendGET(GET_URL);
             String solvePuzzle = solvePuzzle(puzzle);
         }  catch (IOException e) {
             e.printStackTrace();
         }
-        return "";
+
+        return getPuzzleMessage();
     }
 
 }
