@@ -55,7 +55,7 @@ public class LevelController implements Initializable {
 	private Board board;
 	private int tileRenderSize; // Changed by zoom in/zoom out buttons
 	private FloorTile floorTileToInsert;
-	private ActionTile.TileType a;
+	private ActionTile.ActionType a;
 
 	/**
 	 * Get the current game time as an int. Will always be >0.
