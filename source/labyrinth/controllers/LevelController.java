@@ -283,9 +283,9 @@ public class LevelController implements Initializable {
 		currentTurnPhase = TurnPhases.MOVEMENT;
 		int[] playerPos = getPlayerXYPosition(currentPlayer);
 		bottomContainer.getChildren().clear();
-
+		showWay();
 		// TEMP
-		endTurn();
+		//endTurn();
 	}
 
 	private void endTurn() {
@@ -350,6 +350,26 @@ public class LevelController implements Initializable {
 		chosen.setOpacity(0.5);
 		StackPane wayTile = getStackPaneTileByXY(x,y);
 		wayTile.getChildren().add(chosen);
+		wayTile.setOnMouseClicked(event -> {
+			move(x,y);
+		});
+	}
+
+	private void move(Player player,int x,int y) {
+		player.setStandingOn(board.getTileAt(x,y));
+
+		switch (currentTurnPhase) {
+			case PLAYACTION:
+				movementPhase();
+				break;
+			case MOVEMENT:
+				player.addToPastPositions(x, y);
+				endTurn();
+				break;
+		}
+	}
+	private void move(int x,int y) {
+		move(players[currentPlayer],x,y);
 	}
 
 	private StackPane getStackPaneTileByXY(int col, int row) {
