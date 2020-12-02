@@ -62,7 +62,7 @@ public class Player {
 	}
 
 	public void setActionAmount(ActionTile.ActionType at, float newAmount) {
-		this.actions.put(at, newAmount);
+		this.actions.replace(at, newAmount);
 	}
 
 	/**
