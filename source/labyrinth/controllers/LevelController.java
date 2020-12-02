@@ -60,7 +60,7 @@ public class LevelController implements Initializable {
 	private Player[] players;
 	private int currentPlayer; // 0 to 3, player that is doing their turn
 	private Board board;
-	GridPane renderedBoard;
+	private GridPane renderedBoard;
 	private int tileRenderSize; // Changed by zoom in/zoom out buttons
 	private FloorTile floorTileToInsert;
 	private TurnPhases currentTurnPhase;
@@ -141,7 +141,20 @@ public class LevelController implements Initializable {
 			}
 		}
 
-		// TODO: Fill up SilkBag with Action Tiles somewhere here
+		// Create all the action tiles and add them to the Board.
+		// TODO: Use a HashMap in LevelData so we can just do all of this in one loop
+		for (int i = 0; i < ld.getFireAmount(); i++) {
+			SilkBag.addTile(new ActionTile(ActionTile.ActionType.FIRE));
+		}
+		for (int i = 0; i < ld.getIceAmount(); i++) {
+			SilkBag.addTile(new ActionTile(ActionTile.ActionType.ICE));
+		}
+		for (int i = 0; i < ld.getBacktrackAmount(); i++) {
+			SilkBag.addTile(new ActionTile(ActionTile.ActionType.BACKTRACK));
+		}
+		for (int i = 0; i < ld.getDoubleAmount(); i++) {
+			SilkBag.addTile(new ActionTile(ActionTile.ActionType.DOUBLEMOVE));
+		}
 
 		//
 		// Player Setup
@@ -206,8 +219,21 @@ public class LevelController implements Initializable {
 
 		Button drawButton = new Button("Draw a tile from the silk bag to start your turn");
 		drawButton.setOnMouseClicked(event -> {
-			// TODO: Account for ActionTiles
-			placementPhase((FloorTile) SilkBag.getRandomTile());
+			Tile received = SilkBag.getRandomTile();
+			if (received instanceof FloorTile) {
+				System.out.println("Player " + currentPlayer + " drew " + ((FloorTile) received).exportSelf());
+				placementPhase((FloorTile) received);
+			} else {
+				ActionTile thisAction = (ActionTile) received;
+
+				// Add 0.5f to the amount the player has (of this action). When we check how many we have in the
+				// PlayAction phase, we will round down. At the end of the turn, any actions that have a hanging
+				// 0.5f will get rounded up. Because of this we don't have to store instances of ActionTiles.
+				players[currentPlayer].setActionAmount(thisAction.getType(), players[currentPlayer].getActionAmount(thisAction.getType()) + 0.5f);
+				System.out.println("Player " + currentPlayer + " drew " + thisAction.getType().toString());
+
+				playActionPhase();
+			}
 		});
 
 		bottomContainer.getChildren().add(drawButton);
@@ -237,44 +263,52 @@ public class LevelController implements Initializable {
 		renderActionMenu();
 	}
 
+	/**
+	 * During the PlayAction phase, we call renderActionMenu to show what Action Tiles we can use (and how
+	 * many we have) in the bottom container.
+	 */
 	private void renderActionMenu() {
 		bottomContainer.getChildren().clear();
-		HBox atHBox = new HBox();
 
 		// If this player has ActionTiles, show them in the bottom container
 		for (ActionTile.ActionType at : ActionTile.ActionType.values()) {
 			ImageView iv = new ImageView(new Image(at.imageURL, 70, 70, false, false));
 			StackPane stack = new StackPane(iv);
+			stack.setAlignment(Pos.TOP_LEFT);
+
+			// When we re-render we display the currently chosen action
 			if (at == usedAction){
 				ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png",70,70,false,false));
 				chosen.setOpacity(0.5);
 				stack.getChildren().addAll(chosen);
 			}
+
 			// This will always down cast, so no Math.Floor needed (3.99f -> 4)
-			int thisAmount = (int)players[currentPlayer].getActionAmount(at);
-			Text numOfTiles = new Text(Float.toString(thisAmount));
+			System.out.println(players[currentPlayer].getActionAmount(at));
+			int thisAmount = (int) players[currentPlayer].getActionAmount(at);
+
+			Text numOfTiles = new Text(thisAmount + " available");
 			numOfTiles.setStyle("-fx-font-weight: bold");
-			stack.setAlignment(Pos.TOP_LEFT);
-			numOfTiles.setFill(players[currentPlayer].getActionAmount(at) < 1? Color.RED: Color.GREEN);
+			numOfTiles.setFill(players[currentPlayer].getActionAmount(at) < 1 ? Color.RED : Color.GREEN);
 			stack.getChildren().add(numOfTiles);
 
+			// When we click this action
 			stack.setOnMouseClicked(event -> {
 				this.usedAction = at;
 				renderActionMenu();
 				renderBoard();
 				handleClickATChoice();
 			});
-			//bottomContainer.getChildren().add(stack);
-			atHBox.getChildren().add(stack);
+			bottomContainer.getChildren().add(stack);
 		}
 
+		// We don't have to use an Action (even if available), so add a button to just skip to the movement phase
 		Button skipButton = new Button("Skip");
 		skipButton.setPrefSize(70, 70);
 		skipButton.setOnMouseClicked(event -> {
 			movementPhase();
 		});
-		atHBox.getChildren().add(skipButton);
-		bottomContainer.getChildren().add(atHBox);
+		bottomContainer.getChildren().add(skipButton);
 	}
 
 	private void movementPhase() {
@@ -352,7 +386,7 @@ public class LevelController implements Initializable {
 
 		if (!isThereAWay) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("VI' POPALI V DTP");
+			alert.setContentText("Unfortunately you have no available moves. You will remain where you are.");
 			alert.showAndWait();
 			if (currentTurnPhase == TurnPhases.MOVEMENT) {
 				endTurn();
@@ -375,6 +409,8 @@ public class LevelController implements Initializable {
 
 		switch (currentTurnPhase) {
 			case PLAYACTION:
+				// If we were moving in the PLAYACTION phase, we just used a DOUBLEMOVE
+				player.addToPastPositions(x, y);
 				movementPhase();
 				break;
 			case MOVEMENT:
@@ -383,6 +419,7 @@ public class LevelController implements Initializable {
 				break;
 		}
 	}
+
 	private void move(int x,int y) {
 		move(players[currentPlayer],x,y);
 	}
