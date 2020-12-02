@@ -47,19 +47,19 @@ public class Board {
 
 		// Check north
 		if (y - 1 >= 0) {
-			toReturn[0] = atLocation[0] && this.board[x][y-1].getMoveMask()[2];
+			toReturn[0] = atLocation[0] && this.board[x][y-1].getNeighbourMoveMask()[2];
 		}
 		// Check east
 		if (x + 1 < this.width) {
-			toReturn[1] = atLocation[1] && this.board[x + 1][y].getMoveMask()[3];
+			toReturn[1] = atLocation[1] && this.board[x + 1][y].getNeighbourMoveMask()[3];
 		}
 		// Check south
 		if (y + 1 < height) {
-			toReturn[2] = atLocation[2] && this.board[x][y + 1].getMoveMask()[0];
+			toReturn[2] = atLocation[2] && this.board[x][y + 1].getNeighbourMoveMask()[0];
 		}
 		// Check west
 		if (x - 1 >= 0) {
-			toReturn[3] = atLocation[3] && this.board[x - 1][y].getMoveMask()[1];
+			toReturn[3] = atLocation[3] && this.board[x - 1][y].getNeighbourMoveMask()[1];
 		}
 
 		return toReturn;

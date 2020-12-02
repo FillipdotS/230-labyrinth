@@ -334,13 +334,28 @@ public class LevelController implements Initializable {
 	private void showWay() {
 		int[] pos = getPlayerXYPosition(currentPlayer);
 		Boolean[] moveMask = board.getMovableFrom(pos[0],pos[1]);
+		boolean isThereAWay = false;
+		/*
+		 runs setAsWay on neighbours if they exist and player can move there
+		 uses index in moveMask to calculate neighbour's coordinate
+		*/
 		for (int i = 0; i < moveMask.length; i++) {
 			if (moveMask[i]) {
+				isThereAWay = true;
 				if (i % 2 == 0) {
 					setAsWay(pos[0],(pos[1]-1+i));
 				} else {
 					setAsWay((pos[0]+2-i),pos[1]);
 				}
+			}
+		}
+
+		if (!isThereAWay) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("VI' POPALI V DTP");
+			alert.showAndWait();
+			if (currentTurnPhase == TurnPhases.MOVEMENT) {
+				endTurn();
 			}
 		}
 	}

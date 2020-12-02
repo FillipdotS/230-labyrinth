@@ -86,7 +86,11 @@ public class FloorTile extends Tile {
 	}
 
 	public Boolean[] getMoveMask() {
-		return (LevelController.getCurrentTime() >= isOnFireUntil) ? this.moveMask : new Boolean[] {false,false,false,false};
+		return (LevelController.getCurrentTime() >= isOnFireUntil)? this.moveMask : new Boolean[] {false,false,false,false};
+	}
+
+	public Boolean[] getNeighbourMoveMask() {
+		return (player == null)? this.getMoveMask() : new Boolean[] {false,false,false,false};
 	}
 
 	public Boolean getFixed() {
