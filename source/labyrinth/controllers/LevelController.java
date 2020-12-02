@@ -49,13 +49,21 @@ public class LevelController implements Initializable {
 	@FXML private VBox leftVBox;
 	@FXML private HBox bottomContainer;
 
+	private enum TurnPhases {
+		DRAWING,
+		PLACEMENT,
+		PLAYACTION,
+		MOVEMENT
+	}
+
 	private VBox[] playerSubInfoVBoxes;
 	private Player[] players;
 	private int currentPlayer; // 0 to 3, player that is doing their turn
 	private Board board;
 	private int tileRenderSize; // Changed by zoom in/zoom out buttons
 	private FloorTile floorTileToInsert;
-	private ActionTile.ActionType a;
+	private TurnPhases currentTurnPhase;
+	private ActionTile.ActionType usedAction; // We "used" this action, and are now applying it
 
 	/**
 	 * Get the current game time as an int. Will always be >0.
@@ -162,7 +170,6 @@ public class LevelController implements Initializable {
 		}
 
 		// When everything is done, render the board for the first time
-		renderBoard();
 		drawingPhase();
 	}
 
@@ -191,6 +198,8 @@ public class LevelController implements Initializable {
 	}
 
 	private void drawingPhase() {
+		renderBoard();
+		currentTurnPhase = TurnPhases.DRAWING;
 		updateSubInfoVBoxes();
 		bottomContainer.getChildren().clear();
 
@@ -204,6 +213,7 @@ public class LevelController implements Initializable {
 	}
 
 	private void placementPhase(FloorTile nextFloorTileToInsert) {
+		currentTurnPhase = TurnPhases.PLACEMENT;
 		this.floorTileToInsert = nextFloorTileToInsert;
 		bottomContainer.getChildren().clear();
 
@@ -219,21 +229,55 @@ public class LevelController implements Initializable {
 	}
 
 	private void playActionPhase() {
+		currentTurnPhase = TurnPhases.PLAYACTION;
 		bottomContainer.getChildren().clear();
-//		bottomContainer.getChildren().add();
-		Button drawButton = new Button("freese");
-		drawButton.setOnMouseClicked(event -> {
-			// TODO: Account for ActionTiles
-			placementPhase((FloorTile) SilkBag.getRandomTile());
+
+		// If this player has ActionTiles, show them in the bottom container
+ 		for (ActionTile.ActionType at : ActionTile.ActionType.values()) {
+			VBox actionVBox = new VBox();
+
+			ImageView iv = new ImageView(new Image(at.imageURL, 70, 70, false, false));
+			iv.setOnMouseClicked(event -> {
+				this.usedAction = at;
+				System.out.println(at);
+			});
+
+			// This will always down cast, so no Math.Floor needed (3.99f -> 4)
+			int thisAmount = (int)players[currentPlayer].getActionAmount(at);
+
+			actionVBox.getChildren().addAll(iv, new Text(Float.toString(thisAmount)));
+
+			bottomContainer.getChildren().add(actionVBox);
+		}
+
+ 		Button skipButton = new Button("Skip");
+ 		skipButton.setOnMouseClicked(event -> {
+ 			movementPhase();
 		});
-		movementPhase();
+ 		bottomContainer.getChildren().add(skipButton);
 	}
 
 	private void movementPhase() {
+		renderBoard();
+		usedAction = null;
+		currentTurnPhase = TurnPhases.MOVEMENT;
 		int[] playerPos = getPlayerXYPosition(currentPlayer);
+		bottomContainer.getChildren().clear();
+
+		// TEMP
+		endTurn();
 	}
 
 	private void endTurn() {
+		// If a tile amount has a decimal (*.5), then they received one of those action tiles this turn,
+		// so we bump it up so that it is fully usable next turn.
+		Player endingPlayer = players[currentPlayer];
+		for (ActionTile.ActionType at : ActionTile.ActionType.values()) {
+			if (endingPlayer.getActionAmount(at) % 1.0f != 0) {
+				endingPlayer.setActionAmount(at, (float) Math.ceil(endingPlayer.getActionAmount(at)));
+			}
+		}
+
 		// Go up by one or rotate back to 0
 		currentPlayer = (currentPlayer < players.length - 1) ? currentPlayer + 1 : 0;
 		currentTime++;
@@ -256,6 +300,43 @@ public class LevelController implements Initializable {
 			}
 		}
 		return null;
+	}
+
+	private void handleActionClickOn(int x, int y) {
+		switch (usedAction) {
+			case FIRE:
+				// Fire will only apply and move the turn phase forward if it is able to be applied.
+				if (board.canSetOnFire(x, y)) {
+					board.setOnFire(x, y);
+					movementPhase();
+				} else {
+					Alert alert = new Alert(Alert.AlertType.ERROR);
+					alert.setContentText("Cannot apply fire here, there is a player nearby (3 x 3 area)");
+					alert.showAndWait();
+				}
+				break;
+			case ICE:
+				board.setFreezeOn(x, y);
+				movementPhase();
+				break;
+			case BACKTRACK:
+				FloorTile thisTile = this.board.getTileAt(x, y);
+				if (thisTile.getPlayer() != null || !(thisTile.getPlayer().getHasBeenBacktracked())) {
+					thisTile.getPlayer().setHasBeenBacktracked(true);
+					// TODO: Perform a backtrack on the clicked player
+					movementPhase();
+				}
+				break;
+		}
+	}
+
+	private void handleFloorTileClickAt(int x, int y) {
+		if (currentTurnPhase == TurnPhases.PLAYACTION && usedAction != null) {
+			handleActionClickOn(x, y);
+		}
+
+		System.out.println("This tile's mask is " + Arrays.toString(this.board.getTileAt(x, y).getMoveMask()));
+		System.out.println("From this tile you can move to " + Arrays.toString(this.board.getMovableFrom(x, y)));
 	}
 
 	private void renderBoard() {
@@ -328,20 +409,7 @@ public class LevelController implements Initializable {
 				int finalX = x;
 				int finalY = y;
 				stack.setOnMouseClicked(event -> {
-					if (board.canSetOnFire(finalX,finalY)) {
-						board.setOnFire(finalX,finalY);
-						//TODO: call end of the phase
-					} else {
-						Alert alert = new Alert(Alert.AlertType.ERROR);
-						alert.setContentText("can't aplly fire if player in area");
-						alert.showAndWait();
-					}
-					if (true) {
-						board.setFreezeOn(finalX,finalY);
-						//TODO: call end of the phase
-					}
-					System.out.println("This tile's mask is " + Arrays.toString(this.board.getTileAt(finalX, finalY).getMoveMask()));
-					System.out.println("From this tile you can move to " + Arrays.toString(this.board.getMovableFrom(finalX, finalY)));
+					handleFloorTileClickAt(finalX, finalY);
 				});
 
 				renderedBoard.add(stack, x + 1, y + 1);
