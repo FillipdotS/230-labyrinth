@@ -19,4 +19,8 @@ public class ActionTile extends Tile {
     public ActionTile(ActionType actionType) {
         this.actionType = actionType;
     }
+
+    public ActionType getType() {
+        return this.actionType;
+    }
 }
