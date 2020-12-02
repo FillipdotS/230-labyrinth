@@ -2,7 +2,7 @@ package source.labyrinth;
 
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Player represents an the actual player on the board, storing it's past positions, whether it has been backtracked
@@ -15,7 +15,7 @@ public class Player {
 
 	private int[][] pastPositions;
 	private Boolean hasBeenBacktracked;
-	private ArrayList<ActionTile> availableActions;
+	private HashMap<ActionTile.ActionType, Float> actions;
 	private FloorTile standingOn;
 
 	/**
@@ -27,7 +27,11 @@ public class Player {
 
 		this.pastPositions = new int[2][2];
 		this.hasBeenBacktracked = false;
-		this.availableActions = new ArrayList<>();
+		this.actions = new HashMap<>();
+		this.actions.put(ActionTile.ActionType.FIRE, 0.0f);
+		this.actions.put(ActionTile.ActionType.ICE, 0.0f);
+		this.actions.put(ActionTile.ActionType.BACKTRACK, 0.0f);
+		this.actions.put(ActionTile.ActionType.DOUBLEMOVE, 0.0f);
 	}
 
 	/**
@@ -51,6 +55,14 @@ public class Player {
 
 	public int getIdInGame() {
 		return this.idInGame;
+	}
+
+	public float getActionAmount(ActionTile.ActionType at) {
+		return this.actions.get(at);
+	}
+
+	public void setActionAmount(ActionTile.ActionType at, float newAmount) {
+		this.actions.put(at, newAmount);
 	}
 
 	/**
