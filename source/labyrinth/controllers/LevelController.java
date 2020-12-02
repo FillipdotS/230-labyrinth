@@ -11,15 +11,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import source.labyrinth.*;
 
@@ -295,47 +294,68 @@ public class LevelController implements Initializable {
 	 * many we have) in the bottom container.
 	 */
 	private void renderActionMenu() {
+		int actionImageRenderSize = 85;
 		bottomContainer.getChildren().clear();
+		HBox actionsHBox = new HBox();
+		actionsHBox.setAlignment(Pos.TOP_CENTER);
+		actionsHBox.setSpacing(15);
 
-		// If this player has ActionTiles, show them in the bottom container
+		// Render some small UI for every action tile
 		for (ActionTile.ActionType at : ActionTile.ActionType.values()) {
-			ImageView iv = new ImageView(new Image(at.imageURL, 70, 70, false, false));
+			// Actual image of action
+			ImageView iv = new ImageView(new Image(at.imageURL, actionImageRenderSize, actionImageRenderSize, false, false));
 			StackPane stack = new StackPane(iv);
 			stack.setAlignment(Pos.TOP_LEFT);
+			iv.setFitHeight(Region.USE_COMPUTED_SIZE);
 
-			// When we re-render we display the currently chosen action
+			// When we re-render we highlight the currently chosen action
 			if (at == usedAction){
-				ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png",70,70,false,false));
+				ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png",actionImageRenderSize,actionImageRenderSize,false,false));
 				chosen.setOpacity(0.5);
 				stack.getChildren().addAll(chosen);
 			}
 
 			// This will always down cast, so no Math.Floor needed (3.99f -> 4)
-			System.out.println(players[currentPlayer].getActionAmount(at));
-			int thisAmount = (int) players[currentPlayer].getActionAmount(at);
+			int availableAmount = (int) players[currentPlayer].getActionAmount(at);
+			int fullAmount = (int) Math.ceil(players[currentPlayer].getActionAmount(at));
 
-			Text numOfTiles = new Text(thisAmount + " available");
-			numOfTiles.setStyle("-fx-font-weight: bold");
+			// If we can actually use this action (we have 1 or more), allow us to click it and use it,
+			// otherwise display it "greyed out".
+			if (availableAmount >= 1) {
+				stack.setOnMouseClicked(event -> {
+					this.usedAction = at;
+					renderActionMenu();
+					renderBoard();
+					handleClickATChoice();
+				});
+			} else {
+				Pane cover = new Pane();
+				cover.setStyle("-fx-background-color: darkgrey; -fx-opacity: 50%");
+				cover.setMaxWidth(actionImageRenderSize);
+				cover.setMaxHeight(actionImageRenderSize);
+				stack.getChildren().add(cover);
+			}
+
+			// Text to show how much of this action we have
+			Text numOfTiles = new Text(" " + availableAmount + "/" + fullAmount);
+			numOfTiles.setStyle("-fx-font-weight: bold; -fx-font-size: 26px; -fx-stroke: black; -fx-stroke-width: 1px");
+			DropShadow shadow = new DropShadow(7, 0, 0, Color.BLACK);
+			numOfTiles.setEffect(shadow);
 			numOfTiles.setFill(players[currentPlayer].getActionAmount(at) < 1 ? Color.RED : Color.GREEN);
 			stack.getChildren().add(numOfTiles);
 
-			// When we click this action
-			stack.setOnMouseClicked(event -> {
-				this.usedAction = at;
-				renderActionMenu();
-				renderBoard();
-				handleClickATChoice();
-			});
-			bottomContainer.getChildren().add(stack);
+			actionsHBox.getChildren().add(stack);
 		}
 
 		// We don't have to use an Action (even if available), so add a button to just skip to the movement phase
 		Button skipButton = new Button("Skip");
-		skipButton.setPrefSize(70, 70);
+		skipButton.setPrefSize(actionImageRenderSize, actionImageRenderSize);
 		skipButton.setOnMouseClicked(event -> {
 			movementPhase();
 		});
-		bottomContainer.getChildren().add(skipButton);
+		actionsHBox.getChildren().add(skipButton);
+
+		bottomContainer.getChildren().add(actionsHBox);
 	}
 
 	private void movementPhase() {
