@@ -25,7 +25,6 @@ import source.labyrinth.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -261,7 +260,22 @@ public class LevelController implements Initializable {
 
 	private void renderPlacementMenu() {
 		bottomContainer.getChildren().clear();
-		bottomContainer.getChildren().add(floorTileToInsert.renderTile(tileRenderSize));
+		HBox insertHBox = new HBox();
+		insertHBox.setPrefHeight(tileRenderSize);
+		ImageView clockwise = new ImageView(new Image("source/resources/img/turn_arrow.png", tileRenderSize, tileRenderSize, false, false));
+		ImageView aClockwise = new ImageView(new Image("source/resources/img/turn_arrow.png", tileRenderSize, tileRenderSize, false, false));
+		clockwise.setScaleX(-1);
+		clockwise.setOnMouseClicked(event -> {
+			floorTileToInsert.rotateBy(1);
+			renderPlacementMenu();
+		});
+		aClockwise.setOnMouseClicked(event -> {
+			floorTileToInsert.rotateBy(-1);
+			renderPlacementMenu();
+		});
+
+		insertHBox.getChildren().addAll(clockwise,floorTileToInsert.renderTile(tileRenderSize),aClockwise);
+		bottomContainer.getChildren().add(insertHBox);
 	}
 
 	private void endPlacementPhase(int insertionDirection, int insertionPoint) {
@@ -452,6 +466,7 @@ public class LevelController implements Initializable {
 				// Fire will only apply and move the turn phase forward if it is able to be applied.
 				if (board.canSetOnFire(x, y)) {
 					board.setOnFire(x, y);
+					players[currentPlayer].removeAction(usedAction);
 					movementPhase();
 				} else {
 					Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -461,6 +476,7 @@ public class LevelController implements Initializable {
 				break;
 			case ICE:
 				board.setFreezeOn(x, y);
+				players[currentPlayer].removeAction(usedAction);
 				movementPhase();
 				break;
 			case BACKTRACK:
@@ -468,10 +484,12 @@ public class LevelController implements Initializable {
 				if (thisTile.getPlayer() != null || !(thisTile.getPlayer().getHasBeenBacktracked())) {
 					thisTile.getPlayer().setHasBeenBacktracked(true);
 					// TODO: Perform a backtrack on the clicked player
+					players[currentPlayer].removeAction(usedAction);
 					movementPhase();
 				}
 				break;
 			case DOUBLEMOVE:
+				players[currentPlayer].removeAction(usedAction);
 				System.out.println("doublemmove");
 
 				break;

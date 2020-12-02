@@ -115,4 +115,8 @@ public class Player {
 		this.pastPositions[0] = new int[] {x, y};
 		this.pastPositions[1] = temp;
 	}
+
+	public void removeAction(ActionTile.ActionType type) {
+		actions.replace(type,actions.get(type)-1);
+	}
 }
