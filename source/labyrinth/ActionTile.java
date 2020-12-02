@@ -7,7 +7,7 @@ public class ActionTile extends Tile {
         DOUBLEMOVE("source/resources/img/action_tile_double_move.png"),
         BACKTRACK("source/resources/img/action_tile_back_track.png");
 
-        private final String imageURL;
+        public final String imageURL;
 
         ActionType(String imageURL) {
             this.imageURL = imageURL;

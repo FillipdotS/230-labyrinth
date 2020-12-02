@@ -15,9 +15,10 @@ public class FloorTile extends Tile {
 		TSHAPE(new Boolean[]{false, true, true, true},"source/resources/img/tile_tshape.png"),
 		GOAL(new Boolean[]{true, true, true, true},"source/resources/img/tile_goal.png");
 
+		public final String imageURL;
+
 		// Each tile type has their default move mask, and a string to their image.
 		private final Boolean[] defaultMoveMask;
-		private final String imageURL;
 
 		TileType(Boolean[] defaultMoveMask, String imageURL) {
 			this.defaultMoveMask = defaultMoveMask;
@@ -88,10 +89,6 @@ public class FloorTile extends Tile {
 		return (LevelController.getCurrentTime() >= isOnFireUntil) ? this.moveMask : new Boolean[] {false,false,false,false};
 	}
 
-	public String getImageURL() {
-		return this.tileType.imageURL;
-	}
-
 	public Boolean getFixed() {
 		return this.isFixed;
 	}
@@ -129,7 +126,7 @@ public class FloorTile extends Tile {
 	 * @return StackPane representing the FloorTile.
 	 */
 	public StackPane renderTile(int renderSize) {
-		Image img = new Image(this.getImageURL(), renderSize, renderSize, false, false);
+		Image img = new Image(this.tileType.imageURL, renderSize, renderSize, false, false);
 
 		ImageView iv = new ImageView(img);
 		iv.setRotate(90 * this.getOrientation());
