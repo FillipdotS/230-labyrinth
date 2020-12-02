@@ -25,6 +25,7 @@ import source.labyrinth.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -240,10 +241,22 @@ public class LevelController implements Initializable {
 	}
 
 	private void placementPhase(FloorTile nextFloorTileToInsert) {
-		currentTurnPhase = TurnPhases.PLACEMENT;
-		this.floorTileToInsert = nextFloorTileToInsert;
-		renderPlacementMenu();
-		renderBoard();
+		Boolean[][] insertionMask = this.board.getInsertablePositions();
+		// With some clever use of the ice actions, we could potentially freeze all columns and rows, therefore
+		// the placement phase should check that there is at least one insertable column / row before continuing.
+		if (Arrays.asList(insertionMask[0]).contains(true) || Arrays.asList(insertionMask[1]).contains(true)) {
+			currentTurnPhase = TurnPhases.PLACEMENT;
+			this.floorTileToInsert = nextFloorTileToInsert;
+			renderPlacementMenu();
+			renderBoard();
+		} else {
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.setContentText("You have drawn a floor tile, but unfortunately there are no rows or columns you can currently insert into. Your floor tile will be returned to the silk bag.");
+			alert.showAndWait();
+			SilkBag.addTile(floorTileToInsert);
+			floorTileToInsert = null;
+			playActionPhase();
+		}
 	}
 
 	private void renderPlacementMenu() {
