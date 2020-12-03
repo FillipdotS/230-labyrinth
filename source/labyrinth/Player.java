@@ -11,7 +11,7 @@ import java.util.HashMap;
  * @author Fillip Serov
  */
 public class Player implements Serializable {
-	private final Profile associatedProfile;
+	private final int associatedProfileID;
 	private final int idInGame;
 
 	private int[][] pastPositions;
@@ -20,11 +20,11 @@ public class Player implements Serializable {
 	private FloorTile standingOn;
 
 	/**
-	 * @param profile The profile this player is assigned to. If no profile, give null.
+	 * @param profileID The id of the profile this player is assigned to. If no profile, give null.
 	 */
-	public Player(int idInGame, Profile profile) {
+	public Player(int idInGame, int profileID) {
 		this.idInGame = idInGame;
-		this.associatedProfile = profile;
+		this.associatedProfileID = profileID;
 
 		this.pastPositions = new int[3][2];
 		this.hasBeenBacktracked = false;
@@ -99,7 +99,7 @@ public class Player implements Serializable {
 	 * @return The profile this player is assigned to. Can be null.
 	 */
 	public Profile getAssociatedProfile() {
-		return associatedProfile;
+		return ProfileManager.getProfileById(this.associatedProfileID);
 	}
 
 	/**
