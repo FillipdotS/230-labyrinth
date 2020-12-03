@@ -1,6 +1,9 @@
 # Profile file
 source/resources/profiles/profiles.txt
 
+# Saves file
+source/resources/saves/
+
 # Build
 out/
 
