@@ -125,8 +125,27 @@ public class LevelController implements Initializable {
 	 * exportToSave will collect all necessary information about the game and save it to a file. An alert
 	 * will popup to show the save name.
 	 */
-	public void exportToSave() {
+	public void exportToSave() throws IOException {
+		String saveFileName = nextLevelToLoad; // temp, just take level name
+		System.out.println("Saving game state to file " + saveFileName);
 
+		// Setup output
+		FileOutputStream fos = new FileOutputStream("source/resources/saves/" + saveFileName);
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(fos);
+
+		// Serialize the objects from which we could later rebuild the entire game state
+		objectOutputStream.writeObject(currentTime);
+		objectOutputStream.writeObject(this.players);
+		objectOutputStream.writeObject(this.currentPlayer);
+		objectOutputStream.writeObject(this.board);
+		objectOutputStream.writeObject(this.floorTileToInsert);
+		objectOutputStream.writeObject(this.currentTurnPhase);
+		objectOutputStream.flush();
+		objectOutputStream.close();
+
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setContentText("Game saved to save file: " + saveFileName + ". You can load it from the level menu.");
+		alert.showAndWait();
 	}
 
 	/**
