@@ -59,7 +59,7 @@ public class LevelController implements Initializable {
 	private int currentPlayer; // 0 to 3, player that is doing their turn
 	private Board board;
 	private GridPane renderedBoard;
-	private int tileRenderSize = 55; // Changed by zoom in/zoom out buttons
+	private int tileRenderSize = 64; // Changed by zoom in/zoom out buttons
 	private FloorTile floorTileToInsert;
 	private TurnPhases currentTurnPhase;
 	private ActionTile.ActionType usedAction; // We "used" this action, and are now applying it
@@ -499,7 +499,7 @@ public class LevelController implements Initializable {
 
 		// Update everyone else
 		for (int i = 0; i < players.length; i++) {
-			if (i != winningID) {
+			if ((i != winningID) && (players[i].getAssociatedProfile() != null)) {
 				players[i].getAssociatedProfile().addTotalPlayed();
 				players[i].getAssociatedProfile().addLoss();
 			}
