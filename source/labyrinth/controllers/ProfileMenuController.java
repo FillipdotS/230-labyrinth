@@ -1,7 +1,5 @@
 package source.labyrinth.controllers;
 
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,8 +28,6 @@ public class ProfileMenuController implements Initializable {
 	@FXML private TableColumn<Profile, Integer> winCol;
 	@FXML private TableColumn<Profile, Integer> lossCol;
 
-	private ProfileManager pm = new ProfileManager();
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("Created ProfileMenuController");
@@ -41,7 +37,7 @@ public class ProfileMenuController implements Initializable {
 		winCol.setCellValueFactory(new PropertyValueFactory<>("wins"));
 		lossCol.setCellValueFactory(new PropertyValueFactory<>("losses"));
 
-		tableView.getItems().setAll(pm.getProfiles());
+		tableView.getItems().setAll(ProfileManager.getProfiles());
 	}
 
 	@FXML
@@ -57,7 +53,7 @@ public class ProfileMenuController implements Initializable {
 			System.out.println("Profile name with just spaces");
 			potentialError = "Profile name must not be only spaces";
 		}
-		else if (!pm.createNewProfile(newName)) {
+		else if (!ProfileManager.createNewProfile(newName)) {
 			System.out.println("Name is already in use.");
 			potentialError = "A profile with this name already exists";
 		}
@@ -72,7 +68,7 @@ public class ProfileMenuController implements Initializable {
 
 		System.out.println("Created profile with " + newName);
 		newProfileName.clear();
-		tableView.getItems().setAll(pm.getProfiles());
+		tableView.getItems().setAll(ProfileManager.getProfiles());
 	}
 
 	@FXML
