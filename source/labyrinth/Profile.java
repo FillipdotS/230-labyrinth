@@ -1,12 +1,14 @@
 package source.labyrinth;
 
+import java.io.Serializable;
+
 /**
  * Profile is used to store the profiles that have been loaded in. The only class that should create new
  * instances of Profile is ProfileManager, since ProfileManager will ensure new / updated profiles are saved
  * to file.
  * @author Fillip Serov
  */
-public class Profile {
+public class Profile implements Serializable {
 	private final String name;
 	private final int id;
 	private int totalPlayed;
