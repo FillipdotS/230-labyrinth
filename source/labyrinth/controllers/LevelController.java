@@ -23,10 +23,8 @@ import source.labyrinth.*;
 
 import java.io.*;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Random;
-import java.util.ResourceBundle;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * LevelController acts as both a controller for the scene in which the game happens, and as a "Game Manager"
@@ -135,7 +133,9 @@ public class LevelController implements Initializable {
 	 * will popup to show the save name.
 	 */
 	public void exportToSave() throws IOException {
-		String saveFileName = nextLevelToLoad; // temp, just take level name
+		String timeStamp = new SimpleDateFormat("ss-mm-HH-dd-MM-yyyy").format(new Date());
+		String saveFileName = "save_" + timeStamp + ".ser"; // temp, just take level name
+		System.out.println(saveFileName);
 		System.out.println("Saving game state to file " + saveFileName);
 
 		// Setup output
