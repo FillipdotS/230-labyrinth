@@ -35,4 +35,18 @@ public class SilkBag {
 		}
 		tiles.add(tile);
 	}
+
+	/**
+	 * @return All the Tiles in the SilkBag in a linked list
+	 */
+	public static LinkedList<Tile> getEntireBag() {
+		return tiles;
+	}
+
+	/**
+	 * @param newBag A LinkedList of Tiles to set as the new "bag"
+	 */
+	public static void setEntireBag(LinkedList<Tile> newBag) {
+		tiles = newBag;
+	}
 }

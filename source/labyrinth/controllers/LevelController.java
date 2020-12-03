@@ -24,6 +24,7 @@ import source.labyrinth.*;
 import java.io.*;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -105,7 +106,12 @@ public class LevelController implements Initializable {
 		// No matter whether this is a fresh game or a save, the SilkBag must be emptied
 		SilkBag.emptyBag();
 
-		setupFromLevelFile(nextLevelToLoad);
+		boolean loadingASave = false; // temp
+		if (loadingASave) {
+			setupFromSaveFile("example_save.txt");
+		} else {
+			setupFromLevelFile(nextLevelToLoad);
+		}
 	}
 
 	@FXML
@@ -143,10 +149,12 @@ public class LevelController implements Initializable {
 		objectOutputStream.writeObject(this.board);
 		objectOutputStream.writeObject(this.floorTileToInsert);
 		objectOutputStream.writeObject(this.currentTurnPhase);
+		objectOutputStream.writeObject(SilkBag.getEntireBag());
 		objectOutputStream.flush();
 		objectOutputStream.close();
 
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		// TODO: Change text
 		alert.setContentText("Game saved to save file: " + saveFileName + ". You can load it from the level menu.");
 		alert.showAndWait();
 	}
@@ -235,6 +243,55 @@ public class LevelController implements Initializable {
 
 		// Once everything is setup, begin the first phase
 		drawingPhase();
+	}
+
+	/**
+	 * setupFromSaveFile will rebuild a previous game from a serialized save file.
+	 * @param saveName The file name of the save file
+	 */
+	private void setupFromSaveFile(String saveName) {
+		FileInputStream fis;
+		ObjectInputStream objectInputStream;
+		try {
+			fis = new FileInputStream("source/resources/saves/" + saveName);
+			objectInputStream = new ObjectInputStream(fis);
+
+			currentTime = (int) objectInputStream.readObject();
+			this.players = (Player[]) objectInputStream.readObject();
+			this.currentPlayer = (int) objectInputStream.readObject();
+			this.board = (Board) objectInputStream.readObject();
+			this.floorTileToInsert = (FloorTile) objectInputStream.readObject();
+			this.currentTurnPhase = (TurnPhases) objectInputStream.readObject();
+			SilkBag.setEntireBag((LinkedList<Tile>) objectInputStream.readObject());
+
+			// To be safe, just re-render everything
+			setupSideInfo();
+			updateSubInfoVBoxes();
+			renderBoard();
+
+			objectInputStream.close();
+
+			// Finally check what phase we loaded and go there to "begin" the game again
+			switch (this.currentTurnPhase) {
+				case DRAWING:
+					drawingPhase();
+					break;
+				case PLACEMENT:
+					placementPhase(floorTileToInsert);
+					break;
+				case PLAYACTION:
+					playActionPhase();
+					break;
+				case MOVEMENT:
+					movementPhase();
+					break;
+				default:
+					System.out.println("Loading from save gave no phase. Game is now soft-locked.");
+			}
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("Error reading save file");
+		}
 	}
 
 	private void setupSideInfo() {
