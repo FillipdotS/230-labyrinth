@@ -455,7 +455,10 @@ public class LevelController implements Initializable {
 
 	private void move(Player player,int x,int y) {
 		player.setStandingOn(board.getTileAt(x,y));
-
+		if (board.getTileAt(x,y).isItGoal()) {
+			System.out.println("wiiiiin" + currentPlayer);
+			//TODO: Win function
+		}
 		switch (currentTurnPhase) {
 			case PLAYACTION:
 				// If we were moving in the PLAYACTION phase, we just used a DOUBLEMOVE
@@ -469,9 +472,16 @@ public class LevelController implements Initializable {
 		}
 	}
 
+	/**
+	 * move currentPlayer
+	 * @param x Xcoordinate of new tile to move on
+	 * @param y Xcoordinate of new tile to move on
+	 */
 	private void move(int x,int y) {
 		move(players[currentPlayer],x,y);
 	}
+
+
 
 	private StackPane getStackPaneTileByXY(int col, int row) {
 		for (Node node : renderedBoard.getChildren()) {

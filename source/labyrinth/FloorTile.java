@@ -62,6 +62,9 @@ public class FloorTile extends Tile {
 		this.moveMask = calculateMoveMask();
 	}
 
+	public Boolean isItGoal() {
+		return (this.tileType == TileType.GOAL);
+	}
 	/**
 	 * freezes tile for a loop
 	 */
