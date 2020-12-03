@@ -18,11 +18,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import source.labyrinth.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Random;
@@ -60,7 +59,7 @@ public class LevelController implements Initializable {
 	private int currentPlayer; // 0 to 3, player that is doing their turn
 	private Board board;
 	private GridPane renderedBoard;
-	private int tileRenderSize; // Changed by zoom in/zoom out buttons
+	private int tileRenderSize = 55; // Changed by zoom in/zoom out buttons
 	private FloorTile floorTileToInsert;
 	private TurnPhases currentTurnPhase;
 	private ActionTile.ActionType usedAction; // We "used" this action, and are now applying it
@@ -103,19 +102,53 @@ public class LevelController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("Created LevelController");
 
+		setupFromLevelFile(nextLevelToLoad);
+	}
+
+	@FXML
+	public void goToLevelMenu(ActionEvent event) {
+		System.out.println("Going to level menu...");
+		try {
+			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level_menu.fxml"));
+			Scene profileMenuScene = new Scene(profileMenuParent);
+			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+			window.setScene(profileMenuScene);
+			window.setTitle("Level Select");
+			window.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * exportToSave will collect all necessary information about the game and save it to a file. An alert
+	 * will popup to show the save name.
+	 */
+	public void exportToSave() {
+
+	}
+
+	/**
+	 * setupNewLevel will build a completely fresh level. Players will be put on their starting locations and
+	 * they will have no action tiles. The game will then begin with drawingPhase being called.
+	 * @param levelName The file name of the level to load from scratch
+	 */
+	private void setupFromLevelFile(String levelName) {
+		System.out.println("Creating new game from level file...");
+		LevelData ld = LevelReader.readDataFile("source/resources/levels/" + levelName);
+
 		timeForFullLoop = nextLevelProfiles.length;
+		currentTime = 0;
 
-		currentPlayer = 0;
-		tileRenderSize = 55;
-
-		LevelData ld = LevelReader.readDataFile("source/resources/levels/" + nextLevelToLoad);
+		this.currentPlayer = 0;
 
 		//
 		// Board Setup
 		//
 		System.out.println("Setting up board...");
 
-		board = ld.getBoard();
+		this.board = ld.getBoard();
 		boardContainer.setPrefHeight((board.getHeight() * tileRenderSize) + (2 * tileRenderSize));
 		boardContainer.setPrefWidth((board.getWidth() * tileRenderSize) + (2 * tileRenderSize));
 
@@ -161,7 +194,6 @@ public class LevelController implements Initializable {
 		System.out.println("Setting up players...");
 
 		players = new Player[nextLevelProfiles.length];
-		playerSubInfoVBoxes = new VBox[players.length];
 		for (int i = 0; i < players.length; i++) {
 			Profile associatedProfile = null;
 			if (nextLevelProfiles[i] != null) {
@@ -176,38 +208,21 @@ public class LevelController implements Initializable {
 			players[i] = newPlayer;
 		}
 
+		// this.players is now ready, so we can setup the side info with player profile names etc
+		setupSideInfo();
+
+		// Once everything is setup, begin the first phase
+		drawingPhase();
+	}
+
+	private void setupSideInfo() {
+		playerSubInfoVBoxes = new VBox[players.length];
+
 		// Populating leftVBox with player info
 		leftVBox.getChildren().clear();
 		for (int i = 0; i < this.players.length; i++) {
 			leftVBox.getChildren().add(createPlayerInfoVBox(i));
 		}
-
-		// When everything is done, render the board for the first time
-		drawingPhase();
-	}
-
-	@FXML
-	public void goToLevelMenu(ActionEvent event) {
-		System.out.println("Going to level menu...");
-		try {
-			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level_menu.fxml"));
-			Scene profileMenuScene = new Scene(profileMenuParent);
-			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-
-			window.setScene(profileMenuScene);
-			window.setTitle("Level Select");
-			window.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * exportToSave will collect all necessary information about the game and save it to a file. An alert
-	 * will popup to show the save name.
-	 */
-	public void exportToSave() {
-		// TODO: Actually implement it
 	}
 
 	private void drawingPhase() {
