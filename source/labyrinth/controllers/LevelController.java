@@ -230,6 +230,7 @@ public class LevelController implements Initializable {
 				// 0.5f will get rounded up. Because of this we don't have to store instances of ActionTiles.
 				players[currentPlayer].setActionAmount(thisAction.getType(), players[currentPlayer].getActionAmount(thisAction.getType()) + 0.5f);
 				System.out.println("Player " + currentPlayer + " drew " + thisAction.getType().toString());
+				updateSubInfoVBoxes();
 
 				playActionPhase();
 			}
@@ -359,6 +360,7 @@ public class LevelController implements Initializable {
 	}
 
 	private void movementPhase() {
+		updateSubInfoVBoxes(); // We could have played an action to get here
 		renderBoard();
 		usedAction = null;
 		currentTurnPhase = TurnPhases.MOVEMENT;
@@ -610,7 +612,8 @@ public class LevelController implements Initializable {
 	private void updateSubInfoVBoxes() {
 		for (int i = 0; i < playerSubInfoVBoxes.length; i++) {
 			playerSubInfoVBoxes[i].getChildren().clear();
-			playerSubInfoVBoxes[i].getChildren().add(new Text("0 Action Tiles"));
+			String actionAmountText = players[i].getFullActionAmount() == 1 ? " Action Tile" : " Action Tiles";
+			playerSubInfoVBoxes[i].getChildren().add(new Text(players[i].getFullActionAmount() + actionAmountText));
 			if (i == currentPlayer) {
 				Text yourTurn = new Text("Your Turn");
 				yourTurn.setFill(Color.GREEN);

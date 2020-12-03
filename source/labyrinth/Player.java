@@ -66,6 +66,17 @@ public class Player {
 	}
 
 	/**
+	 * @return Total amount of action tiles this player has
+	 */
+	public int getFullActionAmount() {
+		int fullAmount = 0;
+		for (ActionTile.ActionType at : ActionTile.ActionType.values()) {
+			fullAmount += (int) Math.ceil(getActionAmount(at));
+		}
+		return fullAmount;
+	}
+
+	/**
 	 * @return The FloorTile this player is standing on
 	 */
 	public FloorTile getStandingOn() {
