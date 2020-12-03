@@ -108,6 +108,10 @@ public class FloorTile extends Tile implements Serializable {
 		return (player == null)? this.getMoveMask() : new Boolean[] {false,false,false,false};
 	}
 
+	public Boolean canMoveTo(){
+		return (LevelController.getCurrentTime() >= isOnFireUntil) && (player == null);
+	}
+
 	public Boolean getFixed() {
 		return this.isFixed;
 	}

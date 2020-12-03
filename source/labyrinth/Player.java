@@ -26,7 +26,7 @@ public class Player implements Serializable {
 		this.idInGame = idInGame;
 		this.associatedProfile = profile;
 
-		this.pastPositions = new int[2][2];
+		this.pastPositions = new int[3][2];
 		this.hasBeenBacktracked = false;
 		this.actions = new HashMap<>();
 		this.actions.put(ActionTile.ActionType.FIRE, 0.0f);
@@ -123,9 +123,13 @@ public class Player implements Serializable {
 	 */
 	public void addToPastPositions(int x, int y) {
 		// Set the newest position to index 0, move the other one up to index 1
-		int[] temp = this.pastPositions[0];
+		this.pastPositions[2] = this.pastPositions[1];
+		this.pastPositions[1] = this.pastPositions[0];
 		this.pastPositions[0] = new int[] {x, y};
-		this.pastPositions[1] = temp;
+	}
+
+	public int[][] getPastPositions() {
+		return pastPositions;
 	}
 
 	public void removeAction(ActionTile.ActionType type) {

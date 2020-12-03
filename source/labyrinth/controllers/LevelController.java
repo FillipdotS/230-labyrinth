@@ -510,10 +510,8 @@ public class LevelController implements Initializable {
 				}
 			}
 		}
-		return null;
+		return result;
 	}
-
-
 
 	private void handleClickATChoice() {
 		System.out.println(usedAction);
@@ -522,13 +520,44 @@ public class LevelController implements Initializable {
 			showWay();
 		}
 		if (usedAction == ActionTile.ActionType.BACKTRACK) {
-			showWay();
+			showTilesOnWhichPlayerCanBeBacktrackedAndIfSoShowByHowManyTurnsBack();
 		}
 
 	}
 
-	private void showTilesWherePlayerCanBeBacktrackedAndIfItSoShowByHowManyTurnsBack() {
-		
+	private void showTilesOnWhichPlayerCanBeBacktrackedAndIfSoShowByHowManyTurnsBack() {
+		int [][] positions = getAllPlayersXYPosition();
+		for (int i = 0; i < positions.length; i++) {
+			int index = canPlayerCanBeBacktrackedAndIfItCanHowFar(players[i]);
+			if (index > 0) {
+				setAsBacktrackOption(i,index,positions[i][0],positions[i][1]);
+			}
+		}
+	}
+
+	private void setAsBacktrackOption(int player,int index,int x,int y){
+		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png",tileRenderSize,tileRenderSize,false,false));
+		chosen.setOpacity(0.5);
+		StackPane optionTile = getStackPaneTileByXY(x,y);
+		optionTile.getChildren().add(chosen);
+		FloorTile backTile = board.getTileAt(players[player].getPastPositions()[index][0],players[player].getPastPositions()[index][1]);
+		optionTile.setOnMouseClicked(event -> {
+			players[player].setStandingOn(backTile);
+			renderBoard();
+			movementPhase();
+		});
+	}
+
+	private int canPlayerCanBeBacktrackedAndIfItCanHowFar(Player player) {
+		int res = 0;
+		if (!player.getHasBeenBacktracked()) {
+			int [][] pos = player.getPastPositions();
+			res = (board.getTileAt(pos[2][0],pos[2][1]).canMoveTo())?1:0;
+			res = (board.getTileAt(pos[1][0],pos[1][1]).canMoveTo())?res+1:0;
+		} else {
+			res = 0;
+		}
+		return res;
 	}
 
 	private void showWay() {
