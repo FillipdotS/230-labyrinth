@@ -11,7 +11,7 @@ public class SilkBag {
 	/**
 	 * Empty the SilkBag completely. Use this when starting a new game and you need a fresh bag.
 	 */
-	public void emptyBag() {
+	public static void emptyBag() {
 		tiles.clear();
 	}
 
@@ -34,5 +34,19 @@ public class SilkBag {
 			ft.setIsOnFireUntil(-1);
 		}
 		tiles.add(tile);
+	}
+
+	/**
+	 * @return All the Tiles in the SilkBag in a linked list
+	 */
+	public static LinkedList<Tile> getEntireBag() {
+		return tiles;
+	}
+
+	/**
+	 * @param newBag A LinkedList of Tiles to set as the new "bag"
+	 */
+	public static void setEntireBag(LinkedList<Tile> newBag) {
+		tiles = newBag;
 	}
 }

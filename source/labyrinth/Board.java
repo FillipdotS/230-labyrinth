@@ -1,12 +1,13 @@
 package source.labyrinth;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * The Board class will store the layout of the current level.
  * @author Fillip Serov
  */
-public class Board {
+public class Board implements Serializable {
 	private final int width;
 	private final int height;
 	private FloorTile[][] board;

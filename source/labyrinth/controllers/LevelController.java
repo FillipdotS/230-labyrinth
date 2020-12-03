@@ -18,13 +18,13 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import source.labyrinth.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -60,7 +60,7 @@ public class LevelController implements Initializable {
 	private int currentPlayer; // 0 to 3, player that is doing their turn
 	private Board board;
 	private GridPane renderedBoard;
-	private int tileRenderSize; // Changed by zoom in/zoom out buttons
+	private int tileRenderSize = 55; // Changed by zoom in/zoom out buttons
 	private FloorTile floorTileToInsert;
 	private TurnPhases currentTurnPhase;
 	private ActionTile.ActionType usedAction; // We "used" this action, and are now applying it
@@ -103,19 +103,82 @@ public class LevelController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("Created LevelController");
 
+		// No matter whether this is a fresh game or a save, the SilkBag must be emptied
+		SilkBag.emptyBag();
+
+		boolean loadingASave = false; // temp
+		if (loadingASave) {
+			setupFromSaveFile("example_save.txt");
+		} else {
+			setupFromLevelFile(nextLevelToLoad);
+		}
+	}
+
+	@FXML
+	public void goToLevelMenu(ActionEvent event) {
+		System.out.println("Going to level menu...");
+		try {
+			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level_menu.fxml"));
+			Scene profileMenuScene = new Scene(profileMenuParent);
+			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+			window.setScene(profileMenuScene);
+			window.setTitle("Level Select");
+			window.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * exportToSave will collect all necessary information about the game and save it to a file. An alert
+	 * will popup to show the save name.
+	 */
+	public void exportToSave() throws IOException {
+		String saveFileName = nextLevelToLoad; // temp, just take level name
+		System.out.println("Saving game state to file " + saveFileName);
+
+		// Setup output
+		FileOutputStream fos = new FileOutputStream("source/resources/saves/" + saveFileName);
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(fos);
+
+		// Serialize the objects from which we could later rebuild the entire game state
+		objectOutputStream.writeObject(currentTime);
+		objectOutputStream.writeObject(this.players);
+		objectOutputStream.writeObject(this.currentPlayer);
+		objectOutputStream.writeObject(this.board);
+		objectOutputStream.writeObject(this.floorTileToInsert);
+		objectOutputStream.writeObject(this.currentTurnPhase);
+		objectOutputStream.writeObject(SilkBag.getEntireBag());
+		objectOutputStream.flush();
+		objectOutputStream.close();
+
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		// TODO: Change text
+		alert.setContentText("Game saved to save file: " + saveFileName + ". You can load it from the level menu.");
+		alert.showAndWait();
+	}
+
+	/**
+	 * setupNewLevel will build a completely fresh level. Players will be put on their starting locations and
+	 * they will have no action tiles. The game will then begin with drawingPhase being called.
+	 * @param levelName The file name of the level to load from scratch
+	 */
+	private void setupFromLevelFile(String levelName) {
+		System.out.println("Creating new game from level file...");
+		LevelData ld = LevelReader.readDataFile("source/resources/levels/" + levelName);
+
 		timeForFullLoop = nextLevelProfiles.length;
+		currentTime = 0;
 
-		currentPlayer = 0;
-		tileRenderSize = 55;
-
-		LevelData ld = LevelReader.readDataFile("source/resources/levels/" + nextLevelToLoad);
+		this.currentPlayer = 0;
 
 		//
 		// Board Setup
 		//
 		System.out.println("Setting up board...");
 
-		board = ld.getBoard();
+		this.board = ld.getBoard();
 		boardContainer.setPrefHeight((board.getHeight() * tileRenderSize) + (2 * tileRenderSize));
 		boardContainer.setPrefWidth((board.getWidth() * tileRenderSize) + (2 * tileRenderSize));
 
@@ -161,7 +224,6 @@ public class LevelController implements Initializable {
 		System.out.println("Setting up players...");
 
 		players = new Player[nextLevelProfiles.length];
-		playerSubInfoVBoxes = new VBox[players.length];
 		for (int i = 0; i < players.length; i++) {
 			Profile associatedProfile = null;
 			if (nextLevelProfiles[i] != null) {
@@ -176,38 +238,70 @@ public class LevelController implements Initializable {
 			players[i] = newPlayer;
 		}
 
+		// this.players is now ready, so we can setup the side info with player profile names etc
+		setupSideInfo();
+
+		// Once everything is setup, begin the first phase
+		drawingPhase();
+	}
+
+	/**
+	 * setupFromSaveFile will rebuild a previous game from a serialized save file.
+	 * @param saveName The file name of the save file
+	 */
+	private void setupFromSaveFile(String saveName) {
+		FileInputStream fis;
+		ObjectInputStream objectInputStream;
+		try {
+			fis = new FileInputStream("source/resources/saves/" + saveName);
+			objectInputStream = new ObjectInputStream(fis);
+
+			currentTime = (int) objectInputStream.readObject();
+			this.players = (Player[]) objectInputStream.readObject();
+			this.currentPlayer = (int) objectInputStream.readObject();
+			this.board = (Board) objectInputStream.readObject();
+			this.floorTileToInsert = (FloorTile) objectInputStream.readObject();
+			this.currentTurnPhase = (TurnPhases) objectInputStream.readObject();
+			SilkBag.setEntireBag((LinkedList<Tile>) objectInputStream.readObject());
+
+			// To be safe, just re-render everything
+			setupSideInfo();
+			updateSubInfoVBoxes();
+			renderBoard();
+
+			objectInputStream.close();
+
+			// Finally check what phase we loaded and go there to "begin" the game again
+			switch (this.currentTurnPhase) {
+				case DRAWING:
+					drawingPhase();
+					break;
+				case PLACEMENT:
+					placementPhase(floorTileToInsert);
+					break;
+				case PLAYACTION:
+					playActionPhase();
+					break;
+				case MOVEMENT:
+					movementPhase();
+					break;
+				default:
+					System.out.println("Loading from save gave no phase. Game is now soft-locked.");
+			}
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("Error reading save file");
+		}
+	}
+
+	private void setupSideInfo() {
+		playerSubInfoVBoxes = new VBox[players.length];
+
 		// Populating leftVBox with player info
 		leftVBox.getChildren().clear();
 		for (int i = 0; i < this.players.length; i++) {
 			leftVBox.getChildren().add(createPlayerInfoVBox(i));
 		}
-
-		// When everything is done, render the board for the first time
-		drawingPhase();
-	}
-
-	@FXML
-	public void goToLevelMenu(ActionEvent event) {
-		System.out.println("Going to level menu...");
-		try {
-			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level_menu.fxml"));
-			Scene profileMenuScene = new Scene(profileMenuParent);
-			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-
-			window.setScene(profileMenuScene);
-			window.setTitle("Level Select");
-			window.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * exportToSave will collect all necessary information about the game and save it to a file. An alert
-	 * will popup to show the save name.
-	 */
-	public void exportToSave() {
-		// TODO: Actually implement it
 	}
 
 	private void drawingPhase() {
