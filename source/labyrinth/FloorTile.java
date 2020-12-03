@@ -5,7 +5,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import source.labyrinth.controllers.LevelController;
 
-public class FloorTile extends Tile {
+import java.io.Serializable;
+
+public class FloorTile extends Tile implements Serializable {
 	/**
 	 * The different types of floor tile that an instance of FloorTile can be.
 	 */

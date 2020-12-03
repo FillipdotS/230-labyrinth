@@ -2,6 +2,7 @@ package source.labyrinth;
 
 import javafx.scene.paint.Color;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -9,7 +10,7 @@ import java.util.HashMap;
  * and etc. An individual player does not know when it is their turn since they do not need to know.
  * @author Fillip Serov
  */
-public class Player {
+public class Player implements Serializable {
 	private final Profile associatedProfile;
 	private final int idInGame;
 
