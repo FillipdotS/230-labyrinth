@@ -11,7 +11,7 @@ public class SilkBag {
 	/**
 	 * Empty the SilkBag completely. Use this when starting a new game and you need a fresh bag.
 	 */
-	public void emptyBag() {
+	public static void emptyBag() {
 		tiles.clear();
 	}
 

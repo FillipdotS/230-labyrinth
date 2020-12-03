@@ -102,6 +102,9 @@ public class LevelController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("Created LevelController");
 
+		// No matter whether this is a fresh game or a save, the SilkBag must be emptied
+		SilkBag.emptyBag();
+
 		setupFromLevelFile(nextLevelToLoad);
 	}
 
