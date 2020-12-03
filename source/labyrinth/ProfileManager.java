@@ -137,4 +137,15 @@ public final class ProfileManager {
 
 		System.out.println("Loaded " + profiles.size() + " profiles. nextID is " + nextID);
 	}
+
+	private static Boolean removeProfile(Integer id){
+	    for(int i = 0;i < profiles.size();i++){
+	        if(id == profiles.get(i).getID()){
+                profiles.remove(i);
+                return true;
+            }
+        }
+	    return false;
+    }
+
 }
