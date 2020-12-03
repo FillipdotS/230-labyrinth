@@ -30,7 +30,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#exportToSave" text="Save">
+                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#exportToSave" text="Save">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>

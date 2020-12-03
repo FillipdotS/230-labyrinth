@@ -54,23 +54,23 @@ public class Profile implements Serializable {
 		return totalPlayed;
 	}
 
-	public void setTotalPlayed(int totalPlayed) {
-		this.totalPlayed = totalPlayed;
+	public void addTotalPlayed() {
+		this.totalPlayed += 1;
 	}
 
 	public int getWins() {
 		return wins;
 	}
 
-	public void setWins(int wins) {
-		this.wins = wins;
+	public void addWin() {
+		this.wins += 1;
 	}
 
 	public int getLosses() {
 		return losses;
 	}
 
-	public void setLosses(int losses) {
-		this.losses = losses;
+	public void addLoss() {
+		this.losses += 1;
 	}
 }

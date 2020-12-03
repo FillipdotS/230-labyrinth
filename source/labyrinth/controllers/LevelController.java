@@ -42,6 +42,7 @@ public class LevelController implements Initializable {
 	private static String nextLevelToLoad; // Level file name
 	private static String[] nextLevelProfiles; // The length of this
 
+	@FXML private Button saveButton;
 	@FXML private VBox boardContainer;
 	@FXML private VBox leftVBox;
 	@FXML private HBox bottomContainer;
@@ -483,6 +484,44 @@ public class LevelController implements Initializable {
 	}
 
 	/**
+	 * When a player steps onto a Goal, we call this method, which will deal with updating profiles and stopping
+	 * the game from progressing.
+	 * @param winningID The player id of the player that won
+	 */
+	private void playerHasWon(int winningID) {
+		Profile winningProfile = players[winningID].getAssociatedProfile();
+
+		// Update the winner's stats
+		if (winningProfile != null) {
+			winningProfile.addTotalPlayed();
+			winningProfile.addWin();
+		}
+
+		// Update everyone else
+		for (int i = 0; i < players.length; i++) {
+			if (i != winningID) {
+				players[i].getAssociatedProfile().addTotalPlayed();
+				players[i].getAssociatedProfile().addLoss();
+			}
+		}
+
+		ProfileManager.writeProfilesToFile();
+
+		String playerName = winningProfile != null ? winningProfile.getName() : "Player " + winningID;
+		String winningMessage = playerName + " reached the goal tile first! They are the winner!";
+		ImageView playerIcon = new ImageView(new Image("source/resources/img/player_" + winningID + ".png", 50, 50, false, false));
+		Button returnButton = new Button("Return to level menu");
+		returnButton.setOnAction(event -> {
+			goToLevelMenu(event);
+		});
+		bottomContainer.getChildren().clear();
+		bottomContainer.getChildren().addAll(playerIcon, new Text(winningMessage), returnButton);
+
+		// Disable the save button to avoid problems
+		saveButton.setDisable(true);
+	}
+
+	/**
 	 * A dirty hacky method to very slowly find a Player somewhere in a Board. TODO: Replace
 	 * @param playerID
 	 * @return
@@ -600,21 +639,26 @@ public class LevelController implements Initializable {
 	}
 
 	private void move(Player player,int x,int y) {
-		player.setStandingOn(board.getTileAt(x,y));
+		player.setStandingOn(board.getTileAt(x, y));
+		player.addToPastPositions(x, y);
+
+		// Check if we moved to a Goal and won. Otherwise continue the phases.
 		if (board.getTileAt(x,y).isItGoal()) {
-			System.out.println("wiiiiin" + currentPlayer);
-			//TODO: Win function
-		}
-		switch (currentTurnPhase) {
-			case PLAYACTION:
-				// If we were moving in the PLAYACTION phase, we just used a DOUBLEMOVE
-				player.addToPastPositions(x, y);
-				movementPhase();
-				break;
-			case MOVEMENT:
-				player.addToPastPositions(x, y);
-				endTurn();
-				break;
+			System.out.println("Player " + currentPlayer + " has won.");
+			playerHasWon(currentPlayer);
+			renderBoard();
+		} else {
+			// If we moved in the PLAYACTION phase, that means we just double moved and should just continue
+			// to the normal movement phase.
+			switch (currentTurnPhase) {
+				case PLAYACTION:
+					// If we were moving in the PLAYACTION phase, we just used a DOUBLEMOVE
+					movementPhase();
+					break;
+				case MOVEMENT:
+					endTurn();
+					break;
+			}
 		}
 	}
 
