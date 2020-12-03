@@ -499,13 +499,36 @@ public class LevelController implements Initializable {
 		return null;
 	}
 
+	private int[][] getAllPlayersXYPosition() {
+		int[][] result = new int[players.length][2];
+		for (int x = 0; x < this.board.getWidth(); x++) {
+			for (int y = 0; y < this.board.getHeight(); y++) {
+				FloorTile ft = this.board.getTileAt(x, y);
+				if (ft.getPlayer() != null) {
+					result[ft.getPlayer().getIdInGame()][0]= x;
+					result[ft.getPlayer().getIdInGame()][1]= y;
+				}
+			}
+		}
+		return null;
+	}
+
+
+
 	private void handleClickATChoice() {
 		System.out.println(usedAction);
 
 		if (usedAction == ActionTile.ActionType.DOUBLEMOVE) {
 			showWay();
 		}
+		if (usedAction == ActionTile.ActionType.BACKTRACK) {
+			showWay();
+		}
 
+	}
+
+	private void showTilesWherePlayerCanBeBacktrackedAndIfItSoShowByHowManyTurnsBack() {
+		
 	}
 
 	private void showWay() {
