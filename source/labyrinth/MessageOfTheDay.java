@@ -1,7 +1,5 @@
 package source.labyrinth;
 
-import sun.plugin2.message.GetAppletMessage;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,10 +9,13 @@ import java.net.URL;
 public class MessageOfTheDay {
 
     private static final String GET_URL = "http://cswebcat.swansea.ac.uk/puzzle";
+    private static final String GET_MSG_OF_THE_DAY = "http://cswebcat.swansea.ac.uk/message";
+    private static final char[] alphabet = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 
     public static void main(String[] args) throws IOException {
         sendGET(GET_URL);
-        System.out.println(solvePuzzle("XMKVXXRKMYPNMLFF"));
+        sendGET(GET_MSG_OF_THE_DAY);
+        System.out.println(solvePuzzle("AZZ", 2));
     }
 
     private static String sendGET(String getURL) throws IOException {
@@ -43,49 +44,49 @@ public class MessageOfTheDay {
         return "";
     }
 
-    private static String solvePuzzle(String puzzle) {
-        String answer = "";
-        int len = puzzle.length();
-        int x = 0;
-
-        if (puzzle.charAt(x) % 2 == 0) {
-            for (x = 0; x < len; x++) {
-                int shift = puzzle.charAt(x);
-                char c = (char) (puzzle.charAt(x) + shift);
-                if(c > 'z') {
-                    answer += (char)(puzzle.charAt(x) - (26-shift));
-                } else {
-                    answer += (char)(puzzle.charAt(x) + shift);
-                }
-            }
-        } else {
-            for (x = 0; x < len; x--) {
-                int shift = puzzle.charAt(x);
-                char c = (char) (puzzle.charAt(x) + shift);
-                if(c > 'z') {
-                    answer += (char)(puzzle.charAt(x) - (26-shift));
-                } else {
-                    answer += (char)(puzzle.charAt(x) + shift);
-                }
+    private static int AlphabetPos(char l) {
+        for (int x = 0; x < alphabet.length; x++) {
+            if (alphabet[x] == l) {
+                return x;
             }
         }
-        answer = "CS-230" + answer;
-
-        return answer;
+        return 0;
     }
 
-
+    private static String solvePuzzle(String puzzle, int shift) {
+        String answer = "";
+        for (int x = 1; x <= puzzle.length(); x++) {
+            char c = (puzzle.charAt(x-1));
+            if (x % 2 == 0) {
+                System.out.println("Works?");
+                if (c > 'Z') {
+                    answer += (char) (puzzle.charAt(x-1) - (23 - shift));
+                } else {
+                    answer += (char) (puzzle.charAt(x-1) + shift);
+                }
+            } else {
+                if (c < 'A') {
+                    System.out.println("works2");
+                    answer += (char) (puzzle.charAt(x-1) + (23 + shift));
+                } else {
+                    System.out.println("works3");
+                    answer += (char) (puzzle.charAt(x-1) - shift);
+                }
+            }
+        } return answer;
+    }
 
     public static String getPuzzleMessage() {
-        //String key = "";
+        String endResult = "";
         try {
             String puzzle = sendGET(GET_URL);
-            String solvePuzzle = solvePuzzle(puzzle);
+            String solvePuzzle = solvePuzzle(puzzle,2);
+            endResult = sendGET(GET_MSG_OF_THE_DAY + solvePuzzle(puzzle,2));
+
         }  catch (IOException e) {
             e.printStackTrace();
+            System.exit(0);
         }
 
         return getPuzzleMessage();
     }
-
-}
