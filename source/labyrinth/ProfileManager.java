@@ -79,6 +79,16 @@ public final class ProfileManager {
 	}
 
 	/**
+	 * Deletes a profile via reference if it exists.
+	 * @param toDelete Profile to delete.
+	 */
+	public static void deleteProfile(Profile toDelete) {
+		System.out.println("Deleting profile " + toDelete.getName());
+		profiles.remove(toDelete);
+		writeProfilesToFile();
+	}
+
+	/**
 	 * Get all profiles as an ArrayList.
 	 * @return ArrayList of all profiles.
 	 */
@@ -137,15 +147,4 @@ public final class ProfileManager {
 
 		System.out.println("Loaded " + profiles.size() + " profiles. nextID is " + nextID);
 	}
-
-	private static Boolean removeProfile(Integer id){
-	    for(int i = 0;i < profiles.size();i++){
-	        if(id == profiles.get(i).getID()){
-                profiles.remove(i);
-                return true;
-            }
-        }
-	    return false;
-    }
-
 }

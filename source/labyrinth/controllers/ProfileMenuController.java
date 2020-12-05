@@ -7,10 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import source.labyrinth.Profile;
@@ -18,6 +15,7 @@ import source.labyrinth.ProfileManager;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ProfileMenuController implements Initializable {
@@ -38,6 +36,26 @@ public class ProfileMenuController implements Initializable {
 		lossCol.setCellValueFactory(new PropertyValueFactory<>("losses"));
 
 		tableView.getItems().setAll(ProfileManager.getProfiles());
+	}
+
+	/**
+	 * Delete the currently selected profile (which is determined by the table).
+	 */
+	@FXML public void deleteProfile() {
+		Profile toDelete = tableView.getSelectionModel().getSelectedItem();
+		if (toDelete != null) {
+			// Allow user to confirm their deletion
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+			alert.setTitle("Profile Deletion");
+			alert.setHeaderText(null);
+			alert.setContentText("Are you sure you would like to delete the profile '" + toDelete.getName() + "' forever?");
+
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == ButtonType.OK){
+				ProfileManager.deleteProfile(toDelete);
+				tableView.getItems().setAll(ProfileManager.getProfiles());
+			}
+		}
 	}
 
 	@FXML
