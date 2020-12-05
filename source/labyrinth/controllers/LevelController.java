@@ -186,8 +186,8 @@ public class LevelController implements Initializable {
 		System.out.println("Setting up board...");
 
 		this.board = ld.getBoard();
-		boardContainer.setPrefHeight((board.getHeight() * tileRenderSize) + (2 * tileRenderSize));
-		boardContainer.setPrefWidth((board.getWidth() * tileRenderSize) + (2 * tileRenderSize));
+		boardContainer.setMinHeight((board.getHeight() * tileRenderSize) + (2 * tileRenderSize));
+		boardContainer.setMinWidth((board.getWidth() * tileRenderSize) + (2 * tileRenderSize));
 
 		// Create all the floor tiles and add them to the silk bag.
 		for (int i = 0; i < ld.getStraightAmount(); i++) {
