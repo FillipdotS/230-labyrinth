@@ -668,8 +668,6 @@ public class LevelController implements Initializable {
 		move(players[currentPlayer],x,y);
 	}
 
-
-
 	private StackPane getStackPaneTileByXY(int col, int row) {
 		for (Node node : renderedBoard.getChildren()) {
 			if (GridPane.getColumnIndex(node) == col+1 && GridPane.getRowIndex(node) == row+1) {

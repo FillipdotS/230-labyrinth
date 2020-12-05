@@ -92,7 +92,7 @@ public class MessageOfTheDay {
         return endResult;
     }
 
-    public static String callToMainMenu() {
+    public static String getMessageOfTheDay() {
         return MessageOfTheDay.getPuzzleMessage();
     }
 }

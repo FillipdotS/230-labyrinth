@@ -8,12 +8,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import source.labyrinth.MessageOfTheDay;
 import source.labyrinth.ProfileManager;
 
 import java.io.IOException;
 
 public class MainMenuController extends Application {
+	@FXML private Text motd;
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		System.out.println("MainMenuController created.");
@@ -25,6 +29,12 @@ public class MainMenuController extends Application {
 
 		// Setup profiles
 		ProfileManager.performSetup();
+	}
+
+	@FXML
+	private void initialize() {
+		// Show motd
+		motd.setText("Message of the day: " + MessageOfTheDay.getMessageOfTheDay());
 	}
 
 	@FXML
@@ -76,7 +86,7 @@ public class MainMenuController extends Application {
 	}
 
 	@FXML
-	public void exitGame(ActionEvent event) {
+	public void exitGame() {
 		Platform.exit();
 	}
 }
