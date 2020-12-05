@@ -158,9 +158,10 @@ public class LevelController implements Initializable {
 		objectOutputStream.flush();
 		objectOutputStream.close();
 
-		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-		// TODO: Change text
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setContentText("Game saved to save file: " + saveFileName + ". You can load it from the level menu.");
+		alert.setTitle("Game Saved");
+		alert.setHeaderText(null);
 		alert.showAndWait();
 	}
 
