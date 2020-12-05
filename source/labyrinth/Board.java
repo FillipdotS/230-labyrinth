@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class Board implements Serializable {
 	private final int width;
 	private final int height;
-	private FloorTile[][] board;
+	private final FloorTile[][] board;
 
 	public Board(int width, int height) {
 		this.width = width;

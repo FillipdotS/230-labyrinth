@@ -59,7 +59,7 @@ public class LevelController implements Initializable {
 	private int currentPlayer; // 0 to 3, player that is doing their turn
 	private Board board;
 	private GridPane renderedBoard;
-	private int tileRenderSize = 64; // Changed by zoom in/zoom out buttons
+	private final int tileRenderSize = 64; // Changed by zoom in/zoom out buttons
 	private FloorTile floorTileToInsert;
 	private TurnPhases currentTurnPhase;
 	private ActionTile.ActionType usedAction; // We "used" this action, and are now applying it
@@ -445,9 +445,7 @@ public class LevelController implements Initializable {
 		// We don't have to use an Action (even if available), so add a button to just skip to the movement phase
 		Button skipButton = new Button("Skip");
 		skipButton.setPrefSize(actionImageRenderSize, actionImageRenderSize);
-		skipButton.setOnMouseClicked(event -> {
-			movementPhase();
-		});
+		skipButton.setOnMouseClicked(event -> movementPhase());
 		actionsHBox.getChildren().add(skipButton);
 
 		bottomContainer.getChildren().add(actionsHBox);
@@ -458,11 +456,8 @@ public class LevelController implements Initializable {
 		renderBoard();
 		usedAction = null;
 		currentTurnPhase = TurnPhases.MOVEMENT;
-		int[] playerPos = getPlayerXYPosition(currentPlayer);
 		bottomContainer.getChildren().clear();
 		showWay();
-		// TEMP
-		//endTurn();
 	}
 
 	private void endTurn() {
@@ -510,9 +505,7 @@ public class LevelController implements Initializable {
 		String winningMessage = playerName + " reached the goal tile first! They are the winner!";
 		ImageView playerIcon = new ImageView(new Image("source/resources/img/player_" + winningID + ".png", 50, 50, false, false));
 		Button returnButton = new Button("Return to level menu");
-		returnButton.setOnAction(event -> {
-			goToLevelMenu(event);
-		});
+		returnButton.setOnAction(this::goToLevelMenu);
 		bottomContainer.getChildren().clear();
 		bottomContainer.getChildren().addAll(playerIcon, new Text(winningMessage), returnButton);
 
@@ -522,8 +515,8 @@ public class LevelController implements Initializable {
 
 	/**
 	 * A dirty hacky method to very slowly find a Player somewhere in a Board. TODO: Replace
-	 * @param playerID
-	 * @return
+	 * @param playerID playerID
+	 * @return index 0 is x coordinate 1 is y
 	 */
 	private int[] getPlayerXYPosition(int playerID) {
 		for (int x = 0; x < this.board.getWidth(); x++) {
@@ -573,7 +566,7 @@ public class LevelController implements Initializable {
 		}
 	}
 
-	private void setAsBacktrackOption(int player,int index,int x,int y){
+	private void setAsBacktrackOption(int player,int index,int x,int y) {
 		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png",tileRenderSize,tileRenderSize,false,false));
 		chosen.setOpacity(0.5);
 		StackPane optionTile = getStackPaneTileByXY(x,y);
@@ -581,6 +574,8 @@ public class LevelController implements Initializable {
 		FloorTile backTile = board.getTileAt(players[player].getPastPositions()[index][0],players[player].getPastPositions()[index][1]);
 		optionTile.setOnMouseClicked(event -> {
 			players[player].setStandingOn(backTile);
+			players[player].setHasBeenBacktracked(true);
+			players[currentPlayer].removeAction(usedAction);
 			renderBoard();
 			movementPhase();
 		});
@@ -592,8 +587,6 @@ public class LevelController implements Initializable {
 			int [][] pos = player.getPastPositions();
 			res = (board.getTileAt(pos[2][0],pos[2][1]).canMoveTo())?1:0;
 			res = (board.getTileAt(pos[1][0],pos[1][1]).canMoveTo())?res+1:0;
-		} else {
-			res = 0;
 		}
 		return res;
 	}
@@ -632,9 +625,7 @@ public class LevelController implements Initializable {
 		chosen.setOpacity(0.5);
 		StackPane wayTile = getStackPaneTileByXY(x,y);
 		wayTile.getChildren().add(chosen);
-		wayTile.setOnMouseClicked(event -> {
-			move(x,y);
-		});
+		wayTile.setOnMouseClicked(event -> move(x,y));
 	}
 
 	private void move(Player player,int x,int y) {
@@ -652,6 +643,7 @@ public class LevelController implements Initializable {
 			switch (currentTurnPhase) {
 				case PLAYACTION:
 					// If we were moving in the PLAYACTION phase, we just used a DOUBLEMOVE
+					players[currentPlayer].removeAction(usedAction);
 					movementPhase();
 					break;
 				case MOVEMENT:
@@ -701,18 +693,7 @@ public class LevelController implements Initializable {
 				movementPhase();
 				break;
 			case BACKTRACK:
-				FloorTile thisTile = this.board.getTileAt(x, y);
-				if (thisTile.getPlayer() != null || !(thisTile.getPlayer().getHasBeenBacktracked())) {
-					thisTile.getPlayer().setHasBeenBacktracked(true);
-					// TODO: Perform a backtrack on the clicked player
-					players[currentPlayer].removeAction(usedAction);
-					movementPhase();
-				}
-				break;
 			case DOUBLEMOVE:
-				players[currentPlayer].removeAction(usedAction);
-				System.out.println("doublemmove");
-
 				break;
 		}
 	}
@@ -795,9 +776,7 @@ public class LevelController implements Initializable {
 
 				int finalX = x;
 				int finalY = y;
-				stack.setOnMouseClicked(event -> {
-					handleFloorTileClickAt(finalX, finalY);
-				});
+				stack.setOnMouseClicked(event -> handleFloorTileClickAt(finalX, finalY));
 
 				renderedBoard.add(stack, x + 1, y + 1);
 			}
