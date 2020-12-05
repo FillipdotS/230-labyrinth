@@ -91,4 +91,8 @@ public class MessageOfTheDay {
         }
         return endResult;
     }
+
+    public static String callToMainMenu() {
+        return MessageOfTheDay.getPuzzleMessage();
+    }
 }
