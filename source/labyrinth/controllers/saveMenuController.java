@@ -126,11 +126,17 @@ public class saveMenuController implements Initializable {
             if (result.get() == ButtonType.OK) {
                 File delFile = new File("./source/resources/saves/" + selectedSaveName);
                 delFile.delete();
+
                 Alert deleted = new Alert(Alert.AlertType.INFORMATION);
                 deleted.setTitle("Delete Save");
                 deleted.setHeaderText("File deleted");
-                deleted.setContentText("File "+selectedSaveName+" deleted");
+                deleted.setContentText("File "+ selectedSaveName + " deleted");
                 deleted.showAndWait();
+
+                // If we don't reset selected to null, we could potentially attempt to load a deleted file
+                selectedSaveName = null;
+                selectedSaveHBox = null;
+
                 deleteSaveButton.setDisable(true);
                 loadSaveButton.setDisable(true);
                 showSaveFile();
@@ -138,6 +144,23 @@ public class saveMenuController implements Initializable {
 
         } else {
             System.out.println("Error Selection");
+        }
+    }
+
+    @FXML
+    public void loadSave(ActionEvent event) {
+        if (selectedSaveName != null) {
+            LevelController.setNextSaveToLoad(selectedSaveName);
+            try {
+                Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level.fxml"));
+                Scene profileMenuScene = new Scene(profileMenuParent);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(profileMenuScene);
+                window.setTitle("Game");
+                window.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
