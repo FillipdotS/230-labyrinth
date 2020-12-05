@@ -158,8 +158,8 @@ public class LevelMenuController implements Initializable {
 			for (int i = 0; i < prof.length; i++) {
 				if (profilesChosen.size() > i) prof[i] = profilesChosen.get(i);
 			}
-			LevelController.setNextLevelProfiles(prof);
-			LevelController.setNextLevelToLoad(selectedLevel);
+
+			LevelController.setNextLevelToLoad(selectedLevel, prof);
 
 			System.out.println("level: " + selectedLevel);
 			for (String s : prof) {

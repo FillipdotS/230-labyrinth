@@ -39,8 +39,9 @@ public class LevelController implements Initializable {
 	// "unfreeze" time to be "currentTime + amount of players". Static so other classes can easily access it.
 	private static int currentTime;
 
-	private static String nextLevelToLoad; // Level file name
-	private static String[] nextLevelProfiles; // The length of this
+	private static boolean loadingSaveFile;
+	private static String nextFileToLoad; // Either a save file or level file
+	private static String[] nextLevelProfiles; // This will be used if we are loading a completely new game
 
 	@FXML private Button saveButton;
 	@FXML private VBox boardContainer;
@@ -82,20 +83,24 @@ public class LevelController implements Initializable {
 	}
 
 	/**
-	 * Next time the level scene is loaded, it will build from this level file.
-	 * @param nextLevelToLoad Level Name
+	 * Next time the level scene is loaded, it will build a new game from this level file.
+	 * @param levelName Level name
+	 * @param profilesToUse Array of profile names (the length of which is the amount of players)
 	 */
-	public static void setNextLevelToLoad(String nextLevelToLoad) {
-		LevelController.nextLevelToLoad = nextLevelToLoad;
+	public static void setNextLevelToLoad(String levelName, String[] profilesToUse) {
+		loadingSaveFile = false;
+		nextFileToLoad = levelName;
+		nextLevelProfiles = profilesToUse;
 	}
 
 	/**
-	 * Next time the level scene is loaded, it will use these profiles. The length of this array is also
-	 * the amount of players to use.
-	 * @param nextLevelProfiles Profiles (given as strings) to use in this game.
+	 * Next time the level scene is loaded, it will rebuild the game from the given save name.
+	 * @param saveName Name of save file
 	 */
-	public static void setNextLevelProfiles(String[] nextLevelProfiles) {
-		LevelController.nextLevelProfiles = nextLevelProfiles;
+	public static void setNextSaveToLoad(String saveName) {
+		loadingSaveFile = true;
+		nextFileToLoad = saveName;
+		nextLevelProfiles = null; // Not necessary but just to be safe
 	}
 
 	@Override
@@ -105,11 +110,10 @@ public class LevelController implements Initializable {
 		// No matter whether this is a fresh game or a save, the SilkBag must be emptied
 		SilkBag.emptyBag();
 
-		boolean loadingASave = false; // temp
-		if (loadingASave) {
-			setupFromSaveFile("example_save.txt");
+		if (loadingSaveFile) {
+			setupFromSaveFile(nextFileToLoad);
 		} else {
-			setupFromLevelFile(nextLevelToLoad);
+			setupFromLevelFile(nextFileToLoad, nextLevelProfiles);
 		}
 	}
 
@@ -164,12 +168,13 @@ public class LevelController implements Initializable {
 	 * setupNewLevel will build a completely fresh level. Players will be put on their starting locations and
 	 * they will have no action tiles. The game will then begin with drawingPhase being called.
 	 * @param levelName The file name of the level to load from scratch
+	 * @param profileInfo String array of profile names to use for this game (they can be null)
 	 */
-	private void setupFromLevelFile(String levelName) {
+	private void setupFromLevelFile(String levelName, String[] profileInfo) {
 		System.out.println("Creating new game from level file...");
 		LevelData ld = LevelReader.readDataFile("source/resources/levels/" + levelName);
 
-		timeForFullLoop = nextLevelProfiles.length;
+		timeForFullLoop = profileInfo.length;
 		currentTime = 0;
 
 		this.currentPlayer = 0;
@@ -224,7 +229,7 @@ public class LevelController implements Initializable {
 		//
 		System.out.println("Setting up players...");
 
-		players = new Player[nextLevelProfiles.length];
+		players = new Player[profileInfo.length];
 		for (int i = 0; i < players.length; i++) {
 			int associatedProfileID = -1;
 			if (nextLevelProfiles[i] != null) {
