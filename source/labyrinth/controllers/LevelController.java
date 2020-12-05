@@ -778,7 +778,9 @@ public class LevelController implements Initializable {
 			for (int y = 0; y < this.board.getHeight(); y++) {
 				FloorTile current = this.board.getTileAt(x, y);
 				StackPane stack = current.renderTile(tileRenderSize);
-				stack.getChildren().add(new Text("(" + x + ", " + y + ")"));
+
+				// Uncomment for coordinates
+				// stack.getChildren().add(new Text("(" + x + ", " + y + ")"));
 
 				int finalX = x;
 				int finalY = y;
