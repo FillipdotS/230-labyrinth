@@ -96,11 +96,11 @@ public class Board implements Serializable {
 	 * @param newTile The FloorTile to insert
 	 * @param insertionDirection Integer between 0-3 representing the 4 directions
 	 * @param insertionPoint Where in the board to insert tile, starts at 0 up to width/height - 1
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException if insertion is impossible
 	 */
 	public void insertFloorTile(FloorTile newTile, int insertionDirection, int insertionPoint)  throws IllegalArgumentException {
 		// If the insertionDirection is 0 or 2, we are inserting into a column, 1 or 3, into a row
-		Boolean columnInsert = insertionDirection % 2 == 0;
+		boolean columnInsert = insertionDirection % 2 == 0;
 		int inc = insertionDirection % 3 == 0 ? -1: 1;
 		int start = insertionDirection % 3 == 0 ? (columnInsert ? this.height - 1: this.width - 1): 0;
 		int fin = insertionDirection % 3 == 0 ? 0: (columnInsert ? this.height - 1: this.width - 1);
@@ -117,7 +117,7 @@ public class Board implements Serializable {
 		if (columnInsert) {
 			if (this.board[insertionPoint][start].getPlayer() != null) {
 				this.board[insertionPoint][start].getPlayer().setStandingOn(newTile);
-			};
+			}
 			SilkBag.addTile(this.board[insertionPoint][start]);
 			for (int i = start; i != fin; i += inc) {
 				this.board[insertionPoint][i] = this.board[insertionPoint][i + inc];
@@ -152,24 +152,6 @@ public class Board implements Serializable {
 	 */
 	public void setTileAt(FloorTile tile, int x, int y) {
 		this.board[x][y] = tile;
-	}
-
-	/**
-	 * Get a string (with newlines) that represents the current state of the board. The first line will contain
-	 * two numbers representing the width and height of the board. The rest of the lines are tile-specific.
-	 * @return A large string (with newlines) that represents the current state of the board.
-	 */
-	public String exportSelf() {
-		String toReturn = this.width + "," + this.height;
-
-		for (int x = 0; x < this.width; x++) {
-			for (int y = 0; y < this.height; y++) {
-				toReturn += System.lineSeparator();
-				toReturn += this.board[x][y].exportSelf();
-			}
-		}
-
-		return toReturn;
 	}
 
 	public void setOnFire(int x, int y) {

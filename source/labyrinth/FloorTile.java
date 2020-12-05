@@ -15,7 +15,7 @@ public class FloorTile extends Tile implements Serializable {
 		STRAIGHT(new Boolean[]{true, false, true, false}, "source/resources/img/tile_straight.png"),
 		CORNER(new Boolean[]{true, true, false, false}, "source/resources/img/tile_corner.png"),
 		TSHAPE(new Boolean[]{false, true, true, true},"source/resources/img/tile_tshape.png"),
-		GOAL(new Boolean[]{true, true, true, true},"source/resources/img/tile_goal.png");
+		GOAL(new Boolean[]{true, true, true, true}, "source/resources/img/tile_goal.png");
 
 		public final String imageURL;
 
@@ -124,14 +124,6 @@ public class FloorTile extends Tile implements Serializable {
 		return isFixed || LevelController.getCurrentTime() < isFrozenUntil;
 	}
 
-	public int getIsFrozenUntil() {
-		return isFrozenUntil;
-	}
-
-	public int getIsOnFireUntil() {
-		return isOnFireUntil;
-	}
-
 	public void setIsOnFireUntil(int isOnFireUntil) {
 		this.isOnFireUntil = isOnFireUntil;
 	}
@@ -149,7 +141,16 @@ public class FloorTile extends Tile implements Serializable {
 	 * @return StackPane representing the FloorTile.
 	 */
 	public StackPane renderTile(int renderSize) {
-		Image img = new Image(this.tileType.imageURL, renderSize, renderSize, false, false);
+		String url;
+		if (isFixed) {
+			url = this.tileType.imageURL.substring(0,this.tileType.imageURL.length()-4) + "_fixed.png";
+			//System.out.println(this.tileType.imageURL.substring(0,this.tileType.imageURL.length()-4) + "_fixed.png");
+			//url = this.tileType.imageURL;
+		} else {
+			url = this.tileType.imageURL;
+		}
+
+		Image img = new Image(url, renderSize, renderSize, false, false);
 
 		ImageView iv = new ImageView(img);
 		iv.setRotate(90 * this.getOrientation());
@@ -157,11 +158,11 @@ public class FloorTile extends Tile implements Serializable {
 		StackPane stack = new StackPane(iv);
 		stack.setStyle("-fx-border-width: 1px; -fx-border-color: darkgrey");
 
-		if (isFixed) {
-			Image fixedImage = new Image("source/resources/img/fixed_tile.png", renderSize, renderSize, false, false);
-			ImageView fixedImageView = new ImageView(fixedImage);
-			stack.getChildren().addAll(fixedImageView);
-		}
+//		if (isFixed) {
+//			Image fixedImage = new Image("source/resources/img/fixed_tile.png", renderSize, renderSize, false, false);
+//			ImageView fixedImageView = new ImageView(fixedImage);
+//			stack.getChildren().addAll(fixedImageView);
+//		}
 
 		if (isFrozenUntil > LevelController.getCurrentTime()) {
 			Image fixedImage = new Image("source/resources/img/frozen_tile.png", renderSize, renderSize, false, false);
@@ -185,21 +186,6 @@ public class FloorTile extends Tile implements Serializable {
 		}
 
 		return stack;
-	}
-
-	/**
-	 * Get a string that represents this tile and it's state completely.
-	 * Example: "0,STRAIGHT,true,11,15"
-	 * In order: orientation, tile type, is permanently fixed, is on fire until, is frozen until
-	 * @return Single line string representing this FloorTile.
-	 */
-	public String exportSelf() {
-		String self = Integer.toString(this.orientation);
-		self += "," + this.tileType.name();
-		self += "," + this.isFixed;
-		self += "," + this.isOnFireUntil;
-		self += "," + this.isFrozenUntil;
-		return self;
 	}
 
 	/**

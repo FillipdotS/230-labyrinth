@@ -1,9 +1,6 @@
 package source.labyrinth.controllers;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -35,9 +31,8 @@ public class LevelMenuController implements Initializable {
 	private static String selectedLevel;
 	private static HBox selectedHBox;
 	private static int numberOfPlayers =  2;
-	private static ArrayList<Object> profilesChosen = new ArrayList<>();
+	private final static ArrayList<Object> profilesChosen = new ArrayList<>();
 	private static ArrayList<String> profileNames;
-	private ProfileManager profileManager = new ProfileManager();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -88,7 +83,7 @@ public class LevelMenuController implements Initializable {
 			pChoiceBox.getItems().addAll(profileNames);
 
 			profilesChosen.forEach(prof -> pChoiceBox.getItems().remove(prof));
-			if (profilesChosen.size() > i)pChoiceBox.getItems().addAll(profilesChosen.get(i));
+			if (profilesChosen.size() > i) pChoiceBox.getItems().addAll(profilesChosen.get(i));
 			if (profilesChosen.size() > i) pChoiceBox.getSelectionModel().select(profilesChosen.get(i));
 
 			pChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {

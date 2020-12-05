@@ -315,7 +315,6 @@ public class LevelController implements Initializable {
 		drawButton.setOnMouseClicked(event -> {
 			Tile received = SilkBag.getRandomTile();
 			if (received instanceof FloorTile) {
-				System.out.println("Player " + currentPlayer + " drew " + ((FloorTile) received).exportSelf());
 				placementPhase((FloorTile) received);
 			} else {
 				ActionTile thisAction = (ActionTile) received;
