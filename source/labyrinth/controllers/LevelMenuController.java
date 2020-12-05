@@ -20,7 +20,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
+
+/**
+ * LevelMenuController let user choose level number of players and associated profiles
+ * @author Erik Miller
+ */
 
 public class LevelMenuController implements Initializable {
 	@FXML private VBox vboxLevels;
@@ -31,7 +37,7 @@ public class LevelMenuController implements Initializable {
 	private static String selectedLevel;
 	private static HBox selectedHBox;
 	private static int numberOfPlayers =  2;
-	private final static ArrayList<Object> profilesChosen = new ArrayList<>();
+	private final static ArrayList<String> profilesChosen = new ArrayList<>();
 	private static ArrayList<String> profileNames;
 
 	@Override
@@ -52,7 +58,10 @@ public class LevelMenuController implements Initializable {
 		System.out.println("Created LevelMenuController");
 	}
 
-	private void renderLevels(){
+	/**
+	 * renders level list in menu
+	 */
+	private void renderLevels() {
 		vboxLevels.getChildren().clear();
 		getLevels().forEach((value) -> {
 			HBox levelHBox = new HBox(new Text(value.substring(0,value.length()-4)));
@@ -61,15 +70,20 @@ public class LevelMenuController implements Initializable {
 			levelHBox.setStyle("-fx-border-color: black");
 			levelHBox.setOnMouseClicked(event -> {
 				System.out.println(value);
-				if (selectedHBox != null)LevelMenuController.getSelectedHBox().setStyle("-fx-border-color: black");
-				setSelectedHBox(levelHBox);
-				setSelectedLevel(value);
+				if (selectedHBox != null) {
+					selectedHBox.setStyle("-fx-border-color: black");
+				}
+				selectedHBox = levelHBox;
+				selectedLevel = value;
 				levelHBox.setStyle("-fx-border-color: black;-fx-background-color: #c4ffd5;");
 			});
 			vboxLevels.getChildren().addAll(levelHBox);
 		});
 	}
 
+	/**
+	 * renders player profile choice in menu
+	 */
 	private void renderPlayersChoiceBox(){
 		vboxPlayers.getChildren().clear();
 
@@ -78,19 +92,22 @@ public class LevelMenuController implements Initializable {
 		profiles.forEach(profile -> profileNames.add(profile.getName()));
 
 		for (int i = 0; i < numberOfPlayers; i++) {
-			ChoiceBox pChoiceBox = new ChoiceBox();
+			ChoiceBox<String> pChoiceBox = new ChoiceBox<>();
 			pChoiceBox.setPrefWidth(250);
 			pChoiceBox.getItems().addAll(profileNames);
 
 			profilesChosen.forEach(prof -> pChoiceBox.getItems().remove(prof));
-			if (profilesChosen.size() > i) pChoiceBox.getItems().addAll(profilesChosen.get(i));
-			if (profilesChosen.size() > i) pChoiceBox.getSelectionModel().select(profilesChosen.get(i));
+			if (profilesChosen.size() > i) {
+				pChoiceBox.getItems().addAll(profilesChosen.get(i));
+			}
+			if (profilesChosen.size() > i) {
+				pChoiceBox.getSelectionModel().select(profilesChosen.get(i));
+			}
 
 			pChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-					Object obj = pChoiceBox.getItems().get((newValue.intValue()));
-					System.out.println(obj.toString());
-					System.out.println(oldValue);
-					if (!oldValue.equals(-1)) profilesChosen.remove(pChoiceBox.getItems().get((oldValue.intValue())));
+					if (!oldValue.equals(-1)) {
+						profilesChosen.remove(pChoiceBox.getItems().get((oldValue.intValue())));
+					}
 					profilesChosen.add(pChoiceBox.getItems().get((newValue.intValue())));
 					renderPlayersChoiceBox();
 				}
@@ -116,23 +133,30 @@ public class LevelMenuController implements Initializable {
 		}
 	}
 
+	/**
+	 * reeds level names fromm files
+	 * @return level names as string
+	 */
 	private ArrayList<String> getLevels() {
-		File actual = new File("./source/resources/levels");
-		ArrayList<String> levels=new ArrayList<>();
-		for (File f : actual.listFiles()) {
+		File levelsFiles = new File("./source/resources/levels");
+		ArrayList<String> levels = new ArrayList<>();
+		for (File f : Objects.requireNonNull(levelsFiles.listFiles())) {
 			levels.add(f.getName());
 			}
 		return levels;
 	}
 
+	/**
+	 * starts game
+	 * @param event click on button
+	 */
 	@FXML
 	public void playGame(ActionEvent event) {
 		if (selectedLevel != null) {
 			System.out.println("Going to board ...");
-			profilesChosen.forEach(obj -> System.out.println(obj.toString()));
 			String[] prof = new String[numberOfPlayers];
 			for (int i = 0; i < prof.length; i++) {
-				if (profilesChosen.size() > i) prof[i] = profilesChosen.get(i).toString();
+				if (profilesChosen.size() > i) prof[i] = profilesChosen.get(i);
 			}
 			LevelController.setNextLevelProfiles(prof);
 			LevelController.setNextLevelToLoad(selectedLevel);
@@ -158,14 +182,4 @@ public class LevelMenuController implements Initializable {
 			alert.showAndWait();
 		}
 	}
-
-	public static HBox getSelectedHBox() {return selectedHBox;}
-
-	public static void setSelectedHBox(HBox selectedHBox) {LevelMenuController.selectedHBox = selectedHBox;}
-
-	public static String getSelectedLevel() {return selectedLevel;}
-
-	public static void setSelectedLevel(String selectedLevel) {LevelMenuController.selectedLevel = selectedLevel;}
-
-
 }

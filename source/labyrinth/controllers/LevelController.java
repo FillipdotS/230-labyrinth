@@ -29,7 +29,7 @@ import java.util.*;
 /**
  * LevelController acts as both a controller for the scene in which the game happens, and as a "Game Manager"
  * type of class for tracking the current game.
- * @author Fillip Serov
+ * @author Fillip Serov, Erik Miller
  */
 public class LevelController implements Initializable {
 	// The amount of "time" it takes for all players to complete one turn. (i.e. 3 players = 3)
