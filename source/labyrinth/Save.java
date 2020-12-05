@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 /**
  * 
  * @author Max
+ * OLD MODEL for saveManager, not needed on saveMenuController
  * TODO: change all attributes and get set methods that suits the save.txt format 
  */
 public class Save {

@@ -37,6 +37,7 @@ import source.labyrinth.controllers.LevelMenuController;
 
 /**
  * @author Max
+ * OLD SAVE MANAGER, please user the new one(saveMenuController)
  * a save manager UI including function, no fxml required
  * actually crash about fxml fx:id so code FX here may easier to me, sorry about that
  */

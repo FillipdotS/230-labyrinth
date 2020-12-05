@@ -86,6 +86,22 @@ public class MainMenuController extends Application {
 	}
 
 	@FXML
+	public void goToSaveMenu(ActionEvent event) {
+		System.out.println("Going to save menu...");
+		try {
+			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/save_menu.fxml"));
+			Scene profileMenuScene = new Scene(profileMenuParent);
+			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+			window.setScene(profileMenuScene);
+			window.setTitle("Save Menu");
+			window.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
 	public void exitGame() {
 		Platform.exit();
 	}
