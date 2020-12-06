@@ -247,6 +247,10 @@ public class LevelController implements Initializable {
 			int[] startingPosition = ld.getPlayerStartingPositions()[i];
 			newPlayer.setStandingOn(this.board.getTileAt(startingPosition[0], startingPosition[1]));
 
+			newPlayer.addToPastPositions(startingPosition[0],startingPosition[1]);
+			newPlayer.addToPastPositions(startingPosition[0],startingPosition[1]);
+			newPlayer.addToPastPositions(startingPosition[0],startingPosition[1]);
+
 			players[i] = newPlayer;
 		}
 
@@ -634,6 +638,7 @@ public class LevelController implements Initializable {
 		chosen.setOpacity(0.5);
 		StackPane optionTile = getStackPaneTileByXY(x, y);
 		optionTile.getChildren().add(chosen);
+
 		FloorTile backTile = board.getTileAt(players[player].getPastPositions()[index][0],players[player].getPastPositions()[index][1]);
 		optionTile.setOnMouseClicked(event -> {
 			players[player].setStandingOn(backTile);
