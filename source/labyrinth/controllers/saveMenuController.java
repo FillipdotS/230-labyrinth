@@ -27,9 +27,7 @@ import java.util.ResourceBundle;
 
 /**
  * @author Max
- * added delete file function
- * working on load save function
- * added a TextArea to show name of save.ser
+ * saveMenuController are able to load or delete saves
  */
 public class saveMenuController implements Initializable {
     @FXML
@@ -44,21 +42,23 @@ public class saveMenuController implements Initializable {
     private static HBox selectedSaveHBox;
 
 
-
+    /**
+     * @param location -
+     * @param resources -
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         showSaveFile();
-
         System.out.println("Created SaveMenuController");
     }
 
     /**
-     * I am sorry that I have to copy Erik code to make it works
+     * method to display all saveData
      */
     private void showSaveFile() {
         vboxSaves.getChildren().clear();
-        getSaves().forEach((value) -> {
-            HBox saveFile = new HBox(new Text(value.substring(0, value.length() - 4)));
+        getSaves().forEach((savName) -> {
+            HBox saveFile = new HBox(new Text(savName.substring(0, savName.length() - 4)));
             saveFile.setPrefHeight(30);
             saveFile.setAlignment(Pos.CENTER_LEFT);
             saveFile.setStyle("-fx-border-color: #c4fffd");
@@ -67,8 +67,8 @@ public class saveMenuController implements Initializable {
             saveFile.setOnMouseClicked(event -> {
                 deleteSaveButton.setDisable(false);
                 loadSaveButton.setDisable(false);
-                saveDetailTextArea.setText(value);
-                System.out.println(value);
+                saveDetailTextArea.setText("SaveData name:" + "\n" + savName);
+                System.out.println(savName);
                 if (selectedSaveHBox != null) {
                     saveMenuController.getSelectedSaveHBox().setStyle("-fx-border-color: #c4fffd");
 
@@ -76,7 +76,7 @@ public class saveMenuController implements Initializable {
 
                 saveFile.setStyle("-fx-border-color: black;-fx-background-color: #ffb5b5;");
                 setSelectedSaveHBox(saveFile);
-                setSelectedSaveName(value);
+                setSelectedSaveName(savName);
 
             });
 
@@ -85,7 +85,25 @@ public class saveMenuController implements Initializable {
         });
     }
 
+    /**
+     * sub-method to get names from each of the save file
+     *
+     * @return savefile name
+     */
+    private ArrayList<String> getSaves() {
+        File actual = new File("./source/resources/saves");
+        ArrayList<String> saves = new ArrayList<>();
+        for (File save : Objects.requireNonNull(actual.listFiles())) {
+            saves.add(save.getName());
+        }
+        return saves;
+    }
 
+    /**
+     * common method to back to main menu
+     *
+     * @param event click back button
+     */
     @FXML
     public void returnToMainMenu(ActionEvent event) {
         System.out.println("Going back to main menu...");
@@ -102,17 +120,9 @@ public class saveMenuController implements Initializable {
         }
     }
 
-    private ArrayList<String> getSaves() {
-        File actual = new File("./source/resources/saves");
-        ArrayList<String> saves = new ArrayList<>();
-        for (File f : Objects.requireNonNull(actual.listFiles())) {
-            saves.add(f.getName());
-        }
-        return saves;
-    }
 
     /**
-     * method to delete save
+     * method to delete save by using selectedSaveName
      */
     @FXML
     public void deleteSave() {
@@ -130,16 +140,16 @@ public class saveMenuController implements Initializable {
                 Alert deleted = new Alert(Alert.AlertType.INFORMATION);
                 deleted.setTitle("Delete Save");
                 deleted.setHeaderText("File deleted");
-                deleted.setContentText("File "+ selectedSaveName + " deleted");
+                deleted.setContentText("File " + selectedSaveName + " deleted");
                 deleted.showAndWait();
 
-                // If we don't reset selected to null, we could potentially attempt to load a deleted file
+                // avoid to load a deleted file
                 selectedSaveName = null;
                 selectedSaveHBox = null;
 
                 deleteSaveButton.setDisable(true);
                 loadSaveButton.setDisable(true);
-                showSaveFile();
+                showSaveFile();//refresh the saveData list
             }
 
         } else {
@@ -147,6 +157,11 @@ public class saveMenuController implements Initializable {
         }
     }
 
+    /**
+     * method to apply save and continue game
+     *
+     * @param event loadSave
+     */
     @FXML
     public void loadSave(ActionEvent event) {
         if (selectedSaveName != null) {
@@ -165,19 +180,23 @@ public class saveMenuController implements Initializable {
     }
 
 
-
+    /**
+     * @return selectedSaveHBox - HBox with saveName
+     */
     public static HBox getSelectedSaveHBox() {
         return selectedSaveHBox;
     }
 
+    /**
+     * @param selectedSaveHBox - a selected HBox
+     */
     public static void setSelectedSaveHBox(HBox selectedSaveHBox) {
         saveMenuController.selectedSaveHBox = selectedSaveHBox;
     }
 
-/*    public static String getSelectedSaveName() {
-        return selectedSaveName;
-    }*/
-
+    /**
+     * @param selectedSaveName name of each save
+     */
     public static void setSelectedSaveName(String selectedSaveName) {
         saveMenuController.selectedSaveName = selectedSaveName;
     }
