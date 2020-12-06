@@ -378,10 +378,12 @@ public class LevelController implements Initializable {
 	 */
 	private void renderPlacementMenu() {
 		bottomContainer.getChildren().clear();
-		HBox insertHBox = new HBox();
-		insertHBox.setPrefHeight(tileRenderSize);
+
+		GridPane rotationControls = new GridPane();
+
 		ImageView clockwise = new ImageView(new Image("source/resources/img/turn_arrow.png", tileRenderSize, tileRenderSize, false, false));
 		ImageView aClockwise = new ImageView(new Image("source/resources/img/turn_arrow.png", tileRenderSize, tileRenderSize, false, false));
+
 		clockwise.setScaleX(-1);
 		clockwise.setOnMouseClicked(event -> {
 			floorTileToInsert.rotateBy(1);
@@ -392,8 +394,11 @@ public class LevelController implements Initializable {
 			renderPlacementMenu();
 		});
 
-		insertHBox.getChildren().addAll(clockwise,floorTileToInsert.renderTile(tileRenderSize),aClockwise);
-		bottomContainer.getChildren().add(insertHBox);
+		rotationControls.add(clockwise, 0, 0);
+		rotationControls.add(floorTileToInsert.renderTile(tileRenderSize), 1, 0);
+		rotationControls.add(aClockwise, 2, 0);
+		
+		bottomContainer.getChildren().add(rotationControls);
 	}
 
 	/**
@@ -493,6 +498,8 @@ public class LevelController implements Initializable {
 		currentTurnPhase = TurnPhases.MOVEMENT;
 		bottomContainer.getChildren().clear();
 		showWay();
+
+		bottomContainer.getChildren().add(new Text("You must now choose where to move"));
 	}
 
 	private void endTurn() {
