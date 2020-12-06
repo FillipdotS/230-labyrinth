@@ -10,8 +10,7 @@ import java.util.Scanner;
  * @author Fillip Serov
  */
 public final class ProfileManager {
-	private static final File profilesFile = new File("source/resources/profiles/profiles.txt");
-
+	private static final File PROFILESFILE = new File("source/resources/profiles/profiles.txt");
 	private static int nextID; // A new profile will be given this id, which is then incremented
 	private static ArrayList<Profile> profiles;
 
@@ -26,7 +25,7 @@ public final class ProfileManager {
 
 			Scanner in;
 			try {
-				in = new Scanner(profilesFile);
+				in = new Scanner(PROFILESFILE);
 				buildProfiles(in);
 			} catch (FileNotFoundException e) {
 				System.out.println("Profiles file wasn't found, making one now.");
@@ -37,9 +36,12 @@ public final class ProfileManager {
 		}
 	}
 
+	/**
+	 * Writes the profiles to a file and saves them.
+	 */
 	public static void writeProfilesToFile() {
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(profilesFile));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(PROFILESFILE));
 			bw.write(Integer.toString(nextID));
 			bw.newLine();
 
@@ -130,7 +132,7 @@ public final class ProfileManager {
 	 */
 	private static void makeProfileFile() {
 		try {
-			profilesFile.createNewFile();
+			PROFILESFILE.createNewFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Could not create new profiles file, exiting...");
@@ -138,6 +140,10 @@ public final class ProfileManager {
 		}
 	}
 
+	/**
+	 * Sets up the profiles
+	 * @param mainIn main method scanner
+	 */
 	private static void buildProfiles(Scanner mainIn) {
 		// Prevent crash on empty profile files
 		if (mainIn.hasNextLine()) {
