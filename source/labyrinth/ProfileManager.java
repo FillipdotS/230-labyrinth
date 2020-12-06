@@ -139,11 +139,12 @@ public final class ProfileManager {
 	}
 
 	private static void buildProfiles(Scanner mainIn) {
-		nextID = mainIn.nextInt();
-
 		// Prevent crash on empty profile files
 		if (mainIn.hasNextLine()) {
+			nextID = mainIn.nextInt();
 			mainIn.nextLine();
+		} else {
+			nextID = 0; // Fresh profiles file that was just created
 		}
 
 		while (mainIn.hasNextLine()) {
