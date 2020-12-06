@@ -16,7 +16,7 @@
             <Button mnemonicParsing="false" onAction="#returnToMainMenu" text="Back" BorderPane.alignment="CENTER" />
          </bottom>
          <top>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Leaderboard stuff" BorderPane.alignment="CENTER" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Leaderboard" BorderPane.alignment="CENTER" />
          </top>
          <center>
             <TableView fx:id="tableview" prefHeight="316.0" prefWidth="600.0" BorderPane.alignment="CENTER">
