@@ -5,7 +5,7 @@ source/resources/profiles/profiles.txt
 source/resources/saves/
 
 # Leaderboards
-source/resources/levels/*.ser
+source/resources/leaderboards/*.ser
 
 # Build
 out/
