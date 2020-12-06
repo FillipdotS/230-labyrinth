@@ -128,7 +128,7 @@ public class saveMenuController implements Initializable {
     public void deleteSave() {
         if (selectedSaveHBox != null) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation Dialog");
+            alert.setTitle("Delete Save");
             alert.setHeaderText("Warning !");
             alert.setContentText("Are you sure you want to delete these files ?");
 
@@ -151,6 +151,9 @@ public class saveMenuController implements Initializable {
                 loadSaveButton.setDisable(true);
                 showSaveFile();//refresh the saveData list
             }
+            else {
+                System.out.println("Delete Cancelled");
+            }
 
         } else {
             System.out.println("Error Selection");
@@ -165,17 +168,31 @@ public class saveMenuController implements Initializable {
     @FXML
     public void loadSave(ActionEvent event) {
         if (selectedSaveName != null) {
-            LevelController.setNextSaveToLoad(selectedSaveName);
-            try {
-                Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level.fxml"));
-                Scene profileMenuScene = new Scene(profileMenuParent);
-                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                window.setScene(profileMenuScene);
-                window.setTitle("Game");
-                window.show();
-            } catch (IOException e) {
-                e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Load Save");
+            alert.setHeaderText("Loading Save");
+            alert.setContentText("Load this save and continue the game?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                LevelController.setNextSaveToLoad(selectedSaveName);
+                try {
+                    Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level.fxml"));
+                    Scene profileMenuScene = new Scene(profileMenuParent);
+                    Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    window.setScene(profileMenuScene);
+                    window.setTitle("Game");
+                    window.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            else {
+                System.out.println("Load Cancelled");
+            }
+
+
+
         }
     }
 
