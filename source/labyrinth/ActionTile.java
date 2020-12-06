@@ -2,27 +2,46 @@ package source.labyrinth;
 
 import java.io.Serializable;
 
+/**
+ * Action Tile class sets up the action tiles images and gets their action type(fire,ice,etc..)
+ * @author Ian Lavin Rady
+ * @author Erik Miller
+ * @version 1.0
+ */
 public class ActionTile extends Tile implements Serializable {
-    public enum ActionType {
-        FIRE("source/resources/img/action_tile_fire.png"),
-        ICE("source/resources/img/action_tile_ice.png"),
-        DOUBLEMOVE("source/resources/img/action_tile_double_move.png"),
-        BACKTRACK("source/resources/img/action_tile_back_track.png");
 
-        public final String imageURL;
+	public enum ActionType {
+		FIRE("source/resources/img/action_tile_fire.png"),
+		ICE("source/resources/img/action_tile_ice.png"),
+		DOUBLEMOVE("source/resources/img/action_tile_double_move.png"),
+		BACKTRACK("source/resources/img/action_tile_back_track.png");
 
-        ActionType(String imageURL) {
-            this.imageURL = imageURL;
-        }
-    }
+		public final String imageURL;
 
-    private final ActionType actionType;
+		/**
+		 * Constructor for imageURL.
+		 * @param imageURL the imageURL for the action type.
+		 */
+		ActionType(String imageURL) {
+			this.imageURL = imageURL;
+		}
+	}
 
-    public ActionTile(ActionType actionType) {
-        this.actionType = actionType;
-    }
+	private final ActionType ACTIONTYPE;
 
-    public ActionType getType() {
-        return this.actionType;
-    }
+	/**
+	 * Constructor for the action type.
+	 * @param actionType the action type(fire, ice, backtrack, etc..)
+	 */
+	public ActionTile(ActionType actionType) {
+		this.ACTIONTYPE = actionType;
+	}
+
+	/**
+	 * Gets the action type.
+	 * @return the action type.
+	 */
+	public ActionType getType() {
+		return this.ACTIONTYPE;
+	}
 }

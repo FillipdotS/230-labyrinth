@@ -8,6 +8,7 @@ import java.util.Scanner;
 /**
  * The LevelReader is going to read the level chosen, and pass that info so the Board can be constructed.
  * @author Ian Lavin Rady
+ * @author Fillip Serov
  */
 
 public class LevelReader {
@@ -15,7 +16,7 @@ public class LevelReader {
 	private static final int TOTAL_NUM_OF_PLAYERS = 4;
 
 	/**
-	 *
+	 *Reads file and handles exceptions in case file is not found
 	 * @param filename the name of the file.
 	 * @return the selected level once read.
 	 */
@@ -49,11 +50,11 @@ public class LevelReader {
 		Board levelBoard = new Board(width, height);
 		levelData.setBoard(levelBoard);
 
-		while(in.hasNext()) {
+		while (in.hasNext()) {
 			int numOfFixedTiles = in.nextInt();
 			in.nextLine();
 
-			for(int i = 0; i < numOfFixedTiles; i++) {
+			for (int i = 0; i < numOfFixedTiles; i++) {
 				int xPos = in.nextInt();
 				int yPos = in.nextInt();
 				String type = in.next();
@@ -67,7 +68,7 @@ public class LevelReader {
 			}
 
 			int[][] playerStartingPositions = new int[4][2];
-			for(int i = 0; i < TOTAL_NUM_OF_PLAYERS; i++) {
+			for (int i = 0; i < TOTAL_NUM_OF_PLAYERS; i++) {
 				playerStartingPositions[i][0] = in.nextInt();
 				playerStartingPositions[i][1] = in.nextInt();
 				in.nextLine();
@@ -166,6 +167,12 @@ public class LevelReader {
 		}
 	}
 
+	/**
+	 * It reads the filename and adds new profileIDs if they don't already
+	 * exist.
+ 	 * @param filename specified filename.
+	 * @param profileID the Profile IDs to be updated.
+	 */
 	private static void updateProfileID(String filename, int[] profileID ) {
 		Scanner in = null;
 		try {
@@ -175,21 +182,27 @@ public class LevelReader {
 			System.exit(0);
 		}
 
-		String[] pid = in.nextLine().split(",");
-		for(int i = 0; i < profileID.length; i++) {
-			if(checksIfExists(pid,profileID,i) == false);
-			// I HAVE TO CALL FILEWRITER TO ADD PROFILEID[I] TO THIS LINE
-			// System.out.println(profileID[i]);
-
+		String[] originalPid = in.nextLine().split(",");
+		for (int i = 0; i < profileID.length; i++) {
+			if (checkIfExists(originalPid,profileID,i) == false) {
+				// I HAVE TO CALL FILEWRITER TO ADD PROFILEID[I] TO THIS LINE
+				// System.out.println(profileID[i]);
+			}
 		}
 	}
 
 
-
-	private static boolean checksIfExists(String[] pid,int[] profileID,int i) {
-		for (int j = 0; j < pid.length; j++) {
-			if (profileID[i] == Integer.parseInt(pid[j]))
+	/**
+	 * Just checks if pid added is not the same as original pid and returns a boolean depending on that.
+	 * @param originalPid the PIDs already registered in file.
+	 * @param i the position of Profile IDs being added.
+	 * @return true if they're the same, false otherwise.
+	 */
+	private static boolean checkIfExists(String[] originalPid, int[] profileID, int i) {
+		for (int j = 0; j < originalPid.length; j++) {
+			if (profileID[i] == Integer.parseInt(originalPid[j])) {
 				return true;
+			}
 		}
 		return false;
 	}
