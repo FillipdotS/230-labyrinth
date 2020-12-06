@@ -301,6 +301,9 @@ public class LevelController implements Initializable {
 		}
 	}
 
+	/**
+	 * displays data about players
+	 */
 	private void setupSideInfo() {
 		playerSubInfoVBoxes = new VBox[players.length];
 
@@ -311,6 +314,10 @@ public class LevelController implements Initializable {
 		}
 	}
 
+	/**
+	 * gets tile from SilkBag and starts placementPhase if tile is FloorTile
+	 * and playAction if ActionTile
+	 */
 	private void drawingPhase() {
 		renderBoard();
 		currentTurnPhase = TurnPhases.DRAWING;
@@ -339,6 +346,10 @@ public class LevelController implements Initializable {
 		bottomContainer.getChildren().add(drawButton);
 	}
 
+	/**
+	 * Loads interface for placing and rotating the nextFloorTileToInsert
+	 * @param nextFloorTileToInsert FloorTile to insert
+	 */
 	private void placementPhase(FloorTile nextFloorTileToInsert) {
 		Boolean[][] insertionMask = this.board.getInsertablePositions();
 		// With some clever use of the ice actions, we could potentially freeze all columns and rows, therefore
@@ -358,6 +369,9 @@ public class LevelController implements Initializable {
 		}
 	}
 
+	/**
+	 * runs when placement menu initialise and updates
+	 */
 	private void renderPlacementMenu() {
 		bottomContainer.getChildren().clear();
 		HBox insertHBox = new HBox();
@@ -378,6 +392,11 @@ public class LevelController implements Initializable {
 		bottomContainer.getChildren().add(insertHBox);
 	}
 
+	/**
+	 * inserts floor tile renders board and starts playActionPhase
+	 * @param insertionDirection
+	 * @param insertionPoint
+	 */
 	private void endPlacementPhase(int insertionDirection, int insertionPoint) {
 		this.board.insertFloorTile(this.floorTileToInsert, insertionDirection, insertionPoint);
 		this.floorTileToInsert = null;
@@ -385,6 +404,9 @@ public class LevelController implements Initializable {
 		playActionPhase();
 	}
 
+	/**
+	 * starts playAction
+	 */
 	private void playActionPhase() {
 		currentTurnPhase = TurnPhases.PLAYACTION;
 		renderActionMenu();

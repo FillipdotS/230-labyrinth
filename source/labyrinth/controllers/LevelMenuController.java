@@ -63,9 +63,9 @@ public class LevelMenuController implements Initializable {
 	}
 
 	private void renderLeaderBoard(){
-		Profile prof = new Profile("ree",1019, 2,4,0);
+		Profile prof = new Profile("ree",1019, 5,4,1);
 		Profile prof1 = new Profile("ree1",2019, 2,1,0);
-		Profile prof2 = new Profile("ree2",3019, 2,6,0);
+		Profile prof2 = new Profile("ree2"+selectedLevel,3019, 7,6,0);
 
 		ArrayList<Profile> profs = new ArrayList<>();
 		profs.add(prof);
@@ -97,6 +97,7 @@ public class LevelMenuController implements Initializable {
 				selectedHBox = levelHBox;
 				selectedLevel = value;
 				levelHBox.setStyle("-fx-border-color: black;-fx-background-color: #c4ffd5;");
+				renderLeaderBoard();
 			});
 			vboxLevels.getChildren().addAll(levelHBox);
 		});
