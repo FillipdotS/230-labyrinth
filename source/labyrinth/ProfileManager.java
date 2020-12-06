@@ -29,9 +29,10 @@ public final class ProfileManager {
 				in = new Scanner(profilesFile);
 				buildProfiles(in);
 			} catch (FileNotFoundException e) {
-				System.out.println("Profiles file wasn't found.");
-				e.printStackTrace();
-				System.exit(0);
+				System.out.println("Profiles file wasn't found, making one now.");
+				// e.printStackTrace();
+				makeProfileFile();
+				performSetup();
 			}
 		}
 	}
@@ -122,6 +123,19 @@ public final class ProfileManager {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Will create a profile file to be used for saving profiles.
+	 */
+	private static void makeProfileFile() {
+		try {
+			profilesFile.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Could not create new profiles file, exiting...");
+			System.exit(0);
+		}
 	}
 
 	private static void buildProfiles(Scanner mainIn) {
