@@ -745,8 +745,6 @@ public class LevelController implements Initializable {
 
 		// If we are in the placement phase (i.e. we have a FloorTile), show some additional buttons
 		if (floorTileToInsert != null) {
-			// TODO: Game will soft lock if there are no rows/columns that can be inserted into
-
 			// Put column buttons (start at 1 since 0,0 is the empty top left spot)
 			for (int x = 1; x <= this.board.getWidth(); x++) {
 				if (insertableMask[0][x - 1]) {
