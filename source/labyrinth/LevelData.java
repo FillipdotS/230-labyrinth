@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class LevelData {
 	private Board board;
 	private int[][] playerStartingPositions;
-	private HashMap<FloorTile.TileType, Integer> floorTileAmounts;
+	private HashMap<FloorTile.FloorType, Integer> floorTileAmounts;
 	private HashMap<ActionTile.ActionType, Integer> actionTileAmounts;
 
 	/**
@@ -53,7 +53,7 @@ public class LevelData {
 	 * @param typeToChange FloorType to change
 	 * @param amount Amount to change to
 	 */
-	public void setFloorTileAmount(FloorTile.TileType typeToChange, int amount) {
+	public void setFloorTileAmount(FloorTile.FloorType typeToChange, int amount) {
 		floorTileAmounts.put(typeToChange, amount);
 	}
 
@@ -61,7 +61,7 @@ public class LevelData {
 	 * @param typeToGet FloorType to return
 	 * @return Amount of that FloorType
 	 */
-	public int getFloorTileAmount(FloorTile.TileType typeToGet) {
+	public int getFloorTileAmount(FloorTile.FloorType typeToGet) {
 		return floorTileAmounts.get(typeToGet);
 	}
 

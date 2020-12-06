@@ -16,7 +16,7 @@ public class FloorTile extends Tile implements Serializable {
 	/**
 	 * The different types of floor tile that an instance of FloorTile can be.
 	 */
-	public enum TileType {
+	public enum FloorType {
 		STRAIGHT(new Boolean[]{true, false, true, false}, "source/resources/img/tile_straight.png"),
 		CORNER(new Boolean[]{true, true, false, false}, "source/resources/img/tile_corner.png"),
 		TSHAPE(new Boolean[]{false, true, true, true},"source/resources/img/tile_tshape.png"),
@@ -27,14 +27,14 @@ public class FloorTile extends Tile implements Serializable {
 		// Each tile type has their default move mask, and a string to their image.
 		private final Boolean[] defaultMoveMask;
 
-		TileType(Boolean[] defaultMoveMask, String imageURL) {
+		FloorType(Boolean[] defaultMoveMask, String imageURL) {
 			this.defaultMoveMask = defaultMoveMask;
 			this.imageURL = imageURL;
 		}
 	}
 
 	private final double playerToTileScaling = 0.6f;
-	private final TileType tileType;
+	private final FloorType floorType;
 
 	private Boolean[] moveMask; // Specifically THIS tiles move mask, which has been changed by orientation
 	private int orientation;
@@ -43,9 +43,9 @@ public class FloorTile extends Tile implements Serializable {
 	private int isFrozenUntil;
 	private Player player;
 
-	public FloorTile(int orientation, TileType tileType) {
+	public FloorTile(int orientation, FloorType floorType) {
 		this.orientation = orientation;
-		this.tileType = tileType;
+		this.floorType = floorType;
 		this.isFrozenUntil=-1;
 		this.isOnFireUntil=-1;
 
@@ -70,7 +70,7 @@ public class FloorTile extends Tile implements Serializable {
 	}
 
 	public Boolean isItGoal() {
-		return (this.tileType == TileType.GOAL);
+		return (this.floorType == FloorType.GOAL);
 	}
 	/**
 	 * freezes tile for a loop
@@ -148,11 +148,9 @@ public class FloorTile extends Tile implements Serializable {
 	public StackPane renderTile(int renderSize) {
 		String url;
 		if (isFixed) {
-			url = this.tileType.imageURL.substring(0,this.tileType.imageURL.length()-4) + "_fixed.png";
-			//System.out.println(this.tileType.imageURL.substring(0,this.tileType.imageURL.length()-4) + "_fixed.png");
-			//url = this.tileType.imageURL;
+			url = this.floorType.imageURL.substring(0, this.floorType.imageURL.length() - 4) + "_fixed.png";
 		} else {
-			url = this.tileType.imageURL;
+			url = this.floorType.imageURL;
 		}
 
 		Image img = new Image(url, renderSize, renderSize, false, false);
@@ -162,12 +160,6 @@ public class FloorTile extends Tile implements Serializable {
 
 		StackPane stack = new StackPane(iv);
 		stack.setStyle("-fx-border-width: 1px; -fx-border-color: darkgrey");
-
-//		if (isFixed) {
-//			Image fixedImage = new Image("source/resources/img/fixed_tile.png", renderSize, renderSize, false, false);
-//			ImageView fixedImageView = new ImageView(fixedImage);
-//			stack.getChildren().addAll(fixedImageView);
-//		}
 
 		if (isFrozenUntil > LevelController.getCurrentTime()) {
 			Image fixedImage = new Image("source/resources/img/frozen_tile.png", renderSize, renderSize, false, false);
@@ -199,7 +191,7 @@ public class FloorTile extends Tile implements Serializable {
 	 */
 	private Boolean[] calculateMoveMask() {
 		// Shift the array to the right depending on orientation
-		Boolean[] toReturn = this.tileType.defaultMoveMask.clone();
+		Boolean[] toReturn = this.floorType.defaultMoveMask.clone();
 		for (int i = 0; i < orientation; i++) {
 			Boolean tmp = toReturn[3];
 			System.arraycopy(toReturn, 0, toReturn, 1, 3);

@@ -55,7 +55,8 @@ public class LevelController implements Initializable {
 		DRAWING,
 		PLACEMENT,
 		PLAYACTION,
-		MOVEMENT
+		MOVEMENT,
+		END
 	}
 
 	private String currentLevelName; // Name of level we are on, needed to update leaderboards
@@ -203,10 +204,10 @@ public class LevelController implements Initializable {
 		this.board = ld.getBoard();
 
 		// Add all floor tiles to the silk bag
-		for (FloorTile.TileType tileType : FloorTile.TileType.values()) {
-			int amount = ld.getFloorTileAmount(tileType);
+		for (FloorTile.FloorType floorType : FloorTile.FloorType.values()) {
+			int amount = ld.getFloorTileAmount(floorType);
 			for (int i = 0; i < amount; i++) {
-				SilkBag.addTile(new FloorTile(new Random().nextInt(5), tileType));
+				SilkBag.addTile(new FloorTile(new Random().nextInt(5), floorType));
 			}
 		}
 
@@ -499,14 +500,13 @@ public class LevelController implements Initializable {
 	 *
 	 */
 	private void movementPhase() {
+		currentTurnPhase = TurnPhases.MOVEMENT;
 		updateSubInfoVBoxes(); // We could have played an action to get here
 		renderBoard();
 		usedAction = null;
-		currentTurnPhase = TurnPhases.MOVEMENT;
 		bottomContainer.getChildren().clear();
-		showWay();
-
 		bottomContainer.getChildren().add(new Text("You must now choose where to move"));
+		showWay();
 	}
 
 	private void endTurn() {
@@ -704,6 +704,7 @@ public class LevelController implements Initializable {
 		if (board.getTileAt(x,y).isItGoal()) {
 			System.out.println("Player " + currentPlayer + " has won.");
 			playerHasWon(currentPlayer);
+			currentTurnPhase = TurnPhases.END;
 			renderBoard();
 		} else {
 			// If we moved in the PLAYACTION phase, that means we just double moved and should just continue

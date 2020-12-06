@@ -54,22 +54,6 @@ public class MainMenuController extends Application {
 	}
 
 	@FXML
-	public void goToLeaderboards(ActionEvent event) {
-		System.out.println("Going to leaderboards...");
-		try {
-			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/leaderboards.fxml"));
-			Scene profileMenuScene = new Scene(profileMenuParent);
-			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-
-			window.setScene(profileMenuScene);
-			window.setTitle("Level Select");
-			window.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@FXML
 	public void goToProfileMenu(ActionEvent event) {
 		System.out.println("Going to profile menu...");
 		try {

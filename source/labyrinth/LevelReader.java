@@ -57,7 +57,7 @@ public class LevelReader {
 				String type = in.next();
 				int orientation = in.nextInt();
 
-				FloorTile fixedTile = new FloorTile(orientation, FloorTile.TileType.valueOf(type));
+				FloorTile fixedTile = new FloorTile(orientation, FloorTile.FloorType.valueOf(type));
 				fixedTile.setFixed(true);
 				levelBoard.setTileAt(fixedTile, xPos, yPos);
 
@@ -72,16 +72,16 @@ public class LevelReader {
 			}
 			levelData.setPlayerStartingPositions(playerStartingPositions);
 
-			levelData.setFloorTileAmount(FloorTile.TileType.STRAIGHT, in.nextInt());
+			levelData.setFloorTileAmount(FloorTile.FloorType.STRAIGHT, in.nextInt());
 			in.nextLine();
 
-			levelData.setFloorTileAmount(FloorTile.TileType.TSHAPE, in.nextInt());
+			levelData.setFloorTileAmount(FloorTile.FloorType.TSHAPE, in.nextInt());
 			in.nextLine();
 
-			levelData.setFloorTileAmount(FloorTile.TileType.CORNER, in.nextInt());
+			levelData.setFloorTileAmount(FloorTile.FloorType.CORNER, in.nextInt());
 			in.nextLine();
 
-			levelData.setFloorTileAmount(FloorTile.TileType.GOAL, in.nextInt());
+			levelData.setFloorTileAmount(FloorTile.FloorType.GOAL, in.nextInt());
 			in.nextLine();
 
 			levelData.setActionTileAmount(ActionTile.ActionType.ICE, in.nextInt());

@@ -1,75 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="source.labyrinth.controllers.MainMenuController">
-   <children>
-      <BorderPane layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
-         <center>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER_RIGHT">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#goToLevelMenu" text="Play">
-                     <VBox.margin>
+<BorderPane layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="source.labyrinth.controllers.MainMenuController">
+    <center>
+        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER_RIGHT">
+            <children>
+                <Button mnemonicParsing="false" onAction="#goToLevelMenu" text="Play">
+                    <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button mnemonicParsing="false" onAction="#goToLeaderboards" text="Leaderboards">
-                     <VBox.margin>
+                    </VBox.margin>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#goToProfileMenu" text="Profiles" textAlignment="CENTER">
+                    <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button mnemonicParsing="false" onAction="#goToProfileMenu" text="Profiles" textAlignment="CENTER">
-                     <VBox.margin>
+                    </VBox.margin>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#goToSaveMenu" text="Save">
+                    <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button mnemonicParsing="false" onAction="#goToSaveMenu" text="Save">
-                     <VBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </VBox.margin></Button>
-                  <Button mnemonicParsing="false" onAction="#exitGame" text="Exit">
-                     <VBox.margin>
+                    </VBox.margin>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#exitGame" text="Exit">
+                    <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="20.0" />
-                     </VBox.margin>
-                  </Button>
-               </children>
-            </VBox>
-         </center>
-         <top>
-            <VBox alignment="CENTER" prefHeight="213.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Group 39 230 Labyrinth" textAlignment="CENTER">
-                     <font>
+                    </VBox.margin>
+                </Button>
+            </children>
+        </VBox>
+    </center>
+    <top>
+        <VBox alignment="CENTER" prefHeight="213.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <children>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Group 39 230 Labyrinth" textAlignment="CENTER">
+                    <font>
                         <Font name="System Bold" size="36.0" />
-                     </font>
-                  </Text>
-                  <Label text="Message Of The Day" wrapText="true">
-                     <font>
+                    </font>
+                </Text>
+                <Label text="Message Of The Day" wrapText="true">
+                    <font>
                         <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <TextArea fx:id="motd" editable="false" prefHeight="164.0" prefWidth="600.0" text="&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation" wrapText="true">
-                     <font>
+                    </font>
+                </Label>
+                <TextArea fx:id="motd" editable="false" prefHeight="102.0" prefWidth="600.0" text="&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation" wrapText="true">
+                    <font>
                         <Font size="15.0" />
-                     </font>
-                  </TextArea>
-               </children>
-               <BorderPane.margin>
-                  <Insets />
-               </BorderPane.margin>
-            </VBox>
-         </top>
-      </BorderPane>
-   </children>
-</AnchorPane>
+                    </font>
+                </TextArea>
+            </children>
+            <BorderPane.margin>
+                <Insets />
+            </BorderPane.margin>
+        </VBox>
+    </top>
+</BorderPane>
