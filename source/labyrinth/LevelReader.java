@@ -42,11 +42,6 @@ public class LevelReader {
 		LevelData levelData = new LevelData();
 
 		in.useDelimiter("(\\p{javaWhitespace}|,)+");
-		while(in.hasNextInt()) {
-			int profileID = in.nextInt();
-		}
-
-		in.nextLine();
 		int width = in.nextInt();
 		int height = in.nextInt();
 		in.nextLine();
