@@ -536,6 +536,24 @@ public class LevelController implements Initializable {
 
 		ProfileManager.writeProfilesToFile();
 
+		// Update the leaderboard
+		// Get profiles that played
+		ArrayList<Integer> profilesThatPlayed = new ArrayList<>();
+		for (Player p: players) {
+			if (p.getAssociatedProfile() != null) {
+				profilesThatPlayed.add(p.getAssociatedProfile().getID());
+			}
+		}
+
+		// If at least one profile as playing update the leaderboard
+		if (profilesThatPlayed.size() > 0) {
+			if (winningProfile != null) {
+				LevelReader.updateLeaderboard(this.currentLevelName, profilesThatPlayed, winningProfile.getID());
+			} else {
+				LevelReader.updateLeaderboard(this.currentLevelName, profilesThatPlayed, null);
+			}
+		}
+
 		String playerName = winningProfile != null ? winningProfile.getName() : "Player " + winningID;
 		String winningMessage = playerName + " reached the goal tile first! They are the winner!";
 		ImageView playerIcon = new ImageView(new Image("source/resources/img/player_" + winningID + ".png", 50, 50, false, false));

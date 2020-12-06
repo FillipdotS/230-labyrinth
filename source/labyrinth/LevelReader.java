@@ -1,8 +1,8 @@
 package source.labyrinth;
-import sun.util.logging.PlatformLogger;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -104,6 +104,66 @@ public class LevelReader {
 		}
 
 		return levelData;
+	}
+
+	/**
+	 * Update a level-specific leaderboard with new profiles
+	 * @param levelName Level whose leaderboard will be changed
+	 * @param profilesThatPlayed Integer ArrayList of profile ids that played on that level
+	 * @param winningProfile Profile id of player that won (which should increase their wins by 1). Can be null
+	 */
+	public static void updateLeaderboard(String levelName, ArrayList<Integer> profilesThatPlayed, Integer winningProfile) {
+		File leaderboardFile = new File("source/resources/leaderboards/" + levelName + "_leaderboard.ser");
+
+		// If leaderboard file doesnt exist make one
+		if (!leaderboardFile.exists()) {
+			System.out.println("Leaderboard for " + levelName + " didn't exist, making one now...");
+			try {
+				leaderboardFile.createNewFile();
+				// And fill it with an empty HashMap
+				HashMap<Integer, Integer> empty = new HashMap<>();
+
+				ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(leaderboardFile));
+				objectOutputStream.writeObject(empty);
+				objectOutputStream.flush();
+				objectOutputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("Could not create leaderboard file.");
+			}
+		}
+
+		try {
+			System.out.println("Attempting to read leaderboard for " + levelName);
+			ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(leaderboardFile));
+
+			HashMap<Integer, Integer> leaderboardInfo = (HashMap<Integer, Integer>) objectInputStream.readObject();
+			objectInputStream.close();
+
+			// Check that every profile that played exists in the leaderboard already.
+			// If they don't, put them in with wins set to 0
+			for (int i = 0; i < profilesThatPlayed.size(); i++) {
+				int playingProfile = profilesThatPlayed.get(i);
+				if (!leaderboardInfo.containsKey(playingProfile)) {
+					leaderboardInfo.put(playingProfile, 0);
+				}
+			}
+
+			// Update the winner with +1 wins
+			// No need to check if the winner exists since the previous for-loop takes care of that
+			if (winningProfile != null) {
+				leaderboardInfo.put(winningProfile, leaderboardInfo.get(winningProfile) + 1);
+			}
+
+			// Now save the leaderboard
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(leaderboardFile));
+			objectOutputStream.writeObject(leaderboardInfo);
+			objectOutputStream.flush();
+			objectOutputStream.close();
+			System.out.println("Updated the leaderboard for " + levelName);
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static void updateProfileID(String filename, int[] profileID ) {
