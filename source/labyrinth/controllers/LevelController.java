@@ -55,6 +55,7 @@ public class LevelController implements Initializable {
 		MOVEMENT
 	}
 
+	private String currentLevelName; // Name of level we are on, needed to update leaderboards
 	private VBox[] playerSubInfoVBoxes;
 	private Player[] players;
 	private int currentPlayer; // 0 to 3, player that is doing their turn
@@ -89,7 +90,7 @@ public class LevelController implements Initializable {
 	 */
 	public static void setNextLevelToLoad(String levelName, String[] profilesToUse) {
 		loadingSaveFile = false;
-		nextFileToLoad = levelName;
+		nextFileToLoad = levelName + ".txt";
 		nextLevelProfiles = profilesToUse;
 	}
 
@@ -149,6 +150,7 @@ public class LevelController implements Initializable {
 
 		// Serialize the objects from which we could later rebuild the entire game state
 		objectOutputStream.writeObject(currentTime);
+		objectOutputStream.writeObject(this.currentLevelName);
 		objectOutputStream.writeObject(this.players);
 		objectOutputStream.writeObject(this.currentPlayer);
 		objectOutputStream.writeObject(this.board);
@@ -264,6 +266,7 @@ public class LevelController implements Initializable {
 			objectInputStream = new ObjectInputStream(fis);
 
 			currentTime = (int) objectInputStream.readObject();
+			this.currentLevelName = (String) objectInputStream.readObject();
 			this.players = (Player[]) objectInputStream.readObject();
 			this.currentPlayer = (int) objectInputStream.readObject();
 			this.board = (Board) objectInputStream.readObject();
