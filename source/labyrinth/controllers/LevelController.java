@@ -90,7 +90,7 @@ public class LevelController implements Initializable {
 	 */
 	public static void setNextLevelToLoad(String levelName, String[] profilesToUse) {
 		loadingSaveFile = false;
-		nextFileToLoad = levelName + ".txt";
+		nextFileToLoad = levelName;
 		nextLevelProfiles = profilesToUse;
 	}
 
@@ -175,11 +175,12 @@ public class LevelController implements Initializable {
 	 */
 	private void setupFromLevelFile(String levelName, String[] profileInfo) {
 		System.out.println("Creating new game from level file...");
-		LevelData ld = LevelReader.readDataFile("source/resources/levels/" + levelName);
+		LevelData ld = LevelReader.readDataFile("source/resources/levels/" + levelName + ".txt");
 
 		timeForFullLoop = profileInfo.length;
 		currentTime = 0;
 
+		this.currentLevelName = levelName;
 		this.currentPlayer = 0;
 
 		//
