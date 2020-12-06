@@ -32,6 +32,9 @@ import java.util.*;
  * @author Fillip Serov, Erik Miller
  */
 public class LevelController implements Initializable {
+	// Changed by zoom in/zoom out buttons.
+	private static int tileRenderSize = 64;
+
 	// The amount of "time" it takes for all players to complete one turn. (i.e. 3 players = 3)
 	private static int timeForFullLoop;
 
@@ -61,7 +64,6 @@ public class LevelController implements Initializable {
 	private int currentPlayer; // 0 to 3, player that is doing their turn
 	private Board board;
 	private GridPane renderedBoard;
-	private final int tileRenderSize = 64; // Changed by zoom in/zoom out buttons
 	private FloorTile floorTileToInsert;
 	private TurnPhases currentTurnPhase;
 	private ActionTile.ActionType usedAction; // We "used" this action, and are now applying it
@@ -118,8 +120,7 @@ public class LevelController implements Initializable {
 		}
 	}
 
-	@FXML
-	public void goToLevelMenu(ActionEvent event) {
+	@FXML public void goToLevelMenu(ActionEvent event) {
 		System.out.println("Going to level menu...");
 		try {
 			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level_menu.fxml"));
@@ -132,6 +133,16 @@ public class LevelController implements Initializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@FXML public void increaseZoom() {
+		tileRenderSize = Math.min(100, tileRenderSize + 10);
+		renderBoard();
+	}
+
+	@FXML public void decreaseZoom() {
+		tileRenderSize = Math.max(20, tileRenderSize - 10);
+		renderBoard();
 	}
 
 	/**
@@ -189,8 +200,6 @@ public class LevelController implements Initializable {
 		System.out.println("Setting up board...");
 
 		this.board = ld.getBoard();
-		boardContainer.setMinHeight((board.getHeight() * tileRenderSize) + (2 * tileRenderSize));
-		boardContainer.setMinWidth((board.getWidth() * tileRenderSize) + (2 * tileRenderSize));
 
 		// Add all floor tiles to the silk bag
 		for (FloorTile.TileType tileType : FloorTile.TileType.values()) {
@@ -313,8 +322,8 @@ public class LevelController implements Initializable {
 	 * and playAction if ActionTile
 	 */
 	private void drawingPhase() {
-		renderBoard();
 		currentTurnPhase = TurnPhases.DRAWING;
+		renderBoard();
 		updateSubInfoVBoxes();
 		bottomContainer.getChildren().clear();
 
@@ -370,9 +379,10 @@ public class LevelController implements Initializable {
 		bottomContainer.getChildren().clear();
 
 		GridPane rotationControls = new GridPane();
+		final int rotationControlSize = 64;
 
-		ImageView clockwise = new ImageView(new Image("source/resources/img/turn_arrow.png", tileRenderSize, tileRenderSize, false, false));
-		ImageView aClockwise = new ImageView(new Image("source/resources/img/turn_arrow.png", tileRenderSize, tileRenderSize, false, false));
+		ImageView clockwise = new ImageView(new Image("source/resources/img/turn_arrow.png", rotationControlSize, rotationControlSize, false, false));
+		ImageView aClockwise = new ImageView(new Image("source/resources/img/turn_arrow.png", rotationControlSize, rotationControlSize, false, false));
 
 		clockwise.setScaleX(-1);
 		clockwise.setOnMouseClicked(event -> {
@@ -385,7 +395,7 @@ public class LevelController implements Initializable {
 		});
 
 		rotationControls.add(clockwise, 0, 0);
-		rotationControls.add(floorTileToInsert.renderTile(tileRenderSize), 1, 0);
+		rotationControls.add(floorTileToInsert.renderTile(rotationControlSize), 1, 0);
 		rotationControls.add(aClockwise, 2, 0);
 		
 		bottomContainer.getChildren().add(rotationControls);
@@ -616,10 +626,10 @@ public class LevelController implements Initializable {
 		}
 	}
 
-	private void setAsBacktrackOption(int player,int index,int x,int y) {
-		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png",tileRenderSize,tileRenderSize,false,false));
+	private void setAsBacktrackOption(int player, int index, int x, int y) {
+		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png",tileRenderSize,tileRenderSize, false, false));
 		chosen.setOpacity(0.5);
-		StackPane optionTile = getStackPaneTileByXY(x,y);
+		StackPane optionTile = getStackPaneTileByXY(x, y);
 		optionTile.getChildren().add(chosen);
 		FloorTile backTile = board.getTileAt(players[player].getPastPositions()[index][0],players[player].getPastPositions()[index][1]);
 		optionTile.setOnMouseClicked(event -> {
@@ -671,11 +681,11 @@ public class LevelController implements Initializable {
 	}
 
 	private void setAsWay(int x, int y) {
-		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png",tileRenderSize,tileRenderSize,false,false));
+		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", tileRenderSize,tileRenderSize,false,false));
 		chosen.setOpacity(0.5);
-		StackPane wayTile = getStackPaneTileByXY(x,y);
+		StackPane wayTile = getStackPaneTileByXY(x, y);
 		wayTile.getChildren().add(chosen);
-		wayTile.setOnMouseClicked(event -> move(x,y));
+		wayTile.setOnMouseClicked(event -> move(x, y));
 	}
 
 	private void move(Player player,int x,int y) {
@@ -761,6 +771,8 @@ public class LevelController implements Initializable {
 
 		renderedBoard = new GridPane();
 		renderedBoard.setAlignment(Pos.CENTER);
+		boardContainer.setMinHeight((board.getHeight() * tileRenderSize) + (2 * tileRenderSize));
+		boardContainer.setMinWidth((board.getWidth() * tileRenderSize) + (2 * tileRenderSize));
 
 		Boolean[][] insertableMask = this.board.getInsertablePositions();
 		Image insertionImage = new Image("source/resources/img/insert_arrow.png", tileRenderSize, tileRenderSize, false, false);
@@ -831,6 +843,9 @@ public class LevelController implements Initializable {
 		}
 
 		// renderedBoard.setGridLinesVisible(true);
+		if (currentTurnPhase == TurnPhases.MOVEMENT) {
+			showWay();
+		}
 
 		boardContainer.getChildren().add(renderedBoard);
 	}
