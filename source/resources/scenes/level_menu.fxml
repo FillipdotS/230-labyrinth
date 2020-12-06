@@ -3,60 +3,64 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="source.labyrinth.controllers.LevelMenuController">
-   <children>
-      <BorderPane layoutX="10.0" layoutY="10.0" prefHeight="400.0" prefWidth="600.0">
-         <left>
-            <VBox prefHeight="400.0" prefWidth="80.0" BorderPane.alignment="CENTER">
+<BorderPane prefHeight="400.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="source.labyrinth.controllers.LevelMenuController">
+   <left>
+      <VBox prefHeight="400.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#returnToMainMenu" prefHeight="39.0" prefWidth="200.0" text="Back" />
+            <TableView fx:id="tableView" prefHeight="363.0" prefWidth="200.0">
+              <columns>
+                <TableColumn fx:id="nameCol" prefWidth="151.20001524686813" text="Profile" />
+                  <TableColumn fx:id="winCol" prefWidth="48.0" text="Wins" />
+              </columns>
+            </TableView>
+         </children>
+      </VBox>
+   </left>
+   <right>
+      <VBox prefHeight="400.0" prefWidth="241.0" BorderPane.alignment="CENTER">
+         <children>
+            <Pane prefHeight="40.0" prefWidth="182.0" style="-fx-background-color: darkgrey;">
                <children>
-                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#returnToMainMenu" prefHeight="39.0" prefWidth="82.0" text="Back" />
+                  <Text layoutX="29.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Players" />
+               </children>
+            </Pane>
+            <VBox prefHeight="360.0" prefWidth="242.0">
+               <children>
+                  <SplitPane dividerPositions="0.30634390651085147" prefHeight="37.0" prefWidth="242.0">
+                     <items>
+                        <Button fx:id="addPlayerButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Add" />
+                        <Button fx:id="removePlayerButton" mnemonicParsing="false" prefWidth="120.0" text="Remove Player" />
+                     </items>
+                  </SplitPane>
+                  <VBox fx:id="vboxPlayers" prefHeight="151.0" prefWidth="242.0" />
+                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#playGame" prefHeight="49.0" prefWidth="242.0" text="PLAY" />
                </children>
             </VBox>
-         </left>
-         <right>
-            <VBox prefHeight="400.0" prefWidth="241.0" BorderPane.alignment="CENTER">
+         </children>
+      </VBox>
+   </right>
+   <center>
+      <VBox prefHeight="400.0" prefWidth="262.0" BorderPane.alignment="CENTER">
+         <children>
+            <Pane prefHeight="40.0" prefWidth="338.0" style="-fx-background-color: darkgrey;">
                <children>
-                  <Pane prefHeight="40.0" prefWidth="182.0" style="-fx-background-color: darkgrey;">
-                     <children>
-                        <Text layoutX="29.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Players" />
-                     </children>
-                  </Pane>
-                  <VBox prefHeight="360.0" prefWidth="242.0">
-                     <children>
-                        <SplitPane dividerPositions="0.30634390651085147" prefHeight="37.0" prefWidth="242.0">
-                           <items>
-                              <Button fx:id="addPlayerButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Add" />
-                              <Button fx:id="removePlayerButton" mnemonicParsing="false" prefWidth="120.0" text="Remove Player" />
-                           </items>
-                        </SplitPane>
-                        <VBox fx:id="vboxPlayers" prefHeight="151.0" prefWidth="242.0" />
-                        <Button alignment="CENTER" mnemonicParsing="false" onAction="#playGame" prefHeight="49.0" prefWidth="242.0" text="PLAY" />
-                     </children></VBox>
+                  <Text layoutX="26.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Levels" wrappingWidth="41.33673095703125" />
                </children>
-            </VBox>
-         </right>
-         <center>
-            <VBox prefHeight="400.0" prefWidth="262.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Pane prefHeight="40.0" prefWidth="338.0" style="-fx-background-color: darkgrey;">
-                     <children>
-                        <Text layoutX="26.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Levels" wrappingWidth="41.33673095703125" />
-                     </children>
-                  </Pane>
-                  <ScrollPane prefHeight="363.0" prefWidth="278.0">
-                     <content>
-                        <VBox fx:id="vboxLevels" prefHeight="362.0" prefWidth="278.0" />
-                     </content>
-                  </ScrollPane>
-               </children>
-            </VBox>
-         </center>
-      </BorderPane>
-   </children>
-</AnchorPane>
+            </Pane>
+            <ScrollPane prefHeight="363.0" prefWidth="278.0">
+               <content>
+                  <VBox fx:id="vboxLevels" prefHeight="362.0" prefWidth="278.0" />
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

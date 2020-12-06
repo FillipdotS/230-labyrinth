@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -19,9 +20,7 @@ import source.labyrinth.ProfileManager;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * LevelMenuController let user choose level number of players and associated profiles
@@ -33,6 +32,9 @@ public class LevelMenuController implements Initializable {
 	@FXML private VBox vboxPlayers;
 	@FXML private Button addPlayerButton;
 	@FXML private Button removePlayerButton;
+	@FXML private TableView<Profile> tableView;
+	@FXML private TableColumn<Profile, Integer> winCol;
+	@FXML private TableColumn<Profile, String> nameCol;
 
 	private static String selectedLevel;
 	private static HBox selectedHBox;
@@ -55,7 +57,26 @@ public class LevelMenuController implements Initializable {
 			renderPlayersChoiceBox();
 		});
 
+		renderLeaderBoard();
+
 		System.out.println("Created LevelMenuController");
+	}
+
+	private void renderLeaderBoard(){
+		Profile prof = new Profile("ree",1019, 2,4,0);
+		Profile prof1 = new Profile("ree1",2019, 2,1,0);
+		Profile prof2 = new Profile("ree2",3019, 2,6,0);
+
+		ArrayList<Profile> profs = new ArrayList<>();
+		profs.add(prof);
+		profs.add(prof1);
+		profs.add(prof2);
+		profs.sort(Comparator.comparingInt(Profile::getWins));
+		Collections.reverse(profs);
+
+		nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+		winCol.setCellValueFactory(new PropertyValueFactory<>("wins"));
+		tableView.getItems().setAll(profs);
 	}
 
 	/**
