@@ -482,6 +482,9 @@ public class LevelController implements Initializable {
 		bottomContainer.getChildren().add(actionsHBox);
 	}
 
+	/**
+	 *
+	 */
 	private void movementPhase() {
 		updateSubInfoVBoxes(); // We could have played an action to get here
 		renderBoard();

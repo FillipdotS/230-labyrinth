@@ -90,12 +90,12 @@ public class LevelMenuController implements Initializable {
 			levelHBox.setAlignment(Pos.CENTER_LEFT);
 			levelHBox.setStyle("-fx-border-color: black");
 			levelHBox.setOnMouseClicked(event -> {
-				System.out.println(value);
 				if (selectedHBox != null) {
 					selectedHBox.setStyle("-fx-border-color: black");
 				}
 				selectedHBox = levelHBox;
-				selectedLevel = value;
+				selectedLevel = value.substring(0,value.length()-4);
+				System.out.println(selectedLevel);
 				levelHBox.setStyle("-fx-border-color: black;-fx-background-color: #c4ffd5;");
 				renderLeaderBoard();
 			});
