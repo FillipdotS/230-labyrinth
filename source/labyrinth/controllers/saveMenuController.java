@@ -26,12 +26,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- * @author Max(acutally is Fillip)
- * This class heavily copied from LevelMenuController and some functions even the same, apologise for I am such an idiot that don't know how to start
- * the load save and play function is not changed yet(still = loadGame in LevelMenuController)
+ * @author Max
  * added delete file function
  * working on load save function
- * want add a TextArea to show all details inside save.ser but don't know possible or not
+ * added a TextArea to show name of save.ser
  */
 public class saveMenuController implements Initializable {
     @FXML
@@ -55,7 +53,7 @@ public class saveMenuController implements Initializable {
     }
 
     /**
-     * I am sorry that I have to copy Fillip code to make it works
+     * I am sorry that I have to copy Erik code to make it works
      */
     private void showSaveFile() {
         vboxSaves.getChildren().clear();
@@ -69,6 +67,7 @@ public class saveMenuController implements Initializable {
             saveFile.setOnMouseClicked(event -> {
                 deleteSaveButton.setDisable(false);
                 loadSaveButton.setDisable(false);
+                saveDetailTextArea.setText(value);
                 System.out.println(value);
                 if (selectedSaveHBox != null) {
                     saveMenuController.getSelectedSaveHBox().setStyle("-fx-border-color: #c4fffd");
@@ -96,6 +95,7 @@ public class saveMenuController implements Initializable {
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             window.setScene(profileMenuScene);
+            window.setTitle("Main Menu");
             window.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -164,39 +164,6 @@ public class saveMenuController implements Initializable {
         }
     }
 
-   /* @FXML
-    public void loadGame(ActionEvent event) {
-        if (selectedSaveName != null) {
-            System.out.println("loading save ...");
-            profilesChosen.forEach(obj -> System.out.println(obj.toString()));
-            String[] prof = new String[numberOfPlayers];
-            for (int i = 0; i < prof.length; i++) {
-                if (profilesChosen.size() > i) prof[i] = profilesChosen.get(i).toString();
-            }
-            saveMenuController.setNextLevelProfiles(prof);
-            saveMenuController.setNextLevelToLoad(selectedSaveName);
-
-            System.out.println("level: " + selectedSaveName);
-            for (String s : prof) {
-                System.out.println("player " + s);
-            }
-
-            try {
-                Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level.fxml"));
-                Scene profileMenuScene = new Scene(profileMenuParent);
-                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                window.setScene(profileMenuScene);
-                window.setTitle("Level Select");
-                window.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Choose a save!");
-            alert.showAndWait();
-        }
-    }*/
 
 
     public static HBox getSelectedSaveHBox() {

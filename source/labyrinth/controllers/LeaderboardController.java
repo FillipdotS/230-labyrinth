@@ -111,6 +111,7 @@ public class LeaderboardController implements Initializable {
             Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 
             window.setScene(profileMenuScene);
+            window.setTitle("Main Menu");
             window.show();
         } catch (IOException e) {
             e.printStackTrace();
