@@ -9,8 +9,7 @@ import java.net.URL;
 /**
  * The Message of the Day class gets the encoded message,
  * decodes it and gets the decoded message of the day.
- * @author Ian Lavin Rady
- * @author Fillip Serov
+ * @author Ian Lavin Rady, Fillip Serov
  */
 public class MessageOfTheDay {
 

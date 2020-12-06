@@ -14,12 +14,25 @@ import java.io.Serializable;
  */
 public class FloorTile extends Tile implements Serializable {
 	/**
-	 * The different types of floor tile that an instance of FloorTile can be.
+	 * The different types of floor tile that an instance of FloorTile can be. Changes the default move mask and
+	 * the image used for the tile.
 	 */
 	public enum FloorType {
+		/**
+		 * By default can move north (0), south (2).
+		 */
 		STRAIGHT(new Boolean[]{true, false, true, false}, "source/resources/img/tile_straight.png"),
+		/**
+		 * By default can move north (0), east (1).
+		 */
 		CORNER(new Boolean[]{true, true, false, false}, "source/resources/img/tile_corner.png"),
+		/**
+		 * By default can move east (1), south (2), west (3)
+		 */
 		TSHAPE(new Boolean[]{false, true, true, true},"source/resources/img/tile_tshape.png"),
+		/**
+		 * By default can move north (0), east (1), south (2), west (3)
+		 */
 		GOAL(new Boolean[]{true, true, true, true}, "source/resources/img/tile_goal.png");
 
 		public final String imageURL;
@@ -43,6 +56,11 @@ public class FloorTile extends Tile implements Serializable {
 	private int isFrozenUntil;
 	private Player player;
 
+	/**
+	 * Create a new FloorTile with a certain orientation and FloorType
+	 * @param orientation Orientation of this tile, 0 to 3
+	 * @param floorType FloorType of this tile
+	 */
 	public FloorTile(int orientation, FloorType floorType) {
 		this.orientation = orientation;
 		this.floorType = floorType;
@@ -73,14 +91,14 @@ public class FloorTile extends Tile implements Serializable {
 		return (this.floorType == FloorType.GOAL);
 	}
 	/**
-	 * freezes tile for a loop
+	 * Freezes this for 1 turn
 	 */
 	public void freeze() {
 		isFrozenUntil = LevelController.getCurrentTime() + LevelController.getTimeForFullLoop();
 	}
 
 	/**
-	 * sets tile on fire for 2 loops
+	 * Sets tile on fire for 2 turns
 	 */
 	public void setOnFire() {
 		isOnFireUntil = LevelController.getCurrentTime() + 2 * LevelController.getTimeForFullLoop();
@@ -101,22 +119,37 @@ public class FloorTile extends Tile implements Serializable {
 		this.player = player;
 	}
 
+	/**
+	 * @return int 0 to 3 representing this FloorTile's orientation
+	 */
 	public int getOrientation() {
 		return this.orientation;
 	}
 
+	/**
+	 * @return Boolean array representing this tile's move mask
+	 */
 	public Boolean[] getMoveMask() {
-		return (LevelController.getCurrentTime() >= isOnFireUntil)? this.moveMask : new Boolean[] {false,false,false,false};
+		return (LevelController.getCurrentTime() >= isOnFireUntil)? this.moveMask : new Boolean[] {false, false, false, false};
 	}
 
+	/**
+	 * @return Get move mask as if it is a FloorTile next to a player
+	 */
 	public Boolean[] getNeighbourMoveMask() {
-		return (player == null)? this.getMoveMask() : new Boolean[] {false,false,false,false};
+		return (player == null) ? this.getMoveMask() : new Boolean[] {false, false, false, false};
 	}
 
+	/**
+	 * @return
+	 */
 	public Boolean canMoveTo(){
 		return (LevelController.getCurrentTime() >= isOnFireUntil) && (player == null);
 	}
 
+	/**
+	 * @return Boolean representing whether this FloorTile is permanently fixed.
+	 */
 	public Boolean getFixed() {
 		return this.isFixed;
 	}
@@ -129,14 +162,23 @@ public class FloorTile extends Tile implements Serializable {
 		return isFixed || LevelController.getCurrentTime() < isFrozenUntil;
 	}
 
+	/**
+	 * @param isOnFireUntil How many individual player turns should this be on fire for
+	 */
 	public void setIsOnFireUntil(int isOnFireUntil) {
 		this.isOnFireUntil = isOnFireUntil;
 	}
 
+	/**
+	 * @param isFrozenUntil How many individual player turns should this be frozen for
+	 */
 	public void setIsFrozenUntil(int isFrozenUntil) {
 		this.isFrozenUntil = isFrozenUntil;
 	}
 
+	/**
+	 * @param fixed Set this tile to be permanently fixed
+	 */
 	public void setFixed(Boolean fixed) {
 		this.isFixed = fixed;
 	}
