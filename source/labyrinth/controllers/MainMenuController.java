@@ -8,7 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.text.Text;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import source.labyrinth.MessageOfTheDay;
 import source.labyrinth.ProfileManager;
@@ -16,7 +16,7 @@ import source.labyrinth.ProfileManager;
 import java.io.IOException;
 
 public class MainMenuController extends Application {
-	@FXML private Text motd;
+	@FXML private TextArea motd;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -33,8 +33,8 @@ public class MainMenuController extends Application {
 
 	@FXML
 	private void initialize() {
-		// Show motd
-		motd.setText("Message of the day: " + MessageOfTheDay.getMessageOfTheDay());
+		//new motd in textArea
+		motd.setText(MessageOfTheDay.getMessageOfTheDay());
 	}
 
 	@FXML

@@ -15,7 +15,7 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="source.labyrinth.controllers.MainMenuController">
    <children>
-      <BorderPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+      <BorderPane layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
          <center>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER_RIGHT">
                <children>
@@ -34,7 +34,10 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#goToSaveMenu" text="Save" />
+                  <Button mnemonicParsing="false" onAction="#goToSaveMenu" text="Save">
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin></Button>
                   <Button mnemonicParsing="false" onAction="#exitGame" text="Exit">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="20.0" />
@@ -44,19 +47,27 @@
             </VBox>
          </center>
          <top>
-            <VBox alignment="CENTER" prefHeight="134.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <VBox alignment="CENTER" prefHeight="213.0" prefWidth="600.0" BorderPane.alignment="CENTER">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Group 39 230 Labyrinth" textAlignment="CENTER">
                      <font>
                         <Font name="System Bold" size="36.0" />
                      </font>
                   </Text>
-                  <Text fx:id="motd" strokeType="OUTSIDE" strokeWidth="0.0" text="&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation" textAlignment="CENTER" wrappingWidth="550.0">
+                  <Label text="Message Of The Day" wrapText="true">
                      <font>
                         <Font size="18.0" />
                      </font>
-                  </Text>
+                  </Label>
+                  <TextArea fx:id="motd" editable="false" prefHeight="164.0" prefWidth="600.0" text="&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation" wrapText="true">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </TextArea>
                </children>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
             </VBox>
          </top>
       </BorderPane>
