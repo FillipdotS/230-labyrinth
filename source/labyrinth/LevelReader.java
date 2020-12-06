@@ -1,10 +1,11 @@
 package source.labyrinth;
+import sun.util.logging.PlatformLogger;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
- * File is only missing constructors that need to be added to the classes so that I can call them here.
  * The LevelReader is going to read the level chosen, and pass that info so the Board can be constructed.
  * @author Ian Lavin Rady
  */
@@ -41,6 +42,10 @@ public class LevelReader {
         LevelData levelData = new LevelData();
 
         in.useDelimiter("(\\p{javaWhitespace}|,)+");
+        while(in.hasNextInt()) {
+            int profileID = in.nextInt();
+        }
+
         in.nextLine();
         int width = in.nextInt();
         int height = in.nextInt();
@@ -105,19 +110,34 @@ public class LevelReader {
 
         return levelData;
     }
-}
-/*
 
-                        int straight = in.nextInt();
-                        in.nextLine();
-                        int tShape = in.nextInt();
-                        in.nextLine();
-                        int corner = in.nextInt();
-                        in.nextLine();
-                        int ice = in.nextInt();
-                        in.nextLine();
-                        int fire = in.nextInt();
-                        in.nextLine();
-                        int doublemove = in.nextInt();
-                        in.nextLine();
-                        int backtrack = in.nextInt();*/
+    private static void updateProfileID(String filename, int[] profileID ) {
+        Scanner in = null;
+        try {
+            in = new Scanner(new File(filename));
+        } catch (FileNotFoundException e) {
+            System.out.println("Can't find " + filename);
+            System.exit(0);
+        }
+
+        String[] pid = in.nextLine().split(",");
+            for(int i = 0; i < profileID.length; i++) {
+                if(checksIfExists(pid,profileID,i) == false);
+                    // I HAVE TO CALL FILEWRITER TO ADD PROFILEID[I] TO THIS LINE
+                    // System.out.println(profileID[i]);
+
+            }
+        }
+
+
+
+    private static boolean checksIfExists(String[] pid,int[] profileID,int i) {
+        for (int j = 0; j < pid.length; j++) {
+            if (profileID[i] == Integer.parseInt(pid[j]))
+                return true;
+        }
+         return false;
+     }
+}
+
+
