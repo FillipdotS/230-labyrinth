@@ -18,7 +18,9 @@ import source.labyrinth.Profile;
 import source.labyrinth.ProfileManager;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.URL;
 import java.util.*;
 
@@ -62,21 +64,33 @@ public class LevelMenuController implements Initializable {
 		System.out.println("Created LevelMenuController");
 	}
 
-	private void renderLeaderBoard(){
-		Profile prof = new Profile("ree",1019, 5,4,1);
-		Profile prof1 = new Profile("ree1",2019, 2,1,0);
-		Profile prof2 = new Profile("ree2"+selectedLevel,3019, 7,6,0);
+	/**
+	 * renders leaderboard for every level on click on this level
+	 */
+	private void renderLeaderBoard() {
+		tableView.getItems().clear();
+		try {
+			ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("./source/resources/leaderboards/" + selectedLevel + "_leaderboard.ser"));
+			HashMap<Integer, Integer> leaderboardInfo = (HashMap<Integer, Integer>) objectInputStream.readObject();
+			objectInputStream.close();
 
-		ArrayList<Profile> profs = new ArrayList<>();
-		profs.add(prof);
-		profs.add(prof1);
-		profs.add(prof2);
-		profs.sort(Comparator.comparingInt(Profile::getWins));
-		Collections.reverse(profs);
+			ArrayList<Profile> profiles = new ArrayList<>();
+			leaderboardInfo.forEach((id,wins) -> {
+				Profile p = ProfileManager.getProfileById(id);
+				if (p != null) {
+					profiles.add(new Profile(p.getName(),id, 0,wins,0));
+				}
+			});
+			profiles.sort(Comparator.comparingInt(Profile::getWins));
+			Collections.reverse(profiles);
 
-		nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-		winCol.setCellValueFactory(new PropertyValueFactory<>("wins"));
-		tableView.getItems().setAll(profs);
+			nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+			winCol.setCellValueFactory(new PropertyValueFactory<>("wins"));
+			tableView.getItems().setAll(profiles);
+		} catch (IOException | ClassNotFoundException e){
+			tableView.setPlaceholder(new Label("Leaderboard is empty"));
+		}
+
 	}
 
 	/**
