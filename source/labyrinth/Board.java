@@ -44,8 +44,6 @@ public class Board implements Serializable {
 
 		Boolean[] atLocation = this.board[x][y].getMoveMask();
 
-		// TODO: Maybe make these ifs into something cleaner?
-
 		// Check north
 		if (y - 1 >= 0) {
 			toReturn[0] = atLocation[0] && this.board[x][y-1].getNeighbourMoveMask()[2];

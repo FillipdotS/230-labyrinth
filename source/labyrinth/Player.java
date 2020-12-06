@@ -54,16 +54,27 @@ public class Player implements Serializable {
 		}
 	}
 
+	/**
+	 * @return 0 to 3 int representing which one of the 4 players this player is in-game.
+	 */
 	public int getIdInGame() {
 		return this.idInGame;
 	}
 
-	public float getActionAmount(ActionTile.ActionType at) {
-		return this.actions.get(at);
+	/**
+	 * @param actionType ActionType to get
+	 * @return Amount of this ActionType this player has.
+	 */
+	public float getActionAmount(ActionTile.ActionType actionType) {
+		return this.actions.get(actionType);
 	}
 
-	public void setActionAmount(ActionTile.ActionType at, float newAmount) {
-		this.actions.replace(at, newAmount);
+	/**
+	 * @param actionType ActionType to change
+	 * @param newAmount New amount
+	 */
+	public void setActionAmount(ActionTile.ActionType actionType, float newAmount) {
+		this.actions.replace(actionType, newAmount);
 	}
 
 	/**
@@ -75,13 +86,6 @@ public class Player implements Serializable {
 			fullAmount += (int) Math.ceil(getActionAmount(at));
 		}
 		return fullAmount;
-	}
-
-	/**
-	 * @return The FloorTile this player is standing on
-	 */
-	public FloorTile getStandingOn() {
-		return standingOn;
 	}
 
 	/**
@@ -128,10 +132,17 @@ public class Player implements Serializable {
 		this.pastPositions[0] = new int[] {x, y};
 	}
 
+	/**
+	 * @return Matrix containing the past 3 (x, y) positions of this player
+	 */
 	public int[][] getPastPositions() {
 		return pastPositions;
 	}
 
+	/**
+	 * Removes 1 use of a specific action from this player.
+	 * @param type ActionType to remove one of.
+	 */
 	public void removeAction(ActionTile.ActionType type) {
 		actions.replace(type,actions.get(type)-1);
 	}
