@@ -42,34 +42,58 @@ public class Profile implements Serializable {
 		this.losses = losses;
 	}
 
+	/**
+	 * @return the name of the Profile
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * @return the ID of the Profile
+	 */
 	public int getID() {
 		return id;
 	}
 
+	/**
+	 * @return the number of total games played
+	 */
 	public int getTotalPlayed() {
 		return totalPlayed;
 	}
 
+	/**
+	 * Increase the number of total games playes
+	 */
 	public void addTotalPlayed() {
 		this.totalPlayed += 1;
 	}
 
+	/**
+	 * @return the number of win games
+	 */
 	public int getWins() {
 		return wins;
 	}
 
+	/**
+	 * Increase the number of win games
+	 */
 	public void addWin() {
 		this.wins += 1;
 	}
 
+	/**
+	 * @return the number of losses
+	 */
 	public int getLosses() {
 		return losses;
 	}
 
+	/**
+	 * Increase the number of losses
+	 */
 	public void addLoss() {
 		this.losses += 1;
 	}
