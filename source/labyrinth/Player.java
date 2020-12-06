@@ -20,6 +20,7 @@ public class Player implements Serializable {
 	private FloorTile standingOn;
 
 	/**
+	 * @param idInGame The id of the player in game (int 0 to 3).
 	 * @param profileID The id of the profile this player is assigned to. If no profile, give null.
 	 */
 	public Player(int idInGame, int profileID) {

@@ -69,7 +69,7 @@ public class LevelController implements Initializable {
 	private ActionTile.ActionType usedAction; // We "used" this action, and are now applying it
 
 	/**
-	 * Get the current game time as an int. Will always be >0.
+	 * Get the current game time as an int. Will always be above 0.
 	 * @return int representing the game time.
 	 */
 	public static int getCurrentTime() {
@@ -148,6 +148,7 @@ public class LevelController implements Initializable {
 	/**
 	 * exportToSave will collect all necessary information about the game and save it to a file. An alert
 	 * will popup to show the save name.
+	 * @throws IOException If it cannot save to file
 	 */
 	public void exportToSave() throws IOException {
 		String timeStamp = new SimpleDateFormat("ss-mm-HH-dd-MM-yyyy").format(new Date());
@@ -236,6 +237,8 @@ public class LevelController implements Initializable {
 		for (int i = 0; i < players.length; i++) {
 			int associatedProfileID = -1;
 			if (nextLevelProfiles[i] != null) {
+				// This will not hit a null pointer exception since we JUST came from the level menu,
+				// where the profiles were fine.
 				associatedProfileID = ProfileManager.getProfileByName(nextLevelProfiles[i]).getID();
 			}
 
@@ -403,8 +406,8 @@ public class LevelController implements Initializable {
 
 	/**
 	 * inserts floor tile renders board and starts playActionPhase
-	 * @param insertionDirection
-	 * @param insertionPoint
+	 * @param insertionDirection int from 0 to 3 representing the cardinal directions
+	 * @param insertionPoint int from 0 to max width/height, represents in which row/column to insert into.
 	 */
 	private void endPlacementPhase(int insertionDirection, int insertionPoint) {
 		this.board.insertFloorTile(this.floorTileToInsert, insertionDirection, insertionPoint);
@@ -642,13 +645,13 @@ public class LevelController implements Initializable {
 	}
 
 	private int canPlayerCanBeBacktrackedAndIfItCanHowFar(Player player) {
-		int res = 0;
+		int howFar = 0;
 		if (!player.getHasBeenBacktracked()) {
 			int [][] pos = player.getPastPositions();
-			res = (board.getTileAt(pos[2][0],pos[2][1]).canMoveTo())?1:0;
-			res = (board.getTileAt(pos[1][0],pos[1][1]).canMoveTo())?res+1:0;
+			howFar = (board.getTileAt(pos[2][0], pos[2][1]).canMoveTo()) ? 1 : 0;
+			howFar = (board.getTileAt(pos[1][0],pos[1][1]).canMoveTo()) ? howFar + 1: 0;
 		}
-		return res;
+		return howFar;
 	}
 
 	private void showWay() {
@@ -715,8 +718,8 @@ public class LevelController implements Initializable {
 
 	/**
 	 * move currentPlayer
-	 * @param x Xcoordinate of new tile to move on
-	 * @param y Xcoordinate of new tile to move on
+	 * @param x X-position of new tile to move on
+	 * @param y X-position of new tile to move on
 	 */
 	private void move(int x,int y) {
 		move(players[currentPlayer],x,y);

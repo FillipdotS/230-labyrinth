@@ -7,6 +7,11 @@ import source.labyrinth.controllers.LevelController;
 
 import java.io.Serializable;
 
+/**
+ * FloorTile represents a physical tile on the game board on which players can walk on. FloorTiles can be set on
+ * fire, frozen, or both at once.
+ * @author Fillip Serov
+ */
 public class FloorTile extends Tile implements Serializable {
 	/**
 	 * The different types of floor tile that an instance of FloorTile can be.

@@ -33,13 +33,10 @@ public class LevelReader {
 
 	/**
 	 *
-	 * @param in reads the input of the file.
-	 * @return the board width & height, details about every single fixed tile(type, orientation, position),
-	 *         the set of floor tiles that go into the silk bag, the set of action tiles that go into the silk bag &
-	 *         the four player starting positions.
-	 *
+	 * @param in Scanner to use.
+	 * @return Instance of LevelData containing everything needed to setup a level
 	 */
-	public static LevelData level(Scanner in) {
+	private static LevelData level(Scanner in) {
 		LevelData levelData = new LevelData();
 
 		in.useDelimiter("(\\p{javaWhitespace}|,)+");
@@ -161,46 +158,6 @@ public class LevelReader {
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * It reads the filename and adds new profileIDs if they don't already
-	 * exist.
- 	 * @param filename specified filename.
-	 * @param profileID the Profile IDs to be updated.
-	 */
-	private static void updateProfileID(String filename, int[] profileID ) {
-		Scanner in = null;
-		try {
-			in = new Scanner(new File(filename));
-		} catch (FileNotFoundException e) {
-			System.out.println("Can't find " + filename);
-			System.exit(0);
-		}
-
-		String[] originalPid = in.nextLine().split(",");
-		for (int i = 0; i < profileID.length; i++) {
-			if (checkIfExists(originalPid,profileID,i) == false) {
-				// I HAVE TO CALL FILEWRITER TO ADD PROFILEID[I] TO THIS LINE
-				// System.out.println(profileID[i]);
-			}
-		}
-	}
-
-
-	/**
-	 * Just checks if pid added is not the same as original pid and returns a boolean depending on that.
-	 * @param originalPid the PIDs already registered in file.
-	 * @param i the position of Profile IDs being added.
-	 * @return true if they're the same, false otherwise.
-	 */
-	private static boolean checkIfExists(String[] originalPid, int[] profileID, int i) {
-		for (int j = 0; j < originalPid.length; j++) {
-			if (profileID[i] == Integer.parseInt(originalPid[j])) {
-				return true;
-			}
-		}
-		return false;
 	}
 }
 

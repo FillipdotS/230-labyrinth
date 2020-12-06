@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * The Board class will store the layout of the current level.
+ * The Board class will store the layout and state of the current game.
  * @author Fillip Serov
  */
 public class Board implements Serializable {
