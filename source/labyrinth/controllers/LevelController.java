@@ -192,15 +192,12 @@ public class LevelController implements Initializable {
 		boardContainer.setMinHeight((board.getHeight() * tileRenderSize) + (2 * tileRenderSize));
 		boardContainer.setMinWidth((board.getWidth() * tileRenderSize) + (2 * tileRenderSize));
 
-		// Create all the floor tiles and add them to the silk bag.
-		for (int i = 0; i < ld.getStraightAmount(); i++) {
-			SilkBag.addTile(new FloorTile(new Random().nextInt(5), FloorTile.TileType.STRAIGHT));
-		}
-		for (int i = 0; i < ld.getCornerAmount(); i++) {
-			SilkBag.addTile(new FloorTile(new Random().nextInt(5), FloorTile.TileType.CORNER));
-		}
-		for (int i = 0; i < ld.getTshapeAmount(); i++) {
-			SilkBag.addTile(new FloorTile(new Random().nextInt(5), FloorTile.TileType.TSHAPE));
+		// Add all floor tiles to the silk bag
+		for (FloorTile.TileType tileType : FloorTile.TileType.values()) {
+			int amount = ld.getFloorTileAmount(tileType);
+			for (int i = 0; i < amount; i++) {
+				SilkBag.addTile(new FloorTile(new Random().nextInt(5), tileType));
+			}
 		}
 
 		// IMPORTANT: Before we create and add action tiles to the bag, we use the silk bag to fill up
@@ -214,18 +211,11 @@ public class LevelController implements Initializable {
 		}
 
 		// Create all the action tiles and add them to the Board.
-		// TODO: Use a HashMap in LevelData so we can just do all of this in one loop
-		for (int i = 0; i < ld.getFireAmount(); i++) {
-			SilkBag.addTile(new ActionTile(ActionTile.ActionType.FIRE));
-		}
-		for (int i = 0; i < ld.getIceAmount(); i++) {
-			SilkBag.addTile(new ActionTile(ActionTile.ActionType.ICE));
-		}
-		for (int i = 0; i < ld.getBacktrackAmount(); i++) {
-			SilkBag.addTile(new ActionTile(ActionTile.ActionType.BACKTRACK));
-		}
-		for (int i = 0; i < ld.getDoubleAmount(); i++) {
-			SilkBag.addTile(new ActionTile(ActionTile.ActionType.DOUBLEMOVE));
+		for (ActionTile.ActionType tileType : ActionTile.ActionType.values()) {
+			int amount = ld.getActionTileAmount(tileType);
+			for (int i = 0; i < amount; i++) {
+				SilkBag.addTile(new ActionTile(tileType));
+			}
 		}
 
 		//

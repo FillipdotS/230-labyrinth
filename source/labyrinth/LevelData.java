@@ -1,5 +1,7 @@
 package source.labyrinth;
 
+import java.util.HashMap;
+
 /**
  * LevelData is created by LevelReader to store information about the level. This is needed as not
  * all information goes into a single Board class that can easily be returned.
@@ -8,87 +10,74 @@ package source.labyrinth;
 public class LevelData {
 	private Board board;
 	private int[][] playerStartingPositions;
+	private HashMap<FloorTile.TileType, Integer> floorTileAmounts;
+	private HashMap<ActionTile.ActionType, Integer> actionTileAmounts;
 
-	// FloorTiles
-	private int straightAmount;
-	private int tshapeAmount;
-	private int cornerAmount;
+	/**
+	 * Create an instance of LevelData ready to set information
+	 */
+	public LevelData() {
+		floorTileAmounts = new HashMap<>();
+		actionTileAmounts = new HashMap<>();
+	}
 
-	// ActionTiles
-	private int fireAmount;
-	private int iceAmount;
-	private int doubleAmount;
-	private int backtrackAmount;
-
+	/**
+	 * @return Board instance that was generated
+	 */
 	public Board getBoard() {
 		return board;
 	}
 
+	/**
+	 * @param board Board to store
+	 */
 	public void setBoard(Board board) {
 		this.board = board;
 	}
 
+	/**
+	 * @return Integer matrix representing player starting positions. i.e. [[0,0], [5,4]]
+	 */
 	public int[][] getPlayerStartingPositions() {
 		return playerStartingPositions;
 	}
 
+	/**
+	 * @param playerStartingPositions Integer matrix to use as starting positions
+	 */
 	public void setPlayerStartingPositions(int[][] playerStartingPositions) {
 		this.playerStartingPositions = playerStartingPositions;
 	}
 
-	public int getStraightAmount() {
-		return straightAmount;
+	/**
+	 * @param typeToChange FloorType to change
+	 * @param amount Amount to change to
+	 */
+	public void setFloorTileAmount(FloorTile.TileType typeToChange, int amount) {
+		floorTileAmounts.put(typeToChange, amount);
 	}
 
-	public void setStraightAmount(int straightAmount) {
-		this.straightAmount = straightAmount;
+	/**
+	 * @param typeToGet FloorType to return
+	 * @return Amount of that FloorType
+	 */
+	public int getFloorTileAmount(FloorTile.TileType typeToGet) {
+		return floorTileAmounts.get(typeToGet);
 	}
 
-	public int getTshapeAmount() {
-		return tshapeAmount;
+	/**
+	 * @param typeToChange ActionType to change
+	 * @param amount Amount to change to
+	 */
+	public void setActionTileAmount(ActionTile.ActionType typeToChange, int amount) {
+		actionTileAmounts.put(typeToChange, amount);
 	}
 
-	public void setTshapeAmount(int tshapeAmount) {
-		this.tshapeAmount = tshapeAmount;
-	}
-
-	public int getCornerAmount() {
-		return cornerAmount;
-	}
-
-	public void setCornerAmount(int cornerAmount) {
-		this.cornerAmount = cornerAmount;
-	}
-
-	public int getFireAmount() {
-		return fireAmount;
-	}
-
-	public void setFireAmount(int fireAmount) {
-		this.fireAmount = fireAmount;
-	}
-
-	public int getIceAmount() {
-		return iceAmount;
-	}
-
-	public void setIceAmount(int iceAmount) {
-		this.iceAmount = iceAmount;
-	}
-
-	public int getDoubleAmount() {
-		return doubleAmount;
-	}
-
-	public void setDoubleAmount(int doubleAmount) {
-		this.doubleAmount = doubleAmount;
-	}
-
-	public int getBacktrackAmount() {
-		return backtrackAmount;
-	}
-
-	public void setBacktrackAmount(int backtrackAmount) {
-		this.backtrackAmount = backtrackAmount;
+	/**
+	 * @param typeToGet ActionType to return
+	 * @return Amount of that ActionType
+	 */
+	public int getActionTileAmount(ActionTile.ActionType typeToGet) {
+		return actionTileAmounts.get(typeToGet);
 	}
 }

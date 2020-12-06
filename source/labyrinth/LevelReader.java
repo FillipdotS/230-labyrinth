@@ -75,32 +75,28 @@ public class LevelReader {
 			}
 			levelData.setPlayerStartingPositions(playerStartingPositions);
 
-			// Straight FloorTile
-			levelData.setStraightAmount(in.nextInt());
+			levelData.setFloorTileAmount(FloorTile.TileType.STRAIGHT, in.nextInt());
 			in.nextLine();
 
-			// TShape FloorTile
-			levelData.setTshapeAmount(in.nextInt());
+			levelData.setFloorTileAmount(FloorTile.TileType.TSHAPE, in.nextInt());
 			in.nextLine();
 
-			// Corner FloorTile
-			levelData.setCornerAmount(in.nextInt());
+			levelData.setFloorTileAmount(FloorTile.TileType.CORNER, in.nextInt());
 			in.nextLine();
 
-			// Ice Action
-			levelData.setIceAmount(in.nextInt());
+			levelData.setFloorTileAmount(FloorTile.TileType.GOAL, in.nextInt());
 			in.nextLine();
 
-			// Fire Action
-			levelData.setFireAmount(in.nextInt());
+			levelData.setActionTileAmount(ActionTile.ActionType.ICE, in.nextInt());
 			in.nextLine();
 
-			// DoubleMove Action
-			levelData.setDoubleAmount(in.nextInt());
+			levelData.setActionTileAmount(ActionTile.ActionType.FIRE, in.nextInt());
 			in.nextLine();
 
-			// Backtrack Action
-			levelData.setBacktrackAmount(in.nextInt());
+			levelData.setActionTileAmount(ActionTile.ActionType.DOUBLEMOVE, in.nextInt());
+			in.nextLine();
+
+			levelData.setActionTileAmount(ActionTile.ActionType.BACKTRACK, in.nextInt());
 			in.nextLine();
 		}
 
