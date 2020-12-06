@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -13,32 +14,32 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="source.labyrinth.controllers.MainMenuController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="bodybg" stylesheets="@../img/bg.CSS" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="source.labyrinth.controllers.MainMenuController">
    <children>
       <BorderPane layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
          <center>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER_RIGHT">
                <children>
-                  <Button mnemonicParsing="false" onAction="#goToLevelMenu" text="Play">
+                  <Button mnemonicParsing="false" onAction="#goToLevelMenu" stylesheets="@../img/bg.CSS" text="Play">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#goToLeaderboards" text="Leaderboards">
+                  <Button mnemonicParsing="false" onAction="#goToLeaderboards" stylesheets="@../img/bg.CSS" text="Leaderboards">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#goToProfileMenu" text="Profiles" textAlignment="CENTER">
+                  <Button mnemonicParsing="false" onAction="#goToProfileMenu" stylesheets="@../img/bg.CSS" text="Profiles" textAlignment="CENTER">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#goToSaveMenu" text="Save">
+                  <Button mnemonicParsing="false" onAction="#goToSaveMenu" stylesheets="@../img/bg.CSS" text="Save">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin></Button>
-                  <Button mnemonicParsing="false" onAction="#exitGame" text="Exit">
+                  <Button mnemonicParsing="false" onAction="#exitGame" stylesheets="@../img/bg.CSS" text="Exit">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="20.0" />
                      </VBox.margin>
@@ -53,11 +54,27 @@
                      <font>
                         <Font name="System Bold" size="36.0" />
                      </font>
+                     <fill>
+                        <LinearGradient endX="0.5904761904761904" endY="0.5333333333333334" startX="0.42380952380952386" startY="0.4">
+                           <stops>
+                              <Stop color="#00f2ff" />
+                              <Stop color="#ff6767" offset="1.0" />
+                           </stops>
+                        </LinearGradient>
+                     </fill>
                   </Text>
-                  <Label text="Message Of The Day" wrapText="true">
+                  <Label text="Message Of The Day" textAlignment="CENTER" wrapText="true">
                      <font>
-                        <Font size="18.0" />
+                        <Font name="System Bold Italic" size="18.0" />
                      </font>
+                     <textFill>
+                        <LinearGradient endX="0.5761904761904763" endY="0.4904761904761905" startX="0.5095238095238095" startY="0.41904761904761906">
+                           <stops>
+                              <Stop color="#00ffa6" />
+                              <Stop color="#ffa300" offset="1.0" />
+                           </stops>
+                        </LinearGradient>
+                     </textFill>
                   </Label>
                   <TextArea fx:id="motd" editable="false" prefHeight="164.0" prefWidth="600.0" text="&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation" wrapText="true">
                      <font>
