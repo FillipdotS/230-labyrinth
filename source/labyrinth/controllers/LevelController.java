@@ -624,11 +624,11 @@ public class LevelController implements Initializable {
 	}
 
 	private void showTilesOnWhichPlayerCanBeBacktrackedAndIfSoShowByHowManyTurnsBack() {
-		int [][] positions = getAllPlayersXYPosition();
+		int[][] positions = getAllPlayersXYPosition();
 		for (int i = 0; i < positions.length; i++) {
 			int index = canPlayerCanBeBacktrackedAndIfItCanHowFar(players[i]);
 			if (index > 0) {
-				setAsBacktrackOption(i,index,positions[i][0],positions[i][1]);
+				setAsBacktrackOption(i, index,positions[i][0], positions[i][1]);
 			}
 		}
 	}

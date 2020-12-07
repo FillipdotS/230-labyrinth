@@ -10,6 +10,9 @@ import java.io.Serializable;
  */
 public class ActionTile extends Tile implements Serializable {
 
+	/**
+	 * Represents the different types of action tiles available in the game.
+	 */
 	public enum ActionType {
 		FIRE("source/resources/img/action_tile_fire.png"),
 		ICE("source/resources/img/action_tile_ice.png"),

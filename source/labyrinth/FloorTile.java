@@ -141,7 +141,7 @@ public class FloorTile extends Tile implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * @return Boolean showing if a player could stand on this tile.
 	 */
 	public Boolean canMoveTo(){
 		return (LevelController.getCurrentTime() >= isOnFireUntil) && (player == null);
