@@ -22,6 +22,10 @@ import java.io.IOException;
 public class MainMenuController extends Application {
 	@FXML private TextArea motd;
 
+	public static void main(String[] args) {
+		Application.launch(args);
+	}
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		System.out.println("MainMenuController created.");
