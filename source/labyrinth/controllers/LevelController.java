@@ -121,6 +121,10 @@ public class LevelController implements Initializable {
 		}
 	}
 
+	/**
+	 * Go to the level menu
+	 * @param event Click event to get current window.
+	 */
 	@FXML public void goToLevelMenu(ActionEvent event) {
 		System.out.println("Going to level menu...");
 		try {
@@ -136,6 +140,9 @@ public class LevelController implements Initializable {
 		}
 	}
 
+	/**
+	 * Increases the size at which tiles render at, maximum of 100.
+	 */
 	@FXML public void increaseZoom() {
 		tileRenderSize = Math.min(100, tileRenderSize + 10);
 		renderBoard();
@@ -144,6 +151,9 @@ public class LevelController implements Initializable {
 		}
 	}
 
+	/**
+	 * Decreases the size at which tiles render, minimum of 20.
+	 */
 	@FXML public void decreaseZoom() {
 		tileRenderSize = Math.max(20, tileRenderSize - 10);
 		renderBoard();
