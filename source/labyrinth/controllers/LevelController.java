@@ -51,6 +51,10 @@ public class LevelController implements Initializable {
 	@FXML private VBox leftVBox;
 	@FXML private HBox bottomContainer;
 
+	/**
+	 * Represent what "phase" of the game we are in. Allow save files to know what stage of the game they
+	 * were at.
+	 */
 	private enum TurnPhases {
 		DRAWING,
 		PLACEMENT,
