@@ -821,6 +821,11 @@ public class LevelController implements Initializable {
 		}
 	}
 
+	/**
+	 * checks if clicks
+	 * @param x coordinate
+	 * @param y coordinate
+	 */
 	private void handleFloorTileClickAt(int x, int y) {
 		if (currentTurnPhase == TurnPhases.PLAYACTION && usedAction != null) {
 			handleActionClickOn(x, y);
@@ -830,6 +835,9 @@ public class LevelController implements Initializable {
 		System.out.println("From this tile you can move to " + Arrays.toString(this.board.getMovableFrom(x, y)));
 	}
 
+	/**
+	 * renders board
+	 */
 	private void renderBoard() {
 		// Clear the old render
 		boardContainer.getChildren().clear();
@@ -914,6 +922,9 @@ public class LevelController implements Initializable {
 		boardContainer.getChildren().add(renderedBoard);
 	}
 
+	/**
+	 * updates player info 
+	 */
 	private void updateSubInfoVBoxes() {
 		for (int i = 0; i < playerSubInfoVBoxes.length; i++) {
 			playerSubInfoVBoxes[i].getChildren().clear();
