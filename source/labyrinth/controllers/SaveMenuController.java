@@ -27,15 +27,16 @@ import java.util.ResourceBundle;
 
 /**
  * @author Max
- * saveMenuController are able to load or delete saves
+ * SaveMenuController are able to load or delete saves
  */
-public class saveMenuController implements Initializable {
+public class SaveMenuController implements Initializable {
+	private static String selectedSaveName;
+	private static HBox selectedSaveHBox;
+
 	@FXML private VBox vboxSaves;
 	@FXML private Button deleteSaveButton;
 	@FXML private TextArea saveDetailTextArea;
 	@FXML private Button loadSaveButton;
-	private static String selectedSaveName;
-	private static HBox selectedSaveHBox;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
