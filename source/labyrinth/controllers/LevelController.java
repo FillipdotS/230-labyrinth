@@ -503,7 +503,7 @@ public class LevelController implements Initializable {
 	}
 
 	/**
-	 *
+	 * prepare movement phase renders board
 	 */
 	private void movementPhase() {
 		currentTurnPhase = TurnPhases.MOVEMENT;
@@ -515,6 +515,9 @@ public class LevelController implements Initializable {
 		showWay();
 	}
 
+	/**
+	 * ends turn changes player
+	 */
 	private void endTurn() {
 		// If a tile amount has a decimal (*.5), then they received one of those action tiles this turn,
 		// so we bump it up so that it is fully usable next turn.
@@ -603,6 +606,10 @@ public class LevelController implements Initializable {
 		return null;
 	}
 
+	/**
+	 * gets positions of all players on board
+	 * @return first index is players ID, second coordinates 0 for x, 1 for y 
+	 */
 	private int[][] getAllPlayersXYPosition() {
 		int[][] result = new int[players.length][2];
 		for (int x = 0; x < this.board.getWidth(); x++) {
@@ -617,6 +624,9 @@ public class LevelController implements Initializable {
 		return result;
 	}
 
+	/**
+	 * handle click to choose available action tile
+	 */
 	private void handleClickATChoice() {
 		System.out.println(usedAction);
 
@@ -624,21 +634,31 @@ public class LevelController implements Initializable {
 			showWay();
 		}
 		if (usedAction == ActionTile.ActionType.BACKTRACK) {
-			showTilesOnWhichPlayerCanBeBacktrackedAndIfSoShowByHowManyTurnsBack();
+			showPlayersToBacktrack();
 		}
 
 	}
 
-	private void showTilesOnWhichPlayerCanBeBacktrackedAndIfSoShowByHowManyTurnsBack() {
+	/**
+	 * highlights players that can be backtracked
+	 */
+	private void showPlayersToBacktrack() {
 		int[][] positions = getAllPlayersXYPosition();
 		for (int i = 0; i < positions.length; i++) {
-			int index = canPlayerCanBeBacktrackedAndIfItCanHowFar(players[i]);
+			int index = canPlayerBeBacktracked(players[i]);
 			if (index > 0) {
 				setAsBacktrackOption(i, index,positions[i][0], positions[i][1]);
 			}
 		}
 	}
 
+	/**
+	 * highlights player to be backtracked
+	 * @param player player ID
+	 * @param index how many turns back
+	 * @param x current position
+	 * @param y current position
+	 */
 	private void setAsBacktrackOption(int player, int index, int x, int y) {
 		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png",tileRenderSize,tileRenderSize, false, false));
 		chosen.setOpacity(0.5);
@@ -655,7 +675,12 @@ public class LevelController implements Initializable {
 		});
 	}
 
-	private int canPlayerCanBeBacktrackedAndIfItCanHowFar(Player player) {
+	/**
+	 *
+	 * @param player Player
+	 * @return turns to backtrack
+	 */
+	private int canPlayerBeBacktracked(Player player) {
 		int howFar = 0;
 		if (!player.getHasBeenBacktracked()) {
 			int [][] pos = player.getPastPositions();
@@ -665,6 +690,9 @@ public class LevelController implements Initializable {
 		return howFar;
 	}
 
+	/**
+	 * show where can player go
+	 */
 	private void showWay() {
 		int[] pos = getPlayerXYPosition(currentPlayer);
 		Boolean[] moveMask = board.getMovableFrom(pos[0],pos[1]);
@@ -694,6 +722,11 @@ public class LevelController implements Initializable {
 		}
 	}
 
+	/**
+	 * set tile as way to go
+	 * @param x coordinate
+	 * @param y coordinate
+	 */
 	private void setAsWay(int x, int y) {
 		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", tileRenderSize,tileRenderSize,false,false));
 		chosen.setOpacity(0.5);
@@ -702,6 +735,12 @@ public class LevelController implements Initializable {
 		wayTile.setOnMouseClicked(event -> move(x, y));
 	}
 
+	/**
+	 * moves player
+	 * @param player Player
+	 * @param x X-position of new tile to move on
+	 * @param y X-position of new tile to move on
+	 */
 	private void move(Player player,int x,int y) {
 		player.setStandingOn(board.getTileAt(x, y));
 		player.addToPastPositions(x, y);
@@ -737,6 +776,12 @@ public class LevelController implements Initializable {
 		move(players[currentPlayer],x,y);
 	}
 
+	/**
+	 * returns tile as stackPane by coordinates
+	 * @param col column
+	 * @param row row
+	 * @return StackPane tile
+	 */
 	private StackPane getStackPaneTileByXY(int col, int row) {
 		for (Node node : renderedBoard.getChildren()) {
 			if (GridPane.getColumnIndex(node) == col+1 && GridPane.getRowIndex(node) == row+1) {
@@ -746,6 +791,11 @@ public class LevelController implements Initializable {
 		return null;
 	}
 
+	/**
+	 * handles click events on tiles
+	 * @param x coordinate
+	 * @param y coordinate
+	 */
 	private void handleActionClickOn(int x, int y) {
 		switch (usedAction) {
 			case FIRE:
@@ -851,7 +901,9 @@ public class LevelController implements Initializable {
 
 				int finalX = x;
 				int finalY = y;
-				stack.setOnMouseClicked(event -> handleFloorTileClickAt(finalX, finalY));
+				stack.setOnMouseClicked(event -> {
+					handleFloorTileClickAt(finalX, finalY);
+				});
 
 				renderedBoard.add(stack, x + 1, y + 1);
 			}
