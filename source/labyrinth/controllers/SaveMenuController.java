@@ -26,8 +26,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
+ * SaveMenuController are able to load or delete saves.
  * @author Max
- * SaveMenuController are able to load or delete saves
  */
 public class SaveMenuController implements Initializable {
 	private static String selectedSaveName;
@@ -45,7 +45,7 @@ public class SaveMenuController implements Initializable {
 	}
 
 	/**
-	 * method to display all saveData
+	 * Shows every found save file.
 	 */
 	private void showSaveFile() {
 		vboxSaves.getChildren().clear();
@@ -77,9 +77,8 @@ public class SaveMenuController implements Initializable {
 	}
 
 	/**
-	 * sub-method to get names from each of the save file
-	 *
-	 * @return savefile name
+	 * Get a list of all saves.
+	 * @return ArrayList of save files
 	 */
 	private ArrayList<String> getSaves() {
 		File actual = new File("./source/resources/saves");
@@ -91,9 +90,8 @@ public class SaveMenuController implements Initializable {
 	}
 
 	/**
-	 * common method to back to main menu
-	 *
-	 * @param event click back button
+	 * Goes to the main menu.
+	 * @param event Click event to get current window
 	 */
 	@FXML
 	public void returnToMainMenu(ActionEvent event) {
@@ -113,7 +111,7 @@ public class SaveMenuController implements Initializable {
 
 
 	/**
-	 * method to delete save by using selectedSaveName
+	 * Delete the currently selected save.
 	 */
 	@FXML
 	public void deleteSave() {

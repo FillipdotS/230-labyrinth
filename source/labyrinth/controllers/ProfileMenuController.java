@@ -18,6 +18,9 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * JavaFX controller for the profile menu that deals with viewing, deleting and creating profiles.
+ */
 public class ProfileMenuController implements Initializable {
 	@FXML private TextField newProfileName;
 	@FXML private TableView<Profile> tableView;
@@ -41,7 +44,8 @@ public class ProfileMenuController implements Initializable {
 	/**
 	 * Delete the currently selected profile (which is determined by the table).
 	 */
-	@FXML public void deleteProfile() {
+	@FXML
+	public void deleteProfile() {
 		Profile toDelete = tableView.getSelectionModel().getSelectedItem();
 		if (toDelete != null) {
 			// Allow user to confirm their deletion
@@ -58,6 +62,9 @@ public class ProfileMenuController implements Initializable {
 		}
 	}
 
+	/**
+	 * Make a new profile with the inputted name
+	 */
 	@FXML
 	public void makeNewProfile() {
 		System.out.println("Attempting to make new profile...");
@@ -89,6 +96,10 @@ public class ProfileMenuController implements Initializable {
 		tableView.getItems().setAll(ProfileManager.getProfiles());
 	}
 
+	/**
+	 * Goes to the main menu
+	 * @param event Click event to get current window
+	 */
 	@FXML
 	public void returnToMainMenu(ActionEvent event) {
 		System.out.println("Going back to main menu...");

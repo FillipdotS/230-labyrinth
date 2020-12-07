@@ -3,7 +3,7 @@ package source.labyrinth;
 import java.io.Serializable;
 
 /**
- * Action Tile class sets up the action tiles images and gets their action type(fire,ice,etc..)
+ * Action Tile class sets up the action tiles images and gets their action type(fire,ice,etc..).
  * @author Ian Lavin Rady
  * @author Erik Miller
  * @version 1.0

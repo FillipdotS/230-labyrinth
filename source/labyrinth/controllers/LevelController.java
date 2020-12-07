@@ -139,11 +139,17 @@ public class LevelController implements Initializable {
 	@FXML public void increaseZoom() {
 		tileRenderSize = Math.min(100, tileRenderSize + 10);
 		renderBoard();
+		if (currentTurnPhase == TurnPhases.MOVEMENT || (currentTurnPhase == TurnPhases.PLAYACTION && usedAction == ActionTile.ActionType.DOUBLEMOVE)) {
+			showWay();
+		}
 	}
 
 	@FXML public void decreaseZoom() {
 		tileRenderSize = Math.max(20, tileRenderSize - 10);
 		renderBoard();
+		if (currentTurnPhase == TurnPhases.MOVEMENT || (currentTurnPhase == TurnPhases.PLAYACTION && usedAction == ActionTile.ActionType.DOUBLEMOVE)) {
+			showWay();
+		}
 	}
 
 	/**
@@ -188,7 +194,7 @@ public class LevelController implements Initializable {
 	 */
 	private void setupFromLevelFile(String levelName, String[] profileInfo) {
 		System.out.println("Creating new game from level file...");
-		LevelData ld = LevelReader.readDataFile("source/resources/levels/" + levelName + ".txt");
+		LevelData ld = LevelIO.readDataFile("source/resources/levels/" + levelName + ".txt");
 
 		timeForFullLoop = profileInfo.length;
 		currentTime = 0;
@@ -562,9 +568,9 @@ public class LevelController implements Initializable {
 		// If at least one profile as playing update the leaderboard
 		if (profilesThatPlayed.size() > 0) {
 			if (winningProfile != null) {
-				LevelReader.updateLeaderboard(this.currentLevelName, profilesThatPlayed, winningProfile.getID());
+				LevelIO.updateLeaderboard(this.currentLevelName, profilesThatPlayed, winningProfile.getID());
 			} else {
-				LevelReader.updateLeaderboard(this.currentLevelName, profilesThatPlayed, null);
+				LevelIO.updateLeaderboard(this.currentLevelName, profilesThatPlayed, null);
 			}
 		}
 
@@ -852,9 +858,6 @@ public class LevelController implements Initializable {
 		}
 
 		// renderedBoard.setGridLinesVisible(true);
-		if (currentTurnPhase == TurnPhases.MOVEMENT) {
-			showWay();
-		}
 
 		boardContainer.getChildren().add(renderedBoard);
 	}

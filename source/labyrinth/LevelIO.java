@@ -6,12 +6,11 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 /**
- * The LevelReader is going to read the level chosen, and pass that info so the Board can be constructed.
+ * The LevelIO deals with the level files and their leaderboards.
  * @author Ian Lavin Rady
  * @author Fillip Serov
  */
-
-public class LevelReader {
+public class LevelIO {
 
 	private static final int TOTAL_NUM_OF_PLAYERS = 4;
 

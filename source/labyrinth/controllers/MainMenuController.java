@@ -15,6 +15,10 @@ import source.labyrinth.ProfileManager;
 
 import java.io.IOException;
 
+/**
+ * JavaFX controller for main_menu.fxml, shows controls to go to different parts of the game.
+ * @author Fillip Serov
+ */
 public class MainMenuController extends Application {
 	@FXML private TextArea motd;
 
@@ -31,12 +35,10 @@ public class MainMenuController extends Application {
 		ProfileManager.performSetup();
 	}
 
-	@FXML
-	private void initialize() {
-		//new motd in textArea
-		motd.setText(MessageOfTheDay.getMessageOfTheDay());
-	}
-
+	/**
+	 * Go to the level menu
+	 * @param event Click event to get window from
+	 */
 	@FXML
 	public void goToLevelMenu(ActionEvent event) {
 		System.out.println("Going to level menu...");
@@ -53,6 +55,10 @@ public class MainMenuController extends Application {
 		}
 	}
 
+	/**
+	 * Go to the profile menu
+	 * @param event Click event to get window from
+	 */
 	@FXML
 	public void goToProfileMenu(ActionEvent event) {
 		System.out.println("Going to profile menu...");
@@ -69,6 +75,10 @@ public class MainMenuController extends Application {
 		}
 	}
 
+	/**
+	 * Go to the save menu
+	 * @param event Click event to get window from
+	 */
 	@FXML
 	public void goToSaveMenu(ActionEvent event) {
 		System.out.println("Going to save menu...");
@@ -85,8 +95,16 @@ public class MainMenuController extends Application {
 		}
 	}
 
+	/**
+	 * Exits the program
+	 */
 	@FXML
 	public void exitGame() {
 		Platform.exit();
+	}
+
+	@FXML
+	private void initialize() {
+		motd.setText(MessageOfTheDay.getMessageOfTheDay());
 	}
 }

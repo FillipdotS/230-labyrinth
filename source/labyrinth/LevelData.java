@@ -3,7 +3,7 @@ package source.labyrinth;
 import java.util.HashMap;
 
 /**
- * LevelData is created by LevelReader to store information about the level. This is needed as not
+ * LevelData is created by LevelIO to store information about the level. This is needed as not
  * all information goes into a single Board class that can easily be returned.
  * @author Fillip Serov
  */

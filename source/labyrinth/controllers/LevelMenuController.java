@@ -25,11 +25,16 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * LevelMenuController let user choose level number of players and associated profiles
+ * LevelMenuController let user choose level number of players and associated profiles.
  * @author Erik Miller
  */
-
 public class LevelMenuController implements Initializable {
+	private static ArrayList<String> profilesChosen = new ArrayList<>();
+	private static String selectedLevel;
+	private static HBox selectedHBox;
+	private static int numberOfPlayers =  2;
+	private static ArrayList<String> profileNames;
+
 	@FXML private VBox vboxLevels;
 	@FXML private VBox vboxPlayers;
 	@FXML private Button addPlayerButton;
@@ -37,12 +42,6 @@ public class LevelMenuController implements Initializable {
 	@FXML private TableView<Profile> tableView;
 	@FXML private TableColumn<Profile, Integer> winCol;
 	@FXML private TableColumn<Profile, String> nameCol;
-
-	private static String selectedLevel;
-	private static HBox selectedHBox;
-	private static int numberOfPlayers =  2;
-	private final static ArrayList<String> profilesChosen = new ArrayList<>();
-	private static ArrayList<String> profileNames;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -62,6 +61,63 @@ public class LevelMenuController implements Initializable {
 		renderLeaderBoard();
 
 		System.out.println("Created LevelMenuController");
+	}
+
+	/**
+	 * starts game
+	 * @param event click on button
+	 */
+	@FXML
+	public void playGame(ActionEvent event) {
+		if (selectedLevel != null) {
+			System.out.println("Going to board ...");
+			String[] prof = new String[numberOfPlayers];
+			for (int i = 0; i < prof.length; i++) {
+				if (profilesChosen.size() > i) prof[i] = profilesChosen.get(i);
+			}
+
+			LevelController.setNextLevelToLoad(selectedLevel, prof);
+
+			System.out.println("level: " + selectedLevel);
+			for (String s : prof) {
+				System.out.println("player " + s);
+			}
+
+			try {
+				Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level.fxml"));
+				Scene profileMenuScene = new Scene(profileMenuParent);
+				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+				window.setScene(profileMenuScene);
+				window.setTitle("Level Select");
+				window.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("Choose a level!");
+			alert.showAndWait();
+		}
+	}
+
+	/**
+	 * Return to the main menu screen
+	 * @param event Event click to find current window
+	 */
+	@FXML
+	public void returnToMainMenu(ActionEvent event) {
+		System.out.println("Going back to main menu...");
+		try {
+			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/main_menu.fxml"));
+			Scene profileMenuScene = new Scene(profileMenuParent);
+			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+			window.setScene(profileMenuScene);
+			window.setTitle("Main Menu");
+			window.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -153,23 +209,6 @@ public class LevelMenuController implements Initializable {
 
 	}
 
-
-	@FXML
-	public void returnToMainMenu(ActionEvent event) {
-		System.out.println("Going back to main menu...");
-		try {
-			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/main_menu.fxml"));
-			Scene profileMenuScene = new Scene(profileMenuParent);
-			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-
-			window.setScene(profileMenuScene);
-			window.setTitle("Main Menu");
-			window.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * reeds level names fromm files
 	 * @return level names as string
@@ -181,42 +220,5 @@ public class LevelMenuController implements Initializable {
 			levels.add(f.getName());
 			}
 		return levels;
-	}
-
-	/**
-	 * starts game
-	 * @param event click on button
-	 */
-	@FXML
-	public void playGame(ActionEvent event) {
-		if (selectedLevel != null) {
-			System.out.println("Going to board ...");
-			String[] prof = new String[numberOfPlayers];
-			for (int i = 0; i < prof.length; i++) {
-				if (profilesChosen.size() > i) prof[i] = profilesChosen.get(i);
-			}
-
-			LevelController.setNextLevelToLoad(selectedLevel, prof);
-
-			System.out.println("level: " + selectedLevel);
-			for (String s : prof) {
-				System.out.println("player " + s);
-			}
-
-			try {
-				Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level.fxml"));
-				Scene profileMenuScene = new Scene(profileMenuParent);
-				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-				window.setScene(profileMenuScene);
-				window.setTitle("Level Select");
-				window.show();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Choose a level!");
-			alert.showAndWait();
-		}
 	}
 }
