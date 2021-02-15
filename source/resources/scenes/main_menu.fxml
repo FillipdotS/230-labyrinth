@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="source.labyrinth.controllers.MainMenuController">
+<BorderPane layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="447.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="source.labyrinth.controllers.MainMenuController">
     <center>
         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER_RIGHT">
             <children>
@@ -28,6 +28,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </VBox.margin>
                 </Button>
+            <Button mnemonicParsing="false" onAction="#goToLevelEditorMenu" text="Level Editor" />
                 <Button mnemonicParsing="false" onAction="#exitGame" text="Exit">
                     <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="20.0" />
