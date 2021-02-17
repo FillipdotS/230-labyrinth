@@ -153,7 +153,7 @@ public class LevelEditorController implements Initializable {
 	 * @param y Y-coord
 	 */
 	private void rotateFixedTileAt(int x, int y) {
-		board.getTileAt(x, y).rotateBy(1);
+		if (board.getTileAt(x, y) != null) board.getTileAt(x, y).rotateBy(1);
 	}
 
 	/**
