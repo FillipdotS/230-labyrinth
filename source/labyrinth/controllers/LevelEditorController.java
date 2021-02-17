@@ -56,6 +56,7 @@ public class LevelEditorController implements Initializable {
 
 		// temp variable
 		selectedFloorTile = new FloorTile(2, FloorTile.FloorType.TSHAPE,true);
+		selectedFloorTile = null;
 
 		LevelData ld = LevelIO.readDataFile("source/resources/levels/" + levelName + ".txt");
 		board = ld.getBoard();
@@ -132,7 +133,7 @@ public class LevelEditorController implements Initializable {
 				setSelectedFloorTile(new FloorTile(2,tile.getFloorType(),true));
 				updateBottomContainer();
 			});
-			if (tile.getFloorType() == selectedFloorTile.getFloorType()) {
+			if ((selectedFloorTile != null) && (tile.getFloorType() == selectedFloorTile.getFloorType())) {
 				ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", tileRenderSize, tileRenderSize, false, false));
 				chosen.setOpacity(0.5);
 				stackTile.getChildren().add(chosen);
@@ -140,7 +141,18 @@ public class LevelEditorController implements Initializable {
 			bottomContainer.getChildren().add(stackTile);
 		}
 
-		
+		Image img = new Image("source/resources/img/tile_none.png", tileRenderSize, tileRenderSize, false, false);
+		StackPane stack = new StackPane(new ImageView(img));
+		stack.setOnMouseClicked(event -> {
+			setSelectedFloorTile(null);
+			updateBottomContainer();
+		});
+		if(selectedFloorTile == null) {
+			ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", tileRenderSize, tileRenderSize, false, false));
+			chosen.setOpacity(0.5);
+			stack.getChildren().add(chosen);
+		}
+		bottomContainer.getChildren().add(stack);
 	}
 
 	private void setSelectedFloorTile(FloorTile tile){
@@ -155,8 +167,12 @@ public class LevelEditorController implements Initializable {
 	 */
 	private void placeFixedTileAt(int x, int y) {
 		// Deep copy the floor tile, otherwise rotating one will rotate them all
-		FloorTile copy = new FloorTile(selectedFloorTile.getOrientation(), selectedFloorTile.getFloorType(),selectedFloorTile.getFixed());
-		board.setTileAt(copy, x, y);
+		if (selectedFloorTile != null) {
+			FloorTile copy = new FloorTile(selectedFloorTile.getOrientation(), selectedFloorTile.getFloorType(), selectedFloorTile.getFixed());
+			board.setTileAt(copy, x, y);
+		} else {
+			deleteFixedTileAt(x,y);
+		}
 	}
 
 	/**
