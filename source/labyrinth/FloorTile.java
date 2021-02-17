@@ -51,7 +51,7 @@ public class FloorTile extends Tile implements Serializable {
 
 	private Boolean[] moveMask; // Specifically THIS tiles move mask, which has been changed by orientation
 	private int orientation;
-	private Boolean isFixed = false;
+	private Boolean isFixed;
 	private int isOnFireUntil;
 	private int isFrozenUntil;
 	private Player player;
@@ -62,10 +62,15 @@ public class FloorTile extends Tile implements Serializable {
 	 * @param floorType FloorType of this tile
 	 */
 	public FloorTile(int orientation, FloorType floorType) {
+		this(orientation,floorType,false);
+	}
+
+	public FloorTile(int orientation, FloorType floorType,boolean isFixed) {
 		this.orientation = orientation;
 		this.floorType = floorType;
 		this.isFrozenUntil=-1;
 		this.isOnFireUntil=-1;
+		this.isFixed = isFixed;
 
 		this.moveMask = calculateMoveMask();
 	}
