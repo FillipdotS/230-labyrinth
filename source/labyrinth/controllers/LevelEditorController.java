@@ -54,10 +54,6 @@ public class LevelEditorController implements Initializable {
 		// temp variable
 		String levelName = "example_level";
 
-		// temp variable
-		selectedFloorTile = new FloorTile(2, FloorTile.FloorType.TSHAPE,true);
-		selectedFloorTile = null;
-
 		LevelData ld = LevelIO.readDataFile("source/resources/levels/" + levelName + ".txt");
 		board = ld.getBoard();
 
