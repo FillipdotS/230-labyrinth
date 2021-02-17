@@ -141,6 +141,14 @@ public class FloorTile extends Tile implements Serializable {
 	}
 
 	/**
+	 * Get FloorType enum value for this floor tile.
+	 * @return FloorType of this floor tile.
+	 */
+	public FloorType getFloorType() {
+		return this.floorType;
+	}
+
+	/**
 	 * @return Boolean showing if a player could stand on this tile.
 	 */
 	public Boolean canMoveTo(){
