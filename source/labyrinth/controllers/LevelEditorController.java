@@ -1,12 +1,18 @@
 package source.labyrinth.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -14,11 +20,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import source.labyrinth.*;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 /**
  * LevelEditorController is used when editing a game board.
@@ -34,6 +43,22 @@ public class LevelEditorController implements Initializable {
 	private HBox bottomContainer;
 	@FXML
 	private ToggleGroup editingState;
+
+	@FXML
+	public void returnToMainMenu(ActionEvent event) {
+		System.out.println("Main Menu");
+		try {
+			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/main_menu.fxml"));
+			Scene profileMenuScene = new Scene(profileMenuParent);
+			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+			window.setScene(profileMenuScene);
+			window.setTitle("Main Menu");
+			window.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private enum EditingState {
 		BOARD_SIZE,
@@ -96,7 +121,7 @@ public class LevelEditorController implements Initializable {
 
 		switch (currentState) {
 			case BOARD_SIZE:
-				bottomContainer.getChildren().add(new Text("Board size stuff"));
+				selectBoardSize();
 				break;
 			case FIXED_TILES:
 				showFixedTileControls();
@@ -111,6 +136,35 @@ public class LevelEditorController implements Initializable {
 				bottomContainer.getChildren().add(new Text("Save stuff"));
 				break;
 		}
+	}
+
+	private void selectBoardSize() {
+
+		//LevelData newLevel = new LevelData();
+
+		TextField width = new TextField();
+		width.setPromptText("Enter width.");
+		bottomContainer.getChildren().add(width);
+
+	    TextField height = new TextField();
+		height.setPromptText("Enter height.");
+		bottomContainer.getChildren().add(height);
+
+		Button submit = new Button("Set board");
+		bottomContainer.getChildren().add(submit);
+		submit.setOnAction((event) -> {
+			Board newBoard = new Board(Integer.valueOf(width.getText()), Integer.valueOf(height.getText()));
+			board = newBoard;
+			renderBoard();
+			//newLevel.setBoard(newBoard);
+			});
+
+		Button clear = new Button("Clear");
+		clear.setOnAction((event) -> {
+			width.clear();
+			height.clear();
+				});
+		bottomContainer.getChildren().add(clear);
 	}
 
 	/**

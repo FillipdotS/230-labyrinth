@@ -27,7 +27,11 @@
       </ScrollPane>
    </center>
    <left>
+
       <VBox alignment="CENTER" prefHeight="330.0" prefWidth="147.0" BorderPane.alignment="CENTER">
+
+         <Button mnemonicParsing="false" onAction="#returnToMainMenu" text="Back" BorderPane.alignment="CENTER" />
+
          <children>
             <Label text="Zoom" />
             <HBox alignment="TOP_CENTER" prefHeight="46.0" prefWidth="158.0" spacing="5.0">
