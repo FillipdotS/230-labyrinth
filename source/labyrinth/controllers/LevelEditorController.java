@@ -46,14 +46,14 @@ public class LevelEditorController implements Initializable {
 
 	@FXML
 	public void returnToMainMenu(ActionEvent event) {
-		System.out.println("Main Menu");
+		System.out.println("Editor Menu");
 		try {
-			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/main_menu.fxml"));
+			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/editor_menu.fxml"));
 			Scene profileMenuScene = new Scene(profileMenuParent);
 			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 
 			window.setScene(profileMenuScene);
-			window.setTitle("Main Menu");
+			window.setTitle("Editor Menu");
 			window.show();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -77,10 +77,10 @@ public class LevelEditorController implements Initializable {
 		System.out.println("Created LevelEditorController");
 
 		// temp variable
-		String levelName = "example_level";
+		//String levelName = "example_level";
 
-		LevelData ld = LevelIO.readDataFile("source/resources/levels/" + levelName + ".txt");
-		board = ld.getBoard();
+		//LevelData ld = LevelIO.readDataFile("source/resources/levels/" + levelName + ".txt");
+		//board = ld.getBoard();
 
 		editingState.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
 			RadioButton selected = (RadioButton) editingState.getSelectedToggle();
@@ -92,7 +92,7 @@ public class LevelEditorController implements Initializable {
 		currentState = EditingState.FIXED_TILES;
 		updateBottomContainer();
 
-		renderBoard();
+		//renderBoard();
 	}
 
 	/**
@@ -138,8 +138,12 @@ public class LevelEditorController implements Initializable {
 		}
 	}
 
+	/**
+	 * Select the width and the height of the board that you want to create
+	 * Generates a board with 4 fixed corner tiles and a goal tile
+	 * You can always go to the default board by pressing the default button
+	 */
 	private void selectBoardSize() {
-
 		TextField width = new TextField();
 		width.setPromptText("Enter width.");
 		bottomContainer.getChildren().add(width);
@@ -184,6 +188,16 @@ public class LevelEditorController implements Initializable {
 			height.clear();
 				});
 		bottomContainer.getChildren().add(clear);
+
+		/*Button defaultt = new Button("Default");
+		defaultt.setOnAction((event) -> {
+			String levelName = "example_level";
+
+			LevelData ld = LevelIO.readDataFile("source/resources/levels/" + levelName + ".txt");
+			board = ld.getBoard();
+			renderBoard();
+		});
+		bottomContainer.getChildren().add(defaultt);*/
 	}
 
 	/**
