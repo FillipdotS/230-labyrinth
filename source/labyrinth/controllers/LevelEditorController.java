@@ -140,8 +140,6 @@ public class LevelEditorController implements Initializable {
 
 	private void selectBoardSize() {
 
-		//LevelData newLevel = new LevelData();
-
 		TextField width = new TextField();
 		width.setPromptText("Enter width.");
 		bottomContainer.getChildren().add(width);
@@ -155,8 +153,29 @@ public class LevelEditorController implements Initializable {
 		submit.setOnAction((event) -> {
 			Board newBoard = new Board(Integer.valueOf(width.getText()), Integer.valueOf(height.getText()));
 			board = newBoard;
+
+			FloorTile fixedTile = new FloorTile(1, FloorTile.FloorType.CORNER);
+			fixedTile.setFixed(true);
+			board.setTileAt(fixedTile, 0, 0);
+
+			FloorTile fixedTile1 = new FloorTile(2, FloorTile.FloorType.CORNER);
+			fixedTile1.setFixed(true);
+			board.setTileAt(fixedTile1,  Integer.valueOf(width.getText()) - 1, 0);
+
+			FloorTile fixedTile2 = new FloorTile(3, FloorTile.FloorType.CORNER);
+			fixedTile2.setFixed(true);
+			board.setTileAt(fixedTile2, Integer.valueOf(width.getText()) - 1, Integer.valueOf(height.getText()) - 1);
+
+			FloorTile fixedTile3 = new FloorTile(0, FloorTile.FloorType.CORNER);
+			fixedTile3.setFixed(true);
+			board.setTileAt(fixedTile3, 0, Integer.valueOf(height.getText()) - 1);
+
+			if(Integer.valueOf(width.getText()) > 2 && Integer.valueOf(height.getText()) > 2) {
+				FloorTile fixedTile4 = new FloorTile(0, FloorTile.FloorType.GOAL);
+				fixedTile4.setFixed(true);
+				board.setTileAt(fixedTile4, Integer.valueOf(width.getText()) / 2, Integer.valueOf(height.getText()) / 2);
+			}
 			renderBoard();
-			//newLevel.setBoard(newBoard);
 			});
 
 		Button clear = new Button("Clear");
