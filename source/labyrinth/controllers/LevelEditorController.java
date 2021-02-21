@@ -23,6 +23,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import source.labyrinth.*;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -357,4 +359,17 @@ public class LevelEditorController implements Initializable {
 		boardContainer.getChildren().clear();
 		boardContainer.getChildren().add(renderedBoard);
 	}
+
+	private void fileWriter() throws IOException {
+		File filename = new File("source\\resources\\custom_levels");
+		FileWriter writer = new FileWriter(filename);
+		int numOfFixedTiles = 5;
+		int[][] tempPlayerPos = new int[0][0];
+		writer.write(board.getWidth() + "," + board.getHeight());
+		writer.write(numOfFixedTiles);
+		writer.write(board.getTileAt() + selectedFloorTile.getFloorType() + selectedFloorTile.getOrientation());
+		writer.write(String.valueOf(tempPlayerPos));
+		writer.write();
+	}
+
 }
