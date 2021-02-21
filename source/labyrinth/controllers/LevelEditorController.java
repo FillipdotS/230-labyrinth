@@ -188,6 +188,9 @@ public class LevelEditorController implements Initializable {
 		clear.setOnAction((event) -> {
 			width.clear();
 			height.clear();
+			Board newBoard = new Board(0, 0);
+			board = newBoard;
+			renderBoard();
 				});
 		bottomContainer.getChildren().add(clear);
 
