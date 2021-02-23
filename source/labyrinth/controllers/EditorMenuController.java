@@ -44,6 +44,55 @@ public class EditorMenuController implements Initializable {
 		}
 	}
 
+
+
+
+
+
+
+	@FXML
+	public void goToBoardEditorExist(ActionEvent event) {
+		System.out.println("Going to board editor (exist)...");
+		try {
+			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/exist_board_select.fxml"));
+			Scene profileMenuScene = new Scene(profileMenuParent);
+			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+			window.setScene(profileMenuScene);
+			window.setTitle("Exist Board Editor");
+			window.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	@FXML
+	public void goToBoardEditorNew(ActionEvent event) {
+		System.out.println("Going to board editor (new)...");
+		try {
+			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/board_editor_new.fxml"));
+			Scene profileMenuScene = new Scene(profileMenuParent);
+			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+			window.setScene(profileMenuScene);
+			window.setTitle("New Board Editor");
+			window.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
 	/**
 	 * Return to the main menu screen
 	 * @param event Event click to find current window
