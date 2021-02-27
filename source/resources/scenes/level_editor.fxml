@@ -29,10 +29,15 @@
    <left>
 
       <VBox alignment="CENTER" prefHeight="330.0" prefWidth="147.0" BorderPane.alignment="CENTER">
-
-         <Button mnemonicParsing="false" onAction="#returnToMainMenu" text="Back" BorderPane.alignment="CENTER" />
-
          <children>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#returnToEditorMenu" text="Back" />
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </HBox>
             <Label text="Zoom" />
             <HBox alignment="TOP_CENTER" prefHeight="46.0" prefWidth="158.0" spacing="5.0">
                <children>
@@ -46,7 +51,7 @@
                   <Insets bottom="25.0" />
                </VBox.margin>
             </HBox>
-            <RadioButton fx:id="BOARD_SIZE" mnemonicParsing="false" text="Board Size">
+            <RadioButton fx:id="BOARD_SIZE" mnemonicParsing="false" selected="true" text="Board Size">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
@@ -54,7 +59,7 @@
                   <ToggleGroup fx:id="editingState" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="FIXED_TILES" mnemonicParsing="false" selected="true" text="Fixed Tiles" toggleGroup="$editingState">
+            <RadioButton fx:id="FIXED_TILES" mnemonicParsing="false" text="Fixed Tiles" toggleGroup="$editingState">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
@@ -86,15 +91,6 @@
                   <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                </padding>
             </RadioButton>
-         </children>
-         <children>
-
-            <VBox>
-               <Button mnemonicParsing="false" text="Play" BorderPane.alignment="CENTER" />
-               <padding>
-                  <Insets bottom="3.0" left="50.0" right="3.0" top="30.0" />
-               </padding>
-            </VBox>
          </children>
       </VBox>
 

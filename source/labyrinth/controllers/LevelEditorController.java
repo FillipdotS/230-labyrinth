@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -12,8 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -29,7 +26,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 
 /**
  * LevelEditorController is used when editing a game board.
@@ -47,7 +43,7 @@ public class LevelEditorController implements Initializable {
 	private ToggleGroup editingState;
 
 	@FXML
-	public void returnToMainMenu(ActionEvent event) {
+	public void returnToEditorMenu(ActionEvent event) {
 		System.out.println("Editor Menu");
 		try {
 			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/editor_menu.fxml"));
@@ -91,7 +87,7 @@ public class LevelEditorController implements Initializable {
 			updateBottomContainer();
 		}));
 
-		currentState = EditingState.FIXED_TILES;
+		currentState = EditingState.BOARD_SIZE;
 		updateBottomContainer();
 
 		//renderBoard();
@@ -157,8 +153,10 @@ public class LevelEditorController implements Initializable {
 		Button submit = new Button("Set board");
 		bottomContainer.getChildren().add(submit);
 		submit.setOnAction((event) -> {
-			Board newBoard = new Board(Integer.valueOf(width.getText()), Integer.valueOf(height.getText()));
-			board = newBoard;
+			int newWidth = Integer.parseInt(width.getText());
+			int newHeight = Integer.parseInt(height.getText());
+
+			board = new Board(newWidth, newHeight);
 
 			FloorTile fixedTile = new FloorTile(1, FloorTile.FloorType.CORNER);
 			fixedTile.setFixed(true);
@@ -166,20 +164,20 @@ public class LevelEditorController implements Initializable {
 
 			FloorTile fixedTile1 = new FloorTile(2, FloorTile.FloorType.CORNER);
 			fixedTile1.setFixed(true);
-			board.setTileAt(fixedTile1,  Integer.valueOf(width.getText()) - 1, 0);
+			board.setTileAt(fixedTile1,  newWidth - 1, 0);
 
 			FloorTile fixedTile2 = new FloorTile(3, FloorTile.FloorType.CORNER);
 			fixedTile2.setFixed(true);
-			board.setTileAt(fixedTile2, Integer.valueOf(width.getText()) - 1, Integer.valueOf(height.getText()) - 1);
+			board.setTileAt(fixedTile2, newWidth - 1, newHeight - 1);
 
 			FloorTile fixedTile3 = new FloorTile(0, FloorTile.FloorType.CORNER);
 			fixedTile3.setFixed(true);
-			board.setTileAt(fixedTile3, 0, Integer.valueOf(height.getText()) - 1);
+			board.setTileAt(fixedTile3, 0, newHeight - 1);
 
-			if(Integer.valueOf(width.getText()) > 2 && Integer.valueOf(height.getText()) > 2) {
+			if (newWidth > 2 && newHeight > 2) {
 				FloorTile fixedTile4 = new FloorTile(0, FloorTile.FloorType.GOAL);
 				fixedTile4.setFixed(true);
-				board.setTileAt(fixedTile4, Integer.valueOf(width.getText()) / 2, Integer.valueOf(height.getText()) / 2);
+				board.setTileAt(fixedTile4, newWidth / 2, newHeight / 2);
 			}
 			renderBoard();
 			});
@@ -188,10 +186,10 @@ public class LevelEditorController implements Initializable {
 		clear.setOnAction((event) -> {
 			width.clear();
 			height.clear();
-			Board newBoard = new Board(0, 0);
-			board = newBoard;
+			board = new Board(0, 0);
 			renderBoard();
-				});
+		});
+
 		bottomContainer.getChildren().add(clear);
 
 		/*Button defaultt = new Button("Default");
@@ -210,7 +208,6 @@ public class LevelEditorController implements Initializable {
 	 * bottomContainer is cleared out already before this method is called.
 	 */
 	private void showFixedTileControls() {
-		// TODO: Actually implement
 		ArrayList<FloorTile> tiles = new ArrayList<FloorTile>();
 		for (FloorTile.FloorType type:FloorTile.FloorType.values()) {
 			tiles.add(new FloorTile(2,type,true));
@@ -370,9 +367,9 @@ public class LevelEditorController implements Initializable {
 		int[][] tempPlayerPos = new int[0][0];
 		writer.write(board.getWidth() + "," + board.getHeight());
 		writer.write(numOfFixedTiles);
-		writer.write(board.getTileAt() + selectedFloorTile.getFloorType() + selectedFloorTile.getOrientation());
-		writer.write(String.valueOf(tempPlayerPos));
-		writer.write();
+		// writer.write(board.getTileAt() + selectedFloorTile.getFloorType() + selectedFloorTile.getOrientation());
+		// writer.write(String.valueOf(tempPlayerPos));
+		// writer.write();
 	}
 
 }
