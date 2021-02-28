@@ -34,6 +34,8 @@ import java.util.ResourceBundle;
  */
 public class LevelEditorController implements Initializable {
 	private static int tileRenderSize = 64;
+	private int[][] location = new int[100][100];
+	private int playerCount = 1;
 
 	@FXML
 	private VBox boardContainer;
@@ -243,6 +245,24 @@ public class LevelEditorController implements Initializable {
 	private void setSelectedFloorTile(FloorTile tile){
 		selectedFloorTile = tile;
 	}
+    private void placePlayerAt(int x, int y) {
+	    if(playerCount<5){
+	        location[x][y] = playerCount;
+	        playerCount++;
+            System.out.println("Player placed at "+x+","+y);
+        }else{
+	        System.out.println("Maximum Player!");
+        }
+    }
+    private void removePlayerAt(int x, int y){
+	    if(location[x][y] != 0){
+	        location[x][y] =0;
+	        playerCount--;
+	        System.out.println("Player removed at "+x+","+y);
+        }else{
+	        System.out.println("There is no player at that location!");
+        }
+    }
 
 	/**
 	 * Places the currently selected tile at (x, y)
@@ -307,9 +327,11 @@ public class LevelEditorController implements Initializable {
 				switch (e.getButton()) {
 					case PRIMARY:
 						// Place player at
+                        placePlayerAt(x, y);
 						break;
 					case SECONDARY:
 						// Delete player at
+                        removePlayerAt(x, y);
 						break;
 				}
 				break;
