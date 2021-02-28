@@ -365,11 +365,25 @@ public class LevelEditorController implements Initializable {
 		FileWriter writer = new FileWriter(filename);
 		int numOfFixedTiles = 5;
 		int[][] tempPlayerPos = new int[0][0];
+		int[][] tempPlayerPos2 = new int[6][2];
+		int[][] tempPlayerPos3= new int[6][0];
+		int[][] tempPlayerPos4 = new int[0][2];
+
 		writer.write(board.getWidth() + "," + board.getHeight());
 		writer.write(numOfFixedTiles);
-		// writer.write(board.getTileAt() + selectedFloorTile.getFloorType() + selectedFloorTile.getOrientation());
-		// writer.write(String.valueOf(tempPlayerPos));
-		// writer.write();
+
+		writer.write(board.getTileAt(0, 0) + "," +  selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
+		writer.write(board.getTileAt(6, 0) + "," +  selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
+		writer.write(board.getTileAt(0, 2) + "," +  selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
+		writer.write(board.getTileAt(6, 2) + "," +  selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
+		writer.write(board.getTileAt(0, 2) + "," +  selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
+
+		writer.write(String.valueOf(tempPlayerPos));
+		writer.write(String.valueOf(tempPlayerPos2));
+		writer.write(String.valueOf(tempPlayerPos3));
+		writer.write(String.valueOf(tempPlayerPos4));
+		//Not sure how to get the remaining tiles in silkbag.
+		// writer.write(SilkBag.getEntireBag());
 	}
 
 }
