@@ -34,7 +34,6 @@ import java.util.ResourceBundle;
  */
 public class LevelEditorController implements Initializable {
 	private static int tileRenderSize = 64;
-	private final int TILE_RENDER_SIZE = 64;
 
 	@FXML
 	private VBox boardContainer;
@@ -214,27 +213,27 @@ public class LevelEditorController implements Initializable {
 			tiles.add(new FloorTile(2,type,true));
 		}
 		for (FloorTile tile: tiles) {
-			StackPane stackTile = tile.renderTile(TILE_RENDER_SIZE);
+			StackPane stackTile = tile.renderTile(tileRenderSize);
 			stackTile.setOnMouseClicked(event -> {
 				setSelectedFloorTile(new FloorTile(2,tile.getFloorType(),true));
 				updateBottomContainer();
 			});
 			if ((selectedFloorTile != null) && (tile.getFloorType() == selectedFloorTile.getFloorType())) {
-				ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", TILE_RENDER_SIZE, TILE_RENDER_SIZE, false, false));
+				ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", tileRenderSize, tileRenderSize, false, false));
 				chosen.setOpacity(0.5);
 				stackTile.getChildren().add(chosen);
 			}
 			bottomContainer.getChildren().add(stackTile);
 		}
 
-		Image img = new Image("source/resources/img/tile_none.png", TILE_RENDER_SIZE, TILE_RENDER_SIZE, false, false);
+		Image img = new Image("source/resources/img/tile_none.png", tileRenderSize, tileRenderSize, false, false);
 		StackPane stack = new StackPane(new ImageView(img));
 		stack.setOnMouseClicked(event -> {
 			setSelectedFloorTile(null);
 			updateBottomContainer();
 		});
 		if(selectedFloorTile == null) {
-			ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", TILE_RENDER_SIZE, TILE_RENDER_SIZE, false, false));
+			ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", tileRenderSize, tileRenderSize, false, false));
 			chosen.setOpacity(0.5);
 			stack.getChildren().add(chosen);
 		}
