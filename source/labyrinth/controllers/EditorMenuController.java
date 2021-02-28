@@ -83,9 +83,25 @@ public class EditorMenuController implements Initializable {
 		}
 	}
 
+	/**
+	 * Leave the editing board
+	 * @param event
+	 */
+	@FXML
+	public void leaveEditingBoard(ActionEvent event) {
+		System.out.println("Are you sure you want to leave? Your progress will not be saved.");
+		try {
+			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/leave_board_editor.fxml"));
+			Scene profileMenuScene = new Scene(profileMenuParent);
+			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 
-
-
+			window.setScene(profileMenuScene);
+			window.setTitle("Warning: Leaving Editing Board");
+			window.show();
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+	}
 
 
 
