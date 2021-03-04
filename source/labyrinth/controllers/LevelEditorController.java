@@ -34,7 +34,7 @@ import java.util.ResourceBundle;
  */
 public class LevelEditorController implements Initializable {
 	private static int tileRenderSize = 64;
-    private int[][] location = new int[0][0] ;
+	private int[][] playerLocations = new int[0][0];
 	private int playerCount = 1;
 
 	@FXML
@@ -50,7 +50,7 @@ public class LevelEditorController implements Initializable {
 		try {
 			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/editor_menu.fxml"));
 			Scene profileMenuScene = new Scene(profileMenuParent);
-			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+			Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
 			window.setScene(profileMenuScene);
 			window.setTitle("Editor Menu");
@@ -149,7 +149,7 @@ public class LevelEditorController implements Initializable {
 		width.setPromptText("Enter width.");
 		bottomContainer.getChildren().add(width);
 
-	    TextField height = new TextField();
+		TextField height = new TextField();
 		height.setPromptText("Enter height.");
 		bottomContainer.getChildren().add(height);
 
@@ -158,8 +158,7 @@ public class LevelEditorController implements Initializable {
 		submit.setOnAction((event) -> {
 			int newWidth = Integer.parseInt(width.getText());
 			int newHeight = Integer.parseInt(height.getText());
-			int[][] newboard = new int[newWidth][newHeight];
-			location = newboard;
+			playerLocations = new int[newWidth][newHeight];
 			board = new Board(newWidth, newHeight);
 
 			FloorTile fixedTile = new FloorTile(1, FloorTile.FloorType.CORNER);
@@ -168,7 +167,7 @@ public class LevelEditorController implements Initializable {
 
 			FloorTile fixedTile1 = new FloorTile(2, FloorTile.FloorType.CORNER);
 			fixedTile1.setFixed(true);
-			board.setTileAt(fixedTile1,  newWidth - 1, 0);
+			board.setTileAt(fixedTile1, newWidth - 1, 0);
 
 			FloorTile fixedTile2 = new FloorTile(3, FloorTile.FloorType.CORNER);
 			fixedTile2.setFixed(true);
@@ -184,7 +183,7 @@ public class LevelEditorController implements Initializable {
 				board.setTileAt(fixedTile4, newWidth / 2, newHeight / 2);
 			}
 			renderBoard();
-			});
+		});
 
 		Button clear = new Button("Clear");
 		clear.setOnAction((event) -> {
@@ -213,72 +212,75 @@ public class LevelEditorController implements Initializable {
 	 */
 	private void showFixedTileControls() {
 		ArrayList<FloorTile> tiles = new ArrayList<FloorTile>();
-		for (FloorTile.FloorType type:FloorTile.FloorType.values()) {
-			tiles.add(new FloorTile(2,type,true));
+		for (FloorTile.FloorType type : FloorTile.FloorType.values()) {
+			tiles.add(new FloorTile(2, type, true));
 		}
-		for (FloorTile tile: tiles) {
-			StackPane stackTile = tile.renderTile(tileRenderSize);
+		int TILE_RENDER_SIZE = 64;
+		for (FloorTile tile : tiles) {
+			StackPane stackTile = tile.renderTile(TILE_RENDER_SIZE);
 			stackTile.setOnMouseClicked(event -> {
-				setSelectedFloorTile(new FloorTile(2,tile.getFloorType(),true));
+				setSelectedFloorTile(new FloorTile(2, tile.getFloorType(), true));
 				updateBottomContainer();
 			});
 			if ((selectedFloorTile != null) && (tile.getFloorType() == selectedFloorTile.getFloorType())) {
-				ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", tileRenderSize, tileRenderSize, false, false));
+				ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", TILE_RENDER_SIZE, TILE_RENDER_SIZE, false, false));
 				chosen.setOpacity(0.5);
 				stackTile.getChildren().add(chosen);
 			}
 			bottomContainer.getChildren().add(stackTile);
 		}
 
-		Image img = new Image("source/resources/img/tile_none.png", tileRenderSize, tileRenderSize, false, false);
+		Image img = new Image("source/resources/img/tile_none.png", TILE_RENDER_SIZE, TILE_RENDER_SIZE, false, false);
 		StackPane stack = new StackPane(new ImageView(img));
 		stack.setOnMouseClicked(event -> {
 			setSelectedFloorTile(null);
 			updateBottomContainer();
 		});
-		if(selectedFloorTile == null) {
-			ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", tileRenderSize, tileRenderSize, false, false));
+		if (selectedFloorTile == null) {
+			ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", TILE_RENDER_SIZE, TILE_RENDER_SIZE, false, false));
 			chosen.setOpacity(0.5);
 			stack.getChildren().add(chosen);
 		}
 		bottomContainer.getChildren().add(stack);
 	}
 
-	private void setSelectedFloorTile(FloorTile tile){
+	private void setSelectedFloorTile(FloorTile tile) {
 		selectedFloorTile = tile;
 	}
-    /**
-     * Places the player at the selected tile(x, y)
-     *
-     * @param x X-coord
-     * @param y Y-coord
-     */
-    private void placePlayerAt(int x, int y) {
-	    //Check if there is more than 4 player
-	    if(playerCount<5){
-	        location[x][y] = playerCount;
-	        playerCount++;
-            System.out.println("Player placed at "+x+","+y);
-        }else{
-	        System.out.println("Maximum Player!");
-        }
-    }
-    /**
-     * Remove the player at the selected tile(x, y)
-     *
-     * @param x X-coord
-     * @param y Y-coord
-     */
-    private void removePlayerAt(int x, int y){
-	    //Check if there is any player
-	    if(location[x][y] != 0){
-	        location[x][y] =0;
-	        playerCount--;
-	        System.out.println("Player removed at "+x+","+y);
-        }else{
-	        System.out.println("There is no player at that location!");
-        }
-    }
+
+	/**
+	 * Places the player at the selected tile(x, y)
+	 *
+	 * @param x X-coord
+	 * @param y Y-coord
+	 */
+	private void placePlayerAt(int x, int y) {
+		//Check if there is more than 4 player
+		if (playerCount < 5) {
+			playerLocations[x][y] = playerCount;
+			playerCount++;
+			System.out.println("Player placed at " + x + "," + y);
+		} else {
+			System.out.println("Maximum Player!");
+		}
+	}
+
+	/**
+	 * Remove the player at the selected tile(x, y)
+	 *
+	 * @param x X-coord
+	 * @param y Y-coord
+	 */
+	private void removePlayerAt(int x, int y) {
+		//Check if there is any player
+		if (playerLocations[x][y] != 0) {
+			playerLocations[x][y] = 0;
+			playerCount--;
+			System.out.println("Player removed at " + x + "," + y);
+		} else {
+			System.out.println("There is no player at that location!");
+		}
+	}
 
 	/**
 	 * Places the currently selected tile at (x, y)
@@ -292,7 +294,7 @@ public class LevelEditorController implements Initializable {
 			FloorTile copy = new FloorTile(selectedFloorTile.getOrientation(), selectedFloorTile.getFloorType(), selectedFloorTile.getFixed());
 			board.setTileAt(copy, x, y);
 		} else {
-			deleteFixedTileAt(x,y);
+			deleteFixedTileAt(x, y);
 		}
 	}
 
@@ -342,12 +344,10 @@ public class LevelEditorController implements Initializable {
 			case PLAYERS:
 				switch (e.getButton()) {
 					case PRIMARY:
-						// Place player at
-                        placePlayerAt(x, y);
+						placePlayerAt(x, y);
 						break;
 					case SECONDARY:
-						// Delete player at
-                        removePlayerAt(x, y);
+						removePlayerAt(x, y);
 						break;
 				}
 				break;
@@ -404,17 +404,17 @@ public class LevelEditorController implements Initializable {
 		int numOfFixedTiles = 5;
 		int[][] tempPlayerPos = new int[0][0];
 		int[][] tempPlayerPos2 = new int[6][2];
-		int[][] tempPlayerPos3= new int[6][0];
+		int[][] tempPlayerPos3 = new int[6][0];
 		int[][] tempPlayerPos4 = new int[0][2];
 
 		writer.write(board.getWidth() + "," + board.getHeight());
 		writer.write(numOfFixedTiles);
 
-		writer.write(board.getTileAt(0, 0) + "," +  selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
-		writer.write(board.getTileAt(6, 0) + "," +  selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
-		writer.write(board.getTileAt(0, 2) + "," +  selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
-		writer.write(board.getTileAt(6, 2) + "," +  selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
-		writer.write(board.getTileAt(0, 2) + "," +  selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
+		writer.write(board.getTileAt(0, 0) + "," + selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
+		writer.write(board.getTileAt(6, 0) + "," + selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
+		writer.write(board.getTileAt(0, 2) + "," + selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
+		writer.write(board.getTileAt(6, 2) + "," + selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
+		writer.write(board.getTileAt(0, 2) + "," + selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
 
 		writer.write(String.valueOf(tempPlayerPos));
 		writer.write(String.valueOf(tempPlayerPos2));

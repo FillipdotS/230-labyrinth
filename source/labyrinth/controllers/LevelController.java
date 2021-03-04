@@ -964,6 +964,7 @@ public class LevelController implements Initializable {
 		VBox playerSubInfoHBox = new VBox();
 
 		playerSubInfoVBoxes[playerID] = playerSubInfoHBox;
+
 		Circle playerIcon = new Circle(10);
 		playerIcon.setFill(Player.getPlayerColor(playerID));
 
@@ -971,7 +972,9 @@ public class LevelController implements Initializable {
 		if (this.players[playerID].getAssociatedProfile() != null) {
 			playerLabel.setText(this.players[playerID].getAssociatedProfile().getName());
 		}
+
 		playerNameAndIcon.getChildren().addAll(playerIcon, playerLabel);
+
 		playerNameAndIcon.setAlignment(Pos.BOTTOM_CENTER);
 		playerSubInfoHBox.setAlignment(Pos.TOP_CENTER);
 		playerVBox.getChildren().addAll(playerNameAndIcon, playerSubInfoHBox);
