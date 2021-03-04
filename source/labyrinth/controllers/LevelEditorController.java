@@ -34,7 +34,7 @@ import java.util.ResourceBundle;
  */
 public class LevelEditorController implements Initializable {
 	private static int tileRenderSize = 64;
-	private int[][] location = new int[100][100];
+    private int[][] location = new int[0][0] ;
 	private int playerCount = 1;
 
 	@FXML
@@ -71,6 +71,7 @@ public class LevelEditorController implements Initializable {
 	private Board board;
 	private EditingState currentState;
 	private FloorTile selectedFloorTile; // A copy of this is placed onto the board
+
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -157,7 +158,8 @@ public class LevelEditorController implements Initializable {
 		submit.setOnAction((event) -> {
 			int newWidth = Integer.parseInt(width.getText());
 			int newHeight = Integer.parseInt(height.getText());
-
+			int[][] newboard = new int[newWidth][newHeight];
+			location = newboard;
 			board = new Board(newWidth, newHeight);
 
 			FloorTile fixedTile = new FloorTile(1, FloorTile.FloorType.CORNER);
@@ -245,7 +247,14 @@ public class LevelEditorController implements Initializable {
 	private void setSelectedFloorTile(FloorTile tile){
 		selectedFloorTile = tile;
 	}
+    /**
+     * Places the player at the selected tile(x, y)
+     *
+     * @param x X-coord
+     * @param y Y-coord
+     */
     private void placePlayerAt(int x, int y) {
+	    //Check if there is more than 4 player
 	    if(playerCount<5){
 	        location[x][y] = playerCount;
 	        playerCount++;
@@ -254,7 +263,14 @@ public class LevelEditorController implements Initializable {
 	        System.out.println("Maximum Player!");
         }
     }
+    /**
+     * Remove the player at the selected tile(x, y)
+     *
+     * @param x X-coord
+     * @param y Y-coord
+     */
     private void removePlayerAt(int x, int y){
+	    //Check if there is any player
 	    if(location[x][y] != 0){
 	        location[x][y] =0;
 	        playerCount--;
