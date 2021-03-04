@@ -33,7 +33,9 @@ import java.util.ResourceBundle;
  * @author Fillip Serov
  */
 public class LevelEditorController implements Initializable {
+	private static String nextFileToLoad; // null if completely new board, name of custom board file otherwise
 	private static int tileRenderSize = 64;
+
 	private int[][] playerLocations = new int[0][0];
 	private int playerCount = 1;
 
@@ -72,16 +74,24 @@ public class LevelEditorController implements Initializable {
 	private EditingState currentState;
 	private FloorTile selectedFloorTile; // A copy of this is placed onto the board
 
+	/**
+	 * Used to set the next file that will be loaded to the editor (when the scene is created).
+	 * @param newFile Level file name in resources/custom_levels/, null if creating a new board
+	 */
+	public static void setNextFileToLoad(String newFile) {
+		nextFileToLoad = newFile;
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("Created LevelEditorController");
-
-		// temp variable
-		//String levelName = "example_level";
-
-		//LevelData ld = LevelIO.readDataFile("source/resources/levels/" + levelName + ".txt");
-		//board = ld.getBoard();
+		
+		if (nextFileToLoad != null) {
+			LevelData ld = LevelIO.readDataFile("source/resources/custom_levels/" + nextFileToLoad + ".txt");
+			board = ld.getBoard();
+		} else {
+			board = new Board(0, 0);
+		}
 
 		editingState.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
 			RadioButton selected = (RadioButton) editingState.getSelectedToggle();
@@ -93,7 +103,7 @@ public class LevelEditorController implements Initializable {
 		currentState = EditingState.BOARD_SIZE;
 		updateBottomContainer();
 
-		//renderBoard();
+		renderBoard();
 	}
 
 	/**
