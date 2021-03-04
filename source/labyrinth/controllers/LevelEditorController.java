@@ -306,7 +306,6 @@ public class LevelEditorController implements Initializable {
             bottomContainer.getChildren().add(stackTile);
         }
 
-
         Image img = new Image("source/resources/img/tile_none.png", TILE_RENDER_SIZE, TILE_RENDER_SIZE, false, false);
         StackPane stack = new StackPane(new ImageView(img));
         final Tooltip clearTip = new Tooltip("Empty Tile:\n" + "Clear the selected tile on board\n" + "Left click to select the tile");
@@ -323,10 +322,14 @@ public class LevelEditorController implements Initializable {
         }
         bottomContainer.getChildren().add(stack);
     }
-
-    private void setSelectedFloorTile(FloorTile tile) {
-        selectedFloorTile = tile;
-    }
+    
+	/**
+	 * Set the currently selected floor tile. If null then it will "delete" tiles
+	 * @param tile instance of FloorTile to duplicate, null for placing "empty" tiles
+	 */
+	private void setSelectedFloorTile(FloorTile tile) {
+		selectedFloorTile = tile;
+	}
 
     /**
      * Places the player at the selected tile(x, y)
