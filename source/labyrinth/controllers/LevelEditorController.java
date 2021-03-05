@@ -239,6 +239,11 @@ public class LevelEditorController implements Initializable {
 		int TILE_RENDER_SIZE = 64;
 		for (FloorTile tile : tiles) {
 			StackPane stackTile = tile.renderTile(TILE_RENDER_SIZE);
+			final Tooltip tooltip = new Tooltip("Left click - place tile\n" +
+                    "Right click - delete tile\n" +
+                    "Middle click - rotate\n");
+            tooltip.setStyle("-fx-font-size: 16");
+            Tooltip.install(stackTile,tooltip);
 			stackTile.setOnMouseClicked(event -> {
 				setSelectedFloorTile(new FloorTile(2, tile.getFloorType(), true));
 				updateBottomContainer();
