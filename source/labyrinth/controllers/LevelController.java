@@ -208,7 +208,7 @@ public class LevelController implements Initializable {
 	 */
 	private void setupFromLevelFile(String levelName, String[] profileInfo) {
 		System.out.println("Creating new game from level file...");
-		LevelData ld = LevelIO.readDataFile("source/resources/levels/" + levelName + ".txt");
+		LevelData ld = LevelIO.readDataFile("source/resources/" + levelName + ".txt");
 
 		timeForFullLoop = profileInfo.length;
 		currentTime = 0;

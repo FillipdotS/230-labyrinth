@@ -26,199 +26,227 @@ import java.util.*;
 
 /**
  * LevelMenuController let user choose level number of players and associated profiles.
+ *
  * @author Erik Miller
  */
 public class LevelMenuController implements Initializable {
-	private static ArrayList<String> profilesChosen = new ArrayList<>();
-	private static String selectedLevel;
-	private static HBox selectedHBox;
-	private static int numberOfPlayers =  2;
-	private static ArrayList<String> profileNames;
+    private static ArrayList<String> profilesChosen = new ArrayList<>();
+    private static String selectedLevel;
+    private static HBox selectedHBox;
+    private static int numberOfPlayers = 2;
+    private static ArrayList<String> profileNames;
 
-	@FXML private VBox vboxLevels;
-	@FXML private VBox vboxPlayers;
-	@FXML private Button addPlayerButton;
-	@FXML private Button removePlayerButton;
-	@FXML private TableView<Profile> tableView;
-	@FXML private TableColumn<Profile, Integer> winCol;
-	@FXML private TableColumn<Profile, String> nameCol;
+    @FXML
+    private VBox vboxLevels;
+    @FXML
+    private VBox vboxPlayers;
+    @FXML
+    private Button addPlayerButton;
+    @FXML
+    private Button removePlayerButton;
+    @FXML
+    private TableView<Profile> tableView;
+    @FXML
+    private TableColumn<Profile, Integer> winCol;
+    @FXML
+    private TableColumn<Profile, String> nameCol;
+    @FXML
+    private ChoiceBox levelSelect;
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		renderLevels();
-		renderPlayersChoiceBox();
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        levelSelect.getItems().add("Default");
+        levelSelect.getItems().add("Custom");
+        levelSelect.setValue("Default");
+        levelSelect.setOnAction(event -> {
+            System.out.println(levelSelect.getValue());
+            selectedLevel = null;
+            renderLevels();
+        });
 
-		addPlayerButton.setOnMouseClicked(event -> {
-			numberOfPlayers = numberOfPlayers==4?4:numberOfPlayers+1;
-			renderPlayersChoiceBox();
-		});
-		removePlayerButton.setOnMouseClicked(event -> {
-			numberOfPlayers = numberOfPlayers==2?2:numberOfPlayers-1;
-			if(profilesChosen.size() > numberOfPlayers) profilesChosen.remove(numberOfPlayers);
-			renderPlayersChoiceBox();
-		});
+        renderLevels();
+        renderPlayersChoiceBox();
 
-		renderLeaderBoard();
+        addPlayerButton.setOnMouseClicked(event -> {
+            numberOfPlayers = numberOfPlayers == 4 ? 4 : numberOfPlayers + 1;
+            renderPlayersChoiceBox();
+        });
+        removePlayerButton.setOnMouseClicked(event -> {
+            numberOfPlayers = numberOfPlayers == 2 ? 2 : numberOfPlayers - 1;
+            if (profilesChosen.size() > numberOfPlayers) profilesChosen.remove(numberOfPlayers);
+            renderPlayersChoiceBox();
+        });
 
-		System.out.println("Created LevelMenuController");
-	}
+        renderLeaderBoard();
 
-	/**
-	 * starts game
-	 * @param event click on button
-	 */
-	@FXML
-	public void playGame(ActionEvent event) {
-		if (selectedLevel != null) {
-			System.out.println("Going to board ...");
-			String[] prof = new String[numberOfPlayers];
-			for (int i = 0; i < prof.length; i++) {
-				if (profilesChosen.size() > i) prof[i] = profilesChosen.get(i);
-			}
+        System.out.println("Created LevelMenuController");
+    }
 
-			LevelController.setNextLevelToLoad(selectedLevel, prof);
+    /**
+     * starts game
+     *
+     * @param event click on button
+     */
+    @FXML
+    public void playGame(ActionEvent event) {
+        if (selectedLevel != null) {
+            System.out.println("Going to board ...");
+            String[] prof = new String[numberOfPlayers];
+            for (int i = 0; i < prof.length; i++) {
+                if (profilesChosen.size() > i) prof[i] = profilesChosen.get(i);
+            }
 
-			System.out.println("level: " + selectedLevel);
-			for (String s : prof) {
-				System.out.println("player " + s);
-			}
+            LevelController.setNextLevelToLoad(selectedLevel, prof);
 
-			try {
-				Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level.fxml"));
-				Scene profileMenuScene = new Scene(profileMenuParent);
-				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-				window.setScene(profileMenuScene);
-				window.setTitle("Level Select");
-				window.show();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Choose a level!");
-			alert.showAndWait();
-		}
-	}
+            System.out.println("level: " + selectedLevel);
+            for (String s : prof) {
+                System.out.println("player " + s);
+            }
 
-	/**
-	 * Return to the main menu screen
-	 * @param event Event click to find current window
-	 */
-	@FXML
-	public void returnToMainMenu(ActionEvent event) {
-		System.out.println("Going back to main menu...");
-		try {
-			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/main_menu.fxml"));
-			Scene profileMenuScene = new Scene(profileMenuParent);
-			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+            try {
+                Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level.fxml"));
+                Scene profileMenuScene = new Scene(profileMenuParent);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(profileMenuScene);
+                window.setTitle("Level Select");
+                window.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Choose a level!");
+            alert.showAndWait();
+        }
+    }
 
-			window.setScene(profileMenuScene);
-			window.setTitle("Main Menu");
-			window.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * Return to the main menu screen
+     *
+     * @param event Event click to find current window
+     */
+    @FXML
+    public void returnToMainMenu(ActionEvent event) {
+        System.out.println("Going back to main menu...");
+        try {
+            Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/main_menu.fxml"));
+            Scene profileMenuScene = new Scene(profileMenuParent);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-	/**
-	 * renders leaderboard for every level on click on this level
-	 */
-	private void renderLeaderBoard() {
-		tableView.getItems().clear();
-		try {
-			ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("./source/resources/leaderboards/" + selectedLevel + "_leaderboard.ser"));
-			HashMap<Integer, Integer> leaderboardInfo = (HashMap<Integer, Integer>) objectInputStream.readObject();
-			objectInputStream.close();
+            window.setScene(profileMenuScene);
+            window.setTitle("Main Menu");
+            window.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-			ArrayList<Profile> profiles = new ArrayList<>();
-			leaderboardInfo.forEach((id,wins) -> {
-				Profile p = ProfileManager.getProfileById(id);
-				if (p != null) {
-					profiles.add(new Profile(p.getName(),id, 0,wins,0));
-				}
-			});
-			profiles.sort(Comparator.comparingInt(Profile::getWins));
-			Collections.reverse(profiles);
+    /**
+     * renders leaderboard for every level on click on this level
+     */
+    private void renderLeaderBoard() {
+        tableView.getItems().clear();
+        try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("./source/resources/leaderboards/" + selectedLevel + "_leaderboard.ser"));
+            HashMap<Integer, Integer> leaderboardInfo = (HashMap<Integer, Integer>) objectInputStream.readObject();
+            objectInputStream.close();
 
-			nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-			winCol.setCellValueFactory(new PropertyValueFactory<>("wins"));
-			tableView.getItems().setAll(profiles);
-		} catch (IOException | ClassNotFoundException e){
-			tableView.setPlaceholder(new Label("Leaderboard is empty"));
-		}
+            ArrayList<Profile> profiles = new ArrayList<>();
+            leaderboardInfo.forEach((id, wins) -> {
+                Profile p = ProfileManager.getProfileById(id);
+                if (p != null) {
+                    profiles.add(new Profile(p.getName(), id, 0, wins, 0));
+                }
+            });
+            profiles.sort(Comparator.comparingInt(Profile::getWins));
+            Collections.reverse(profiles);
 
-	}
+            nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+            winCol.setCellValueFactory(new PropertyValueFactory<>("wins"));
+            tableView.getItems().setAll(profiles);
+        } catch (IOException | ClassNotFoundException e) {
+            tableView.setPlaceholder(new Label("Leaderboard is empty"));
+        }
 
-	/**
-	 * renders level list in menu
-	 */
-	private void renderLevels() {
-		vboxLevels.getChildren().clear();
-		getLevels().forEach((value) -> {
-			HBox levelHBox = new HBox(new Text(value.substring(0,value.length()-4)));
-			levelHBox.setPrefHeight(30);
-			levelHBox.setAlignment(Pos.CENTER_LEFT);
-			levelHBox.setStyle("-fx-border-color: black");
-			levelHBox.setOnMouseClicked(event -> {
-				if (selectedHBox != null) {
-					selectedHBox.setStyle("-fx-border-color: black");
-				}
-				selectedHBox = levelHBox;
-				selectedLevel = value.substring(0,value.length()-4);
-				System.out.println(selectedLevel);
-				levelHBox.setStyle("-fx-border-color: black;-fx-background-color: #c4ffd5;");
-				renderLeaderBoard();
-			});
-			vboxLevels.getChildren().addAll(levelHBox);
-		});
-	}
+    }
 
-	/**
-	 * renders player profile choice in menu
-	 */
-	private void renderPlayersChoiceBox(){
-		vboxPlayers.getChildren().clear();
+    /**
+     * renders level list in menu
+     */
+    private void renderLevels() {
+        vboxLevels.getChildren().clear();
+        getLevels().forEach((value) -> {
+            HBox levelHBox = new HBox(new Text(value.substring(0, value.length() - 4)));
+            levelHBox.setPrefHeight(30);
+            levelHBox.setAlignment(Pos.CENTER_LEFT);
+            levelHBox.setStyle("-fx-border-color: black");
+            levelHBox.setOnMouseClicked(event -> {
+                if (selectedHBox != null) {
+                    selectedHBox.setStyle("-fx-border-color: black");
+                }
+                selectedHBox = levelHBox;
+                selectedLevel = levelSelect.getSelectionModel().getSelectedIndex() == 0 ? "levels/" : "custom_levels/";
+                selectedLevel += value.substring(0, value.length() - 4);
+                System.out.println(selectedLevel);
+                levelHBox.setStyle("-fx-border-color: black;-fx-background-color: #c4ffd5;");
+                renderLeaderBoard();
+            });
+            vboxLevels.getChildren().addAll(levelHBox);
+        });
+    }
 
-		ArrayList<Profile> profiles = ProfileManager.getProfiles();
-		profileNames = new ArrayList<>();
-		profiles.forEach(profile -> profileNames.add(profile.getName()));
+    /**
+     * renders player profile choice in menu
+     */
+    private void renderPlayersChoiceBox() {
+        vboxPlayers.getChildren().clear();
 
-		for (int i = 0; i < numberOfPlayers; i++) {
-			ChoiceBox<String> pChoiceBox = new ChoiceBox<>();
-			pChoiceBox.setPrefWidth(250);
-			pChoiceBox.getItems().addAll(profileNames);
+        ArrayList<Profile> profiles = ProfileManager.getProfiles();
+        profileNames = new ArrayList<>();
+        profiles.forEach(profile -> profileNames.add(profile.getName()));
 
-			profilesChosen.forEach(prof -> pChoiceBox.getItems().remove(prof));
-			if (profilesChosen.size() > i) {
-				pChoiceBox.getItems().addAll(profilesChosen.get(i));
-			}
-			if (profilesChosen.size() > i) {
-				pChoiceBox.getSelectionModel().select(profilesChosen.get(i));
-			}
+        for (int i = 0; i < numberOfPlayers; i++) {
+            ChoiceBox<String> pChoiceBox = new ChoiceBox<>();
+            pChoiceBox.setPrefWidth(250);
+            pChoiceBox.getItems().addAll(profileNames);
 
-			pChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-					if (!oldValue.equals(-1)) {
-						profilesChosen.remove(pChoiceBox.getItems().get((oldValue.intValue())));
-					}
-					profilesChosen.add(pChoiceBox.getItems().get((newValue.intValue())));
-					renderPlayersChoiceBox();
-				}
-			);
-			vboxPlayers.getChildren().addAll(pChoiceBox);
-		}
+            profilesChosen.forEach(prof -> pChoiceBox.getItems().remove(prof));
+            if (profilesChosen.size() > i) {
+                pChoiceBox.getItems().addAll(profilesChosen.get(i));
+            }
+            if (profilesChosen.size() > i) {
+                pChoiceBox.getSelectionModel().select(profilesChosen.get(i));
+            }
 
-	}
+            pChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+                        if (!oldValue.equals(-1)) {
+                            profilesChosen.remove(pChoiceBox.getItems().get((oldValue.intValue())));
+                        }
+                        profilesChosen.add(pChoiceBox.getItems().get((newValue.intValue())));
+                        renderPlayersChoiceBox();
+                    }
+            );
+            vboxPlayers.getChildren().addAll(pChoiceBox);
+        }
 
-	/**
-	 * reeds level names fromm files
-	 * @return level names as string
-	 */
-	private ArrayList<String> getLevels() {
-		File levelsFiles = new File("./source/resources/levels");
-		ArrayList<String> levels = new ArrayList<>();
-		for (File f : Objects.requireNonNull(levelsFiles.listFiles())) {
-			levels.add(f.getName());
-			}
-		return levels;
-	}
+    }
+
+    /**
+     * reeds level names fromm files
+     *
+     * @return level names as string
+     */
+    private ArrayList<String> getLevels() {
+        File levelsFiles;
+        if (levelSelect.getSelectionModel().getSelectedIndex() == 0) {
+            levelsFiles = new File("./source/resources/levels");
+        } else {
+            levelsFiles = new File("./source/resources/custom_levels");
+        }
+        ArrayList<String> levels = new ArrayList<>();
+        for (File f : Objects.requireNonNull(levelsFiles.listFiles())) {
+            levels.add(f.getName());
+        }
+        return levels;
+    }
 }
