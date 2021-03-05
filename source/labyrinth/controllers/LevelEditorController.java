@@ -25,6 +25,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -48,18 +49,28 @@ public class LevelEditorController implements Initializable {
 
 	@FXML
 	public void returnToEditorMenu(ActionEvent event) {
-		System.out.println("Editor Menu");
-		try {
-			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/editor_menu.fxml"));
-			Scene profileMenuScene = new Scene(profileMenuParent);
-			Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Leaving");
+        alert.setHeaderText("Warning !");
+        alert.setContentText("Are you sure to leave? All unsaved progress will be discard!");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
 
-			window.setScene(profileMenuScene);
-			window.setTitle("Editor Menu");
-			window.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+            System.out.println("Editor Menu");
+            try {
+                Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/editor_menu.fxml"));
+                Scene profileMenuScene = new Scene(profileMenuParent);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+                window.setScene(profileMenuScene);
+                window.setTitle("Editor Menu");
+                window.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
 	}
 
 	private enum EditingState {
