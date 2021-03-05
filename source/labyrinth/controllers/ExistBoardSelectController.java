@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -34,6 +35,7 @@ public class ExistBoardSelectController implements Initializable {
 
 
     @FXML private VBox vboxLevels;
+    @FXML private Button edit;
 
 
 
@@ -42,6 +44,7 @@ public class ExistBoardSelectController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         renderLevels();
         System.out.println("Created LevelMenuController");
+        edit.setDisable(true);
     }
 
     /**
@@ -62,6 +65,7 @@ public class ExistBoardSelectController implements Initializable {
                 selectedHBox = levelHBox;
                 selectedLevel = value.substring(0,value.length()-4);
                 System.out.println(selectedLevel);
+                edit.setDisable(false);
                 levelHBox.setStyle("-fx-border-color: black;-fx-background-color: #c4ffd5;");
                 //renderLeaderBoard();
             });
@@ -82,8 +86,6 @@ public class ExistBoardSelectController implements Initializable {
         return levels;
     }
 
-
-
     @FXML
     public void goToBoardEditor(ActionEvent event) {
         System.out.println("Exist Board Editor");
@@ -102,6 +104,7 @@ public class ExistBoardSelectController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        edit.setDisable(true);
     }
 
 

@@ -21,7 +21,7 @@
                </content></ScrollPane>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#goToBoardEditor" text="edit" />
+                  <Button fx:id="edit" mnemonicParsing="false" onAction="#goToBoardEditor" text="edit" />
                   <Button mnemonicParsing="false" onAction="#returnToLevelEditorMenu" text="cancel" />
                </children>
             </HBox>
