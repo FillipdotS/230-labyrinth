@@ -27,6 +27,7 @@ import java.util.*;
  * LevelEditorController is used when editing a game board.
  *
  * @author Fillip Serov
+ * @author Morgan Firkins
  */
 public class LevelEditorController implements Initializable {
 	private static String nextFileToLoad; // null if completely new board, name of custom board file otherwise
@@ -43,6 +44,12 @@ public class LevelEditorController implements Initializable {
 	private HBox bottomContainer;
 	@FXML
 	private ToggleGroup editingState;
+
+	@FXML
+
+	public void saveChanges(ActionEvent event){
+		// Stuff to save work that user has done on the level editor
+	}
 
 	@FXML
 	public void returnToEditorMenu(ActionEvent event) {
