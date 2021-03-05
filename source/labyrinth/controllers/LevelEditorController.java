@@ -155,7 +155,7 @@ public class LevelEditorController implements Initializable {
                 bottomContainer.getChildren().add(new Text("Silk bag stuff"));
                 break;
             case PLAYERS:
-                bottomContainer.getChildren().add(new Text("Player stuff"));
+                bottomContainer.getChildren().add(new Text("Left click to put player"));
                 break;
             case SAVE:
                 bottomContainer.getChildren().add(new Text("Save stuff"));
@@ -329,17 +329,48 @@ public class LevelEditorController implements Initializable {
      */
     private void placePlayerAt(int x, int y) {
         //Check if there is more than 4 player
-        if(playerLocations[x][y]>0){
+        if(playerLocations[x][y]==1){
             System.out.println("There is already a Player in that location");
         } else{
             if (playerCount < 5) {
-                playerLocations[x][y] = playerCount;
+                playerLocations[x][y] = 1;
                 playerCount++;
                 System.out.println("Player placed at " + x + "," + y);
             } else {
                 System.out.println("Maximum Player!");
             }
         }
+        /*int playercounter=0;
+        boolean exist=false;
+        for(int i=0;i<playerLocations[0].length;i++){
+            for(int j=0;j<playerLocations[1].length;j++){
+                if(playerLocations[i][j]>0){
+
+                    playercounter+=1;
+                }
+                }
+            }
+
+        if(playercounter<4) {
+            for (int k = 1; k < 5; k++) {
+                exist=false;
+                for (int i = 0; i < playerLocations[0].length; i++) {
+                    for (int j = 0; j < playerLocations[1].length; j++) {
+                        if (playerLocations[i][j] != 0) {
+                            if (playerLocations[i][j] == k) {
+                                exist=true;
+                            }
+                            if(!exist){
+                                playerCount=k;
+                                System.out.println("Not exist Player No."+playerCount);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }*/
+
     }
 
     /**
@@ -350,13 +381,29 @@ public class LevelEditorController implements Initializable {
      */
     private void removePlayerAt(int x, int y) {
         //Check if there is any player
-        if (playerLocations[x][y] != 0) {
-            playerLocations[x][y] = 0;
+        if (playerLocations[x][y] == 1) {
             playerCount--;
+            //playerCount =  playerLocations[x][y];
+            playerLocations[x][y]=0;
             System.out.println("Player removed at " + x + "," + y);
         } else {
             System.out.println("There is no player at that location!");
         }
+    }
+    /**
+     * Get all the player location into a string array
+     */
+    private String[] getPlayerLocations(){
+        String[] output = new String[4];
+        int k = 0;
+        for(int x=0;x<playerLocations[0].length;x++){
+            for(int y=0;y<playerLocations[1].length;y++){
+                if (playerLocations[x][y] == 1) {
+                    output[k]= x+","+y;
+                }
+            }
+        }
+        return output;
     }
 
     /**
