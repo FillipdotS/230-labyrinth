@@ -661,8 +661,12 @@ public class LevelEditorController implements Initializable {
 		writer.write(String.valueOf(tempPlayerPos2));
 		writer.write(String.valueOf(tempPlayerPos3));
 		writer.write(String.valueOf(tempPlayerPos4));
-		//Not sure how to get the remaining tiles in silkbag.
-		// writer.write(SilkBag.getEntireBag());
+
+		writer.write(silkbagAmounts.get(0).intValue() + silkbagAmounts.get(0));
+		writer.write(silkbagAmounts.get(1).intValue() + silkbagAmounts.get(1));
+		writer.write(silkbagAmounts.get(2).intValue() + silkbagAmounts.get(2));
+		writer.write(silkbagAmounts.get(3).intValue() + silkbagAmounts.get(3));
+
 	}
 
 
