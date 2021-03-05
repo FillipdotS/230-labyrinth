@@ -329,12 +329,16 @@ public class LevelEditorController implements Initializable {
      */
     private void placePlayerAt(int x, int y) {
         //Check if there is more than 4 player
-        if (playerCount < 5) {
-            playerLocations[x][y] = playerCount;
-            playerCount++;
-            System.out.println("Player placed at " + x + "," + y);
-        } else {
-            System.out.println("Maximum Player!");
+        if(playerLocations[x][y]>0){
+            System.out.println("There is already a Player in that location");
+        } else{
+            if (playerCount < 5) {
+                playerLocations[x][y] = playerCount;
+                playerCount++;
+                System.out.println("Player placed at " + x + "," + y);
+            } else {
+                System.out.println("Maximum Player!");
+            }
         }
     }
 
