@@ -39,7 +39,6 @@ public class LevelEditorController implements Initializable {
 
     private int[][] playerLocations = new int[0][0];
     private int playerCount = 1;
-    private int tileType = 0;
     private String tileTypeHelp = "";
 
     @FXML
@@ -112,12 +111,13 @@ public class LevelEditorController implements Initializable {
             currentState = EditingState.valueOf(selected.getId());
             System.out.println("Changed currentState to: " + currentState);
             updateBottomContainer();
+            renderBoard();//have to update tooltip when change mode
         }));
 
         currentState = EditingState.BOARD_SIZE;
         updateBottomContainer();
 
-        renderBoard();
+
     }
 
     /**
@@ -185,14 +185,14 @@ public class LevelEditorController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Error");
             try {//stop users from entering things other than required
-                if(width.getText().equals("")||height.getText().equals("")){
+                if (width.getText().equals("") || height.getText().equals("")) {
                     alert.setHeaderText("Why is it empty?");
                     alert.setContentText("You have to enter integer for both width and height before submitting the size.");
                     alert.showAndWait();
                     return;
                 }
-                 newWidth= Integer.parseInt(width.getText());
-                 newHeight= Integer.parseInt(height.getText());
+                newWidth = Integer.parseInt(width.getText());
+                newHeight = Integer.parseInt(height.getText());
             } catch (NumberFormatException e) {
                 alert.setHeaderText("Are you trying to break me?");
                 alert.setContentText("You have to enter INTEGER, not other things!");
@@ -268,7 +268,7 @@ public class LevelEditorController implements Initializable {
             tiles.add(new FloorTile(2, type, true));
         }
         int TILE_RENDER_SIZE = 64;
-
+        int tileType = 0;
         for (FloorTile tile : tiles) {
             StackPane stackTile = tile.renderTile(TILE_RENDER_SIZE);
             if (tileType == 0) {
@@ -283,14 +283,10 @@ public class LevelEditorController implements Initializable {
             if (tileType == 3) {
                 tileTypeHelp = "Cross Tile:";
             }
-            final Tooltip stacktip = new Tooltip(
-                    tileTypeHelp + "\n" +
-                            "Left click - place tile\n" +
-                            "Right click - delete tile\n" +
-                            "Middle click - rotate\n");
+            final Tooltip TileTip = new Tooltip(tileTypeHelp + "\nLeft click to select the tile");
             tileType++;
-            stacktip.setStyle("-fx-font-size: 16");
-            Tooltip.install(stackTile, stacktip);
+            TileTip.setStyle("-fx-font-size: 16");
+            showToolTip(stackTile, TileTip);
             stackTile.setOnMouseClicked(event -> {
                 setSelectedFloorTile(new FloorTile(2, tile.getFloorType(), true));
                 updateBottomContainer();
@@ -302,13 +298,13 @@ public class LevelEditorController implements Initializable {
             }
             bottomContainer.getChildren().add(stackTile);
         }
-        tileType = 0;
+
 
         Image img = new Image("source/resources/img/tile_none.png", TILE_RENDER_SIZE, TILE_RENDER_SIZE, false, false);
         StackPane stack = new StackPane(new ImageView(img));
-        final Tooltip cleartip = new Tooltip("Empty Tile:\n" + "Clear the selected tile on board");
-        cleartip.setStyle("-fx-font-size: 16");
-        Tooltip.install(stack, cleartip);
+        final Tooltip clearTip = new Tooltip("Empty Tile:\n" + "Clear the selected tile on board\n" + "Left click to select the tile");
+        clearTip.setStyle("-fx-font-size: 16");
+        showToolTip(stack, clearTip);
         stack.setOnMouseClicked(event -> {
             setSelectedFloorTile(null);
             updateBottomContainer();
@@ -448,13 +444,26 @@ public class LevelEditorController implements Initializable {
                 FloorTile current = this.board.getTileAt(x, y);
                 StackPane stack;
 
+
                 if (current != null) {
                     stack = current.renderTile(tileRenderSize);
+                    if (currentState.equals(EditingState.FIXED_TILES)) {
+                        final Tooltip TileTip = new Tooltip("Left click - replace tile\n" + "Right click - delete tile\n" + "Middle click - rotate");
+                        TileTip.setStyle("-fx-font-size: 16");
+                        showToolTip(stack, TileTip);
+                    }
+
                 } else {
                     Image img = new Image("source/resources/img/tile_none.png", tileRenderSize, tileRenderSize, false, false);
                     ImageView iv = new ImageView(img);
                     stack = new StackPane(iv);
+                    if (currentState.equals(EditingState.FIXED_TILES)) {
+                        final Tooltip emptyTip = new Tooltip("Left click - place tile");
+                        emptyTip.setStyle("-fx-font-size: 16");
+                        showToolTip(stack, emptyTip);
+                    }
                 }
+
 
                 // TODO: Render player positions onto the grid here
 
@@ -475,6 +484,7 @@ public class LevelEditorController implements Initializable {
         boardContainer.getChildren().add(renderedBoard);
     }
 
+    @FXML
     private void fileWriter() throws IOException {
         File filename = new File("source\\resources\\custom_levels");
         FileWriter writer = new FileWriter(filename);
@@ -499,6 +509,23 @@ public class LevelEditorController implements Initializable {
         writer.write(String.valueOf(tempPlayerPos4));
         //Not sure how to get the remaining tiles in silkbag.
         // writer.write(SilkBag.getEntireBag());
+    }
+
+
+    /**
+     * replace the original install method from tooltips to remove delay time
+     *
+     * @param tile
+     * @param tooltip
+     */
+    private void showToolTip(final Node tile, final Tooltip tooltip) {
+        tile.setOnMouseMoved(event -> {
+            //set the tooltip location at cursor below
+            tooltip.show(tile, event.getScreenX() + 10, event.getScreenY() + 10);
+        });
+        tile.setOnMouseExited(event -> {
+            tooltip.hide();
+        });
     }
 
 }
