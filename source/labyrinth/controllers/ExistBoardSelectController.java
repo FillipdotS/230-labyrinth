@@ -74,7 +74,7 @@ public class ExistBoardSelectController implements Initializable {
      */
 
     private ArrayList<String> getLevels() {
-        File levelsFiles = new File("./source/resources/levels");
+        File levelsFiles = new File("./source/resources/custom_levels");
         ArrayList<String> levels = new ArrayList<>();
         for (File f : Objects.requireNonNull(levelsFiles.listFiles())) {
             levels.add(f.getName());
@@ -86,7 +86,11 @@ public class ExistBoardSelectController implements Initializable {
 
     @FXML
     public void goToBoardEditor(ActionEvent event) {
-        System.out.println("Board Editor");
+        System.out.println("Exist Board Editor");
+        LevelEditorController loadExist = new LevelEditorController();
+        System.out.println("Loading an exist board to edit...");
+        loadExist.setNextFileToLoad(selectedLevel);
+
         try {
             Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level_editor.fxml"));
             Scene profileMenuScene = new Scene(profileMenuParent);
