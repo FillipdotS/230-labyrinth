@@ -41,6 +41,7 @@ public class LevelEditorController implements Initializable {
     private int playerCount = 1;
     private String tileTypeHelp = "";
 
+
     @FXML
     private VBox boardContainer;
     @FXML
@@ -102,20 +103,25 @@ public class LevelEditorController implements Initializable {
         if (nextFileToLoad != null) {
             LevelData ld = LevelIO.readDataFile("source/resources/custom_levels/" + nextFileToLoad + ".txt");
             board = ld.getBoard();
+            nextFileToLoad=null;//have to reset each time, otherwise keep loading the same level
         } else {
             board = new Board(0, 0);
+
         }
 
         editingState.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
-            RadioButton selected = (RadioButton) editingState.getSelectedToggle();
-            currentState = EditingState.valueOf(selected.getId());
+            RadioButton modeSelected = (RadioButton) editingState.getSelectedToggle();
+            currentState = EditingState.valueOf(modeSelected.getId());
             System.out.println("Changed currentState to: " + currentState);
+
             updateBottomContainer();
-            renderBoard();//have to update tooltip when change mode
+            renderBoard();//change ToolTip
+
         }));
 
         currentState = EditingState.BOARD_SIZE;
         updateBottomContainer();
+        renderBoard();
 
 
     }
@@ -241,6 +247,7 @@ public class LevelEditorController implements Initializable {
                 width.clear();
                 height.clear();
                 board = new Board(0, 0);
+                boardContainer.getChildren().clear();
                 renderBoard();
             }
         });
@@ -498,7 +505,7 @@ public class LevelEditorController implements Initializable {
 
                 if (current != null) {
                     stack = current.renderTile(tileRenderSize);
-                    if (currentState.equals(EditingState.FIXED_TILES)) {
+                    if (currentState.equals(EditingState.FIXED_TILES)){
                         final Tooltip TileTip = new Tooltip("Left click - replace tile\n" + "Right click - delete tile\n" + "Middle click - rotate");
                         TileTip.setStyle("-fx-font-size: 16");
                         showToolTip(stack, TileTip);
