@@ -12,10 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import source.labyrinth.*;
@@ -24,9 +21,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * LevelEditorController is used when editing a game board.
@@ -87,6 +82,9 @@ public class LevelEditorController implements Initializable {
 	private EditingState currentState;
 	private FloorTile selectedFloorTile; // A copy of this is placed onto the board
 
+	// Hashmap for storing silk bag info. The String key is an enum value from FloorTile.FloorType or ActionTile.ActionType
+	private HashMap<String, Integer> silkbagAmounts;
+
 	/**
 	 * Used to set the next file that will be loaded to the editor (when the scene is created).
 	 *
@@ -100,13 +98,24 @@ public class LevelEditorController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("Created LevelEditorController");
 
+		LevelData ld = null;
 		if (nextFileToLoad != null) {
-			LevelData ld = LevelIO.readDataFile("source/resources/custom_levels/" + nextFileToLoad + ".txt");
+			ld = LevelIO.readDataFile("source/resources/custom_levels/" + nextFileToLoad + ".txt");
 			board = ld.getBoard();
 			nextFileToLoad = null;//have to reset each time, otherwise keep loading the same level
 		} else {
 			board = new Board(0, 0);
+		}
 
+		// This is slightly messy, but basically:
+		// Fill up silkbagAmounts hashmap with needed values (ICE, FIRE, TSHAPE, GOAL, etc)
+		// And set the amount to amount loaded from the level file, 0 otherwise
+		silkbagAmounts = new HashMap<>();
+		for (ActionTile.ActionType actionType : ActionTile.ActionType.values()) {
+			silkbagAmounts.put(actionType.name(), (ld != null ? ld.getActionTileAmount(actionType) : 0));
+		}
+		for (FloorTile.FloorType floorType : FloorTile.FloorType.values()) {
+			silkbagAmounts.put(floorType.name(), (ld != null ? ld.getFloorTileAmount(floorType) : 0));
 		}
 
 		editingState.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
@@ -122,8 +131,6 @@ public class LevelEditorController implements Initializable {
 		currentState = EditingState.BOARD_SIZE;
 		updateBottomContainer();
 		renderBoard();
-
-
 	}
 
 	/**
@@ -158,7 +165,7 @@ public class LevelEditorController implements Initializable {
 				showFixedTileControls();
 				break;
 			case SILK_BAG:
-				bottomContainer.getChildren().add(new Text("Silk bag stuff"));
+				showSilkbagControls();
 				break;
 			case PLAYERS:
 				bottomContainer.getChildren().add(new Text("Left click to put player"));
@@ -321,6 +328,83 @@ public class LevelEditorController implements Initializable {
 			stack.getChildren().add(chosen);
 		}
 		bottomContainer.getChildren().add(stack);
+	}
+
+	/**
+	 * Show all eight tiles with an amount that the user can change. Assumed bottomContainer is cleared out before.
+	 */
+	private void showSilkbagControls() {
+		for (Map.Entry<String, Integer> tile : silkbagAmounts.entrySet()) {
+			VBox generalVbox = new VBox();
+			HBox imgAndControls = new HBox();
+
+			generalVbox.getChildren().add(imgAndControls);
+			generalVbox.setAlignment(Pos.CENTER);
+
+			String imageURL = "source/resources/img/tile_none.png";
+
+			for (FloorTile.FloorType ft : FloorTile.FloorType.values()) {
+				if (ft.name().equals(tile.getKey())) {
+					imageURL = ft.imageURL;
+					break;
+				}
+			}
+			for (ActionTile.ActionType at : ActionTile.ActionType.values()) {
+				if (at.name().equals(tile.getKey())) {
+					imageURL = at.imageURL;
+					break;
+				}
+			}
+
+			// Tile image
+			ImageView tileImg = new ImageView(new Image(imageURL, tileRenderSize, tileRenderSize, false, false));
+			imgAndControls.getChildren().add(tileImg);
+
+			// Arrow/Button controls
+			VBox arrowButtonBox = new VBox();
+			arrowButtonBox.setMinWidth(40);
+			arrowButtonBox.setAlignment(Pos.CENTER);
+
+			// Number field, needs to be initialized earlier than arrow buttons
+			TextField numField = new TextField(silkbagAmounts.get(tile.getKey()).toString());
+			numField.setMaxWidth(50);
+			numField.setOnAction(event -> {
+				try {
+					int newValue = Integer.parseInt(numField.getText());
+					newValue = newValue > -1 ? newValue : 0; // If user put negative number, make it 0
+
+					silkbagAmounts.put(tile.getKey(), newValue);
+					numField.setText(String.valueOf(newValue)); // User could have put "025" or something similar
+				} catch (NumberFormatException e) {
+					numField.setText(tile.getValue().toString());
+				}
+			});
+
+			// Increase button
+			Button increase = new Button("▲");
+			increase.setOnAction(event -> {
+				int newValue = tile.getValue() + 1;
+				silkbagAmounts.put(tile.getKey(), newValue);
+				numField.setText(String.valueOf(newValue));
+			});
+
+			// Decrease button
+			Button decrease = new Button("▼");
+			decrease.setOnAction(event -> {
+				int newValue = tile.getValue() - 1;
+				if (newValue > -1) {
+					silkbagAmounts.put(tile.getKey(), newValue);
+					numField.setText(String.valueOf(newValue));
+				}
+			});
+
+			arrowButtonBox.getChildren().addAll(increase, decrease);
+			imgAndControls.getChildren().add(arrowButtonBox);
+
+			generalVbox.getChildren().add(numField);
+
+			bottomContainer.getChildren().add(generalVbox);
+		}
 	}
 
 	/**
