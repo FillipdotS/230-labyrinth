@@ -19,14 +19,15 @@ import java.io.IOException;
  * JavaFX controller for main_menu.fxml, shows controls to go to different parts of the game.
  * @author Fillip Serov
  */
-public class MainMenuController extends Application {
+
+public class MainMenuController {//extends Application (original)
 	@FXML private TextArea motd;
 
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		Application.launch(args);
 	}
 
-	@Override
+	@Override//testing on Main
 	public void start(Stage primaryStage) throws Exception {
 		System.out.println("MainMenuController created.");
 		Parent root = FXMLLoader.load(getClass().getResource("../../resources/scenes/main_menu.fxml"));
@@ -37,7 +38,7 @@ public class MainMenuController extends Application {
 
 		// Setup profiles
 		ProfileManager.performSetup();
-	}
+	}*/
 
 	/**
 	 * Go to the level menu
