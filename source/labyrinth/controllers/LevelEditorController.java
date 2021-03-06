@@ -192,11 +192,37 @@ public class LevelEditorController implements Initializable {
 	private void selectBoardSize() {
 		TextField width = new TextField();
 		width.setPromptText("Enter width.");
-		bottomContainer.getChildren().add(width);
+
+		Button widthIncreaseButton = new Button("+");
+		widthIncreaseButton.setOnAction(event -> {
+			board.changeSize(board.getWidth() + 1, board.getHeight());
+			renderBoard();
+		});
+
+		Button widthDecreaseButton = new Button("-");
+		widthDecreaseButton.setOnAction(event -> {
+			board.changeSize(board.getWidth() - 1, board.getHeight());
+			renderBoard();
+		});
+
+		bottomContainer.getChildren().addAll(width, widthIncreaseButton, widthDecreaseButton);
 
 		TextField height = new TextField();
 		height.setPromptText("Enter height.");
-		bottomContainer.getChildren().add(height);
+
+		Button heightIncreaseButton = new Button("+");
+		heightIncreaseButton.setOnAction(event -> {
+			board.changeSize(board.getWidth(), board.getHeight() + 1);
+			renderBoard();
+		});
+
+		Button heightDecreaseButton = new Button("-");
+		heightDecreaseButton.setOnAction(event -> {
+			board.changeSize(board.getWidth(), board.getHeight() - 1);
+			renderBoard();
+		});
+
+		bottomContainer.getChildren().addAll(height, heightIncreaseButton, heightDecreaseButton);
 
 		Button submit = new Button("Set board");
 		bottomContainer.getChildren().add(submit);
