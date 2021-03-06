@@ -62,6 +62,7 @@ public class LevelMenuController implements Initializable {
             System.out.println(levelSelect.getValue());
             selectedLevel = null;
             renderLevels();
+            renderLeaderBoard();
         });
 
         renderLevels();
