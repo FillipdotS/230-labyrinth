@@ -663,10 +663,14 @@ public class LevelEditorController implements Initializable {
 		writer.write(String.valueOf(tempPlayerPos3));
 		writer.write(String.valueOf(tempPlayerPos4));
 
-		writer.write(silkbagAmounts.get(0).intValue() + silkbagAmounts.get(0));
-		writer.write(silkbagAmounts.get(1).intValue() + silkbagAmounts.get(1));
-		writer.write(silkbagAmounts.get(2).intValue() + silkbagAmounts.get(2));
-		writer.write(silkbagAmounts.get(3).intValue() + silkbagAmounts.get(3));
+		writer.write(silkbagAmounts.get("STRAIGHT") + "," + "Straight: ");
+		writer.write(silkbagAmounts.get("TSHAPE") + "," + "TShape: ");
+		writer.write(silkbagAmounts.get("CORNER") + "," + "Corner: ");
+		writer.write(silkbagAmounts.get("GOAL") + "," + "Goal: ");
+		writer.write(silkbagAmounts.get("ICE") + "," + "ICE: ");
+		writer.write(silkbagAmounts.get("FIRE") + "," + "Fire: ");
+		writer.write(silkbagAmounts.get("DOUBLEMOVE") + "," + "DoubleMove: ");
+		writer.write(silkbagAmounts.get("BACKTRACK") + "," + "BackTrack: ");
 
 	}
 
