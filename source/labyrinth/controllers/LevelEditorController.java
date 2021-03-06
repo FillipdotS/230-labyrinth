@@ -342,7 +342,9 @@ public class LevelEditorController implements Initializable {
 	 * Show all eight tiles with an amount that the user can change. Assumed bottomContainer is cleared out before.
 	 */
 	private void showSilkbagControls() {
-		for (Map.Entry<String, Integer> tile : silkbagAmounts.entrySet()) {
+		String[] displayOrder = {"STRAIGHT", "TSHAPE", "CORNER", "GOAL", "ICE", "FIRE", "DOUBLEMOVE", "BACKTRACK"};
+
+		for (String tileTypeName : displayOrder) {
 			VBox generalVbox = new VBox();
 			HBox imgAndControls = new HBox();
 
@@ -351,14 +353,15 @@ public class LevelEditorController implements Initializable {
 
 			String imageURL = "source/resources/img/tile_none.png";
 
+			// TODO: Do something better than just 2 dumb loops
 			for (FloorTile.FloorType ft : FloorTile.FloorType.values()) {
-				if (ft.name().equals(tile.getKey())) {
+				if (ft.name().equals(tileTypeName)) {
 					imageURL = ft.imageURL;
 					break;
 				}
 			}
 			for (ActionTile.ActionType at : ActionTile.ActionType.values()) {
-				if (at.name().equals(tile.getKey())) {
+				if (at.name().equals(tileTypeName)) {
 					imageURL = at.imageURL;
 					break;
 				}
@@ -374,34 +377,34 @@ public class LevelEditorController implements Initializable {
 			arrowButtonBox.setAlignment(Pos.CENTER);
 
 			// Number field, needs to be initialized earlier than arrow buttons
-			TextField numField = new TextField(silkbagAmounts.get(tile.getKey()).toString());
+			TextField numField = new TextField(silkbagAmounts.get(tileTypeName).toString());
 			numField.setMaxWidth(50);
 			numField.setOnAction(event -> {
 				try {
 					int newValue = Integer.parseInt(numField.getText());
 					newValue = newValue > -1 ? newValue : 0; // If user put negative number, make it 0
 
-					silkbagAmounts.put(tile.getKey(), newValue);
+					silkbagAmounts.put(tileTypeName, newValue);
 					numField.setText(String.valueOf(newValue)); // User could have put "025" or something similar
 				} catch (NumberFormatException e) {
-					numField.setText(tile.getValue().toString());
+					numField.setText(silkbagAmounts.get(tileTypeName).toString());
 				}
 			});
 
 			// Increase button
 			Button increase = new Button("▲");
 			increase.setOnAction(event -> {
-				int newValue = tile.getValue() + 1;
-				silkbagAmounts.put(tile.getKey(), newValue);
+				int newValue = silkbagAmounts.get(tileTypeName) + 1;
+				silkbagAmounts.put(tileTypeName, newValue);
 				numField.setText(String.valueOf(newValue));
 			});
 
 			// Decrease button
 			Button decrease = new Button("▼");
 			decrease.setOnAction(event -> {
-				int newValue = tile.getValue() - 1;
+				int newValue = silkbagAmounts.get(tileTypeName) - 1;
 				if (newValue > -1) {
-					silkbagAmounts.put(tile.getKey(), newValue);
+					silkbagAmounts.put(tileTypeName, newValue);
 					numField.setText(String.valueOf(newValue));
 				}
 			});
