@@ -33,49 +33,12 @@ public class LevelEditorController implements Initializable {
 	private static String nextFileToLoad; // null if completely new board, name of custom board file otherwise
 	private static int tileRenderSize = 64;
 
-	private int[][] playerLocations = new int[0][0];
-	private int playerCount = 1;
-	private String tileTypeHelp = "";
-
-
 	@FXML
 	private VBox boardContainer;
 	@FXML
 	private HBox bottomContainer;
 	@FXML
 	private ToggleGroup editingState;
-
-	@FXML
-
-	public void saveChanges(ActionEvent event){
-		// Stuff to save work that user has done on the level editor
-	}
-
-	@FXML
-	public void returnToEditorMenu(ActionEvent event) {
-		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-		alert.setTitle("Leaving");
-		alert.setHeaderText("You are about to leave");
-		alert.setContentText("Are you sure want to leave? All unsaved progress will be discard! Don't blame me if your board are not save yet ^o^");
-		Optional<ButtonType> leave = alert.showAndWait();
-		if (leave.get() == ButtonType.OK) {
-
-			System.out.println("Editor Menu");
-			try {
-				Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/editor_menu.fxml"));
-				Scene profileMenuScene = new Scene(profileMenuParent);
-				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-				window.setScene(profileMenuScene);
-				window.setTitle("Editor Menu");
-				window.show();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		}
-
-	}
 
 	private enum EditingState {
 		BOARD_SIZE,
@@ -85,6 +48,9 @@ public class LevelEditorController implements Initializable {
 		SAVE
 	}
 
+	private int[][] playerLocations = new int[0][0];
+	private int playerCount = 1;
+	private String tileTypeHelp = "";
 	private Board board;
 	private EditingState currentState;
 	private FloorTile selectedFloorTile; // A copy of this is placed onto the board
@@ -138,6 +104,41 @@ public class LevelEditorController implements Initializable {
 		currentState = EditingState.BOARD_SIZE;
 		updateBottomContainer();
 		renderBoard();
+	}
+
+	@FXML
+	public void saveChanges(ActionEvent event){
+		// Stuff to save work that user has done on the level editor
+	}
+
+	/**
+	 * Go back to the editor menu
+	 * @param event Event to get scene from
+	 */
+	@FXML
+	public void returnToEditorMenu(ActionEvent event) {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setTitle("Leaving");
+		alert.setHeaderText("You are about to leave");
+		alert.setContentText("Are you sure want to leave? All unsaved progress will be discard! Don't blame me if your board are not save yet ^o^");
+		Optional<ButtonType> leave = alert.showAndWait();
+		if (leave.get() == ButtonType.OK) {
+
+			System.out.println("Editor Menu");
+			try {
+				Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/editor_menu.fxml"));
+				Scene profileMenuScene = new Scene(profileMenuParent);
+				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+				window.setScene(profileMenuScene);
+				window.setTitle("Editor Menu");
+				window.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+
 	}
 
 	/**
