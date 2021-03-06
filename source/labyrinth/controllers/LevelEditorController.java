@@ -11,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -40,6 +42,8 @@ public class LevelEditorController implements Initializable {
 	@FXML
 	private ToggleGroup editingState;
 
+
+
 	private enum EditingState {
 		BOARD_SIZE,
 		FIXED_TILES,
@@ -54,6 +58,7 @@ public class LevelEditorController implements Initializable {
 	private Board board;
 	private EditingState currentState;
 	private FloorTile selectedFloorTile; // A copy of this is placed onto the board
+	private ArrayList<FloorTile> fixedTilesControls = new ArrayList<>();
 
 	// Hashmap for storing silk bag info. The String key is an enum value from FloorTile.FloorType or ActionTile.ActionType
 	private HashMap<String, Integer> silkbagAmounts;
@@ -70,6 +75,10 @@ public class LevelEditorController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("Created LevelEditorController");
+
+		for (FloorTile.FloorType type : FloorTile.FloorType.values()) {
+			fixedTilesControls.add(new FloorTile(2, type, true));
+		}
 
 		LevelData ld = null;
 		if (nextFileToLoad != null) {
@@ -98,7 +107,6 @@ public class LevelEditorController implements Initializable {
 
 			updateBottomContainer();
 			renderBoard();//change ToolTip
-
 		}));
 
 		currentState = EditingState.BOARD_SIZE;
@@ -306,6 +314,26 @@ public class LevelEditorController implements Initializable {
 		bottomContainer.getChildren().add(defaultt);*/
 	}
 
+	private void addEvent() {
+		Scene scene = boardContainer.getScene();
+		scene.setOnKeyPressed((key) -> {
+			if(key.getCode() == KeyCode.A) {
+				System.out.println("AAAAAAAAAAAAA");
+				rotateSelectedFloorTile(-1);
+			}
+			if(key.getCode() == KeyCode.D) {
+				System.out.println("DDDDDDDDDDDDDDD");
+				rotateSelectedFloorTile(1);
+			}
+		});
+	}
+
+	private void rotateSelectedFloorTile(int rot) {
+		if ((currentState == EditingState.FIXED_TILES) && (selectedFloorTile != null)) {
+			selectedFloorTile.rotateBy(rot);
+			updateBottomContainer();
+		}
+	}
 	/**
 	 * Shows the 4 floor tiles (and a fifth empty one) that you can click and place. Assumed that
 	 * bottomContainer is cleared out already before this method is called.
@@ -317,7 +345,7 @@ public class LevelEditorController implements Initializable {
 		}
 		int TILE_RENDER_SIZE = 64;
 		int tileType = 0;
-		for (FloorTile tile : tiles) {
+		for (FloorTile tile : fixedTilesControls) {
 			StackPane stackTile = tile.renderTile(TILE_RENDER_SIZE);
 			if (tileType == 0) {
 				tileTypeHelp = "Straight Tile:";
@@ -335,8 +363,10 @@ public class LevelEditorController implements Initializable {
 			tileType++;
 			TileTip.setStyle("-fx-font-size: 16");
 			showToolTip(stackTile, TileTip);
+
 			stackTile.setOnMouseClicked(event -> {
-				setSelectedFloorTile(new FloorTile(2, tile.getFloorType(), true));
+//				setSelectedFloorTile(new FloorTile(tile.getOrientation(), tile.getFloorType(), true));
+				setSelectedFloorTile(tile);
 				updateBottomContainer();
 			});
 			if ((selectedFloorTile != null) && (tile.getFloorType() == selectedFloorTile.getFloorType())) {
@@ -344,6 +374,9 @@ public class LevelEditorController implements Initializable {
 				chosen.setOpacity(0.5);
 				stackTile.getChildren().add(chosen);
 			}
+
+			addEvent();
+
 			bottomContainer.getChildren().add(stackTile);
 		}
 
@@ -362,6 +395,7 @@ public class LevelEditorController implements Initializable {
 			stack.getChildren().add(chosen);
 		}
 		bottomContainer.getChildren().add(stack);
+
 	}
 
 	/**
