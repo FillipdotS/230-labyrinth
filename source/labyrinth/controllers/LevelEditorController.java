@@ -199,6 +199,7 @@ public class LevelEditorController implements Initializable {
 		Alert errorDialog = validate(fileName);
 		if (errorDialog != null){
 			errorDialog.showAndWait();
+			saveChanges();//show up the textDialog again for user to re-enter the name
 		}
 		else{
 			fileName += ".txt";
@@ -221,7 +222,7 @@ public class LevelEditorController implements Initializable {
 		}
 	}
 	@FXML
-	public void saveChanges(ActionEvent event) throws IOException {
+	public void saveChanges() throws IOException {//removed unused Action event parameter, unexpected problem may happen
 		TextInputDialog textDialog = new TextInputDialog();
 		textDialog.setTitle("Save your Level");
 		textDialog.setHeaderText("Give Your Level A Name");
