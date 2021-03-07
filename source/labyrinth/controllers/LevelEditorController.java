@@ -12,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -112,10 +111,62 @@ public class LevelEditorController implements Initializable {
 		renderBoard();
 	}
 
+	private String validate (String fileName){
+		String errorLog = "The following errors have occured in your file name:\n";
+		if (fileName.contains(".")){
+			errorLog += "-> File Name contains full stops(.)\n";
+		}
+		if (fileName.contains(":")){
+			errorLog += "-> File Name contains colon(:)\n";
+
+		}
+		if (fileName.contains("/") || fileName.contains("\\")) {
+			errorLog += "-> File Name contains a slash (not the guitarist)(/ or \\)\n";
+		}
+
+		if (fileName.contains("#")){
+			errorLog += "-> File Name contains a pound/hashtag(#)\n";
+		}
+
+		if (fileName.contains("%")){
+			errorLog += "-> File Name contains a percent(%)\n";
+		}
+		if (fileName.contains("&")){
+			errorLog += "-> File Name contains an ampersand(&)\n";
+		}
+		if (fileName.contains("{") || fileName.contains("}")){
+			errorLog += "-> File Name contains a curly bracket({ or })\n";
+		}
+		if (fileName.contains("<") || fileName.contains(">")){
+			errorLog += "-> File Name contains an angled bracket(< or >)\n";
+		}
+		if (fileName.contains("*")){
+			errorLog += "-> File Name contains an asterisk(*)\n";
+		}
+
+		return "";
+	}
+
 	@FXML
-	public void saveChanges(ActionEvent event) {
-		int width = board.getWidth();
-		int height = board.getHeight();
+	public void saveChanges(ActionEvent event) throws IOException {
+		TextInputDialog textDialoge = new TextInputDialog(".txt");
+		textDialoge.setTitle("Save your Level");
+		textDialoge.setHeaderText("Give Your Level A Name");
+		textDialoge.showAndWait();
+		Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+		errorAlert.setTitle("An Error has Occured");
+
+		String fileName = textDialoge.getEditor().getText();
+		validate(fileName);
+
+
+
+
+
+
+		System.out.println(fileName);
+
+
 	}
 
 	/**
