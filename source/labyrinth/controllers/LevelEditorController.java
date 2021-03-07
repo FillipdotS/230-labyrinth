@@ -111,12 +111,13 @@ public class LevelEditorController implements Initializable {
 		renderBoard();
 	}
 
-	private String validate (String fileName){
-		String errorLog = "The following errors have occured in your file name:\n";
-		if (fileName.contains(".")){
+	private Alert validate(String fileName) {
+		String errorTitle = "The following errors have occured in your file name:\n";
+		String errorLog = "";
+		if (fileName.contains(".")) {
 			errorLog += "-> File Name contains full stops(.)\n";
 		}
-		if (fileName.contains(":")){
+		if (fileName.contains(":")) {
 			errorLog += "-> File Name contains colon(:)\n";
 
 		}
@@ -124,50 +125,122 @@ public class LevelEditorController implements Initializable {
 			errorLog += "-> File Name contains a slash (not the guitarist)(/ or \\)\n";
 		}
 
-		if (fileName.contains("#")){
+		if (fileName.contains("#")) {
 			errorLog += "-> File Name contains a pound/hashtag(#)\n";
 		}
 
-		if (fileName.contains("%")){
+		if (fileName.contains("%")) {
 			errorLog += "-> File Name contains a percent(%)\n";
 		}
-		if (fileName.contains("&")){
+		if (fileName.contains("&")) {
 			errorLog += "-> File Name contains an ampersand(&)\n";
 		}
-		if (fileName.contains("{") || fileName.contains("}")){
+		if (fileName.contains("{") || fileName.contains("}")) {
 			errorLog += "-> File Name contains a curly bracket({ or })\n";
 		}
-		if (fileName.contains("<") || fileName.contains(">")){
+		if (fileName.contains("<") || fileName.contains(">")) {
 			errorLog += "-> File Name contains an angled bracket(< or >)\n";
 		}
-		if (fileName.contains("*")){
+		if (fileName.contains("*")) {
 			errorLog += "-> File Name contains an asterisk(*)\n";
 		}
+		if (fileName.contains("?")) {
+			errorLog += "-> File Name contains a question mark(?)\n";
+		}
+		if (fileName.contains("$")) {
+			errorLog += "-> File Name contains a dollar sign($)\n";
+		}
+		if (fileName.contains("!")) {
+			errorLog += "-> File Name contains an exclamation mark(!)\n";
+		}
+		if (fileName.contains("'") || fileName.contains("\"")) {
+			errorLog += "-> File Name contains a quotation marks(' or \")\n";
+		}
+		if (fileName.contains("@")) {
+			errorLog += "-> File Name contains an at symbol(@)\n";
+		}
+		if (fileName.contains("+")) {
+			errorLog += "-> File Name contains an addition symbol(+)\n";
+		}
+		if (fileName.contains("`")) {
+			errorLog += "-> File Name contains a back tick(`)\n";
+		}
+		if (fileName.contains("|")) {
+			errorLog += "-> File Name contains a pipe(|)\n";
+		}
+		if (fileName.contains("`")) {
+			errorLog += "-> File Name contains an equals symbol(=)\n";
+		}
+		if (fileName == null || fileName.isEmpty() || fileName.contains(" ")) {
+			errorLog += "-> File Name is blank";
+		}
+		if (errorLog == "") {
+			return null;
+		} else {
+			Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+			errorAlert.setTitle("An Error has Occured");
+			errorAlert.setHeaderText("There is a problem with your file name");
+			String errorContent = errorTitle + errorLog;
+			errorAlert.setContentText(errorContent);
+			return errorAlert;
+		}
 
-		return "";
 	}
 
+	public void textDialogOk(TextInputDialog textDialog) throws IOException {
+		String fileName = textDialog.getEditor().getText();
+		System.out.println(fileName);
+		System.out.println("Call validate");
+		Alert errorDialog = validate(fileName);
+		if (errorDialog != null){
+			errorDialog.showAndWait();
+		}
+		else{
+			fileName += ".txt";
+			File filePath = new File("source\\resources\\custom_levels" + "\\" + fileName);
+			System.out.println(filePath);
+			if (filePath.exists()){
+				String dialogMsg = fileName + " already exists. Are you sure you want to overwrite it?";
+				Alert overwriteDialog = new Alert(Alert.AlertType.CONFIRMATION, dialogMsg, ButtonType.YES, ButtonType.CANCEL);
+				overwriteDialog.showAndWait();
+				if (overwriteDialog.getResult() == ButtonType.YES){
+					fileWriter(filePath);
+				}
+				else{
+					overwriteDialog.close();
+				}
+			}
+			else{
+				fileWriter(filePath);
+			}
+		}
+	}
 	@FXML
 	public void saveChanges(ActionEvent event) throws IOException {
-		TextInputDialog textDialoge = new TextInputDialog(".txt");
-		textDialoge.setTitle("Save your Level");
-		textDialoge.setHeaderText("Give Your Level A Name");
-		textDialoge.showAndWait();
-		Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-		errorAlert.setTitle("An Error has Occured");
+		TextInputDialog textDialog = new TextInputDialog();
+		textDialog.setTitle("Save your Level");
+		textDialog.setHeaderText("Give Your Level A Name");
+		textDialog.showAndWait();
+		textDialogOk(textDialog);
+		/*NOT TOO SURE IF THIS WORKS YET
+		Button okButton = (Button) textDialog.getDialogPane().lookupButton(ButtonType.OK);
+		okButton.addEventFilter(ActionEvent.ACTION, e ->
+				{
+					try {
+						System.out.println("Call method");
+						textDialogOk(textDialog);
+					} catch (IOException ioException) {
+						System.out.println("Error with textDialog to textDialogOk method");
+					}
+				}
+		);*/
 
-		String fileName = textDialoge.getEditor().getText();
-		validate(fileName);
+		}
 
 
 
 
 
-
-		System.out.println(fileName);
-
-
-	}
 
 	/**
 	 * Go back to the editor menu
@@ -844,8 +917,7 @@ public class LevelEditorController implements Initializable {
 	}
 
 	@FXML
-	private void fileWriter() throws IOException {
-		File filename = new File("source\\resources\\custom_levels");
+	private void fileWriter(File filename) throws IOException {
 		FileWriter writer = new FileWriter(filename);
 		int numOfFixedTiles = 0;
 		int posInX = 0;
