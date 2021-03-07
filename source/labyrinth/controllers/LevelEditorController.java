@@ -43,7 +43,6 @@ public class LevelEditorController implements Initializable {
 	private ToggleGroup editingState;
 
 
-
 	private enum EditingState {
 		BOARD_SIZE,
 		FIXED_TILES,
@@ -54,7 +53,6 @@ public class LevelEditorController implements Initializable {
 
 	private int[][] playerLocations = new int[0][0];
 	private int playerCount = 1;
-	private String tileTypeHelp = "";
 	private Board board;
 	private EditingState currentState;
 	private FloorTile selectedFloorTile; // A copy of this is placed onto the board
@@ -115,12 +113,13 @@ public class LevelEditorController implements Initializable {
 	}
 
 	@FXML
-	public void saveChanges(ActionEvent event){
+	public void saveChanges(ActionEvent event) {
 		// Stuff to save work that user has done on the level editor
 	}
 
 	/**
 	 * Go back to the editor menu
+	 *
 	 * @param event Event to get scene from
 	 */
 	@FXML
@@ -212,6 +211,14 @@ public class LevelEditorController implements Initializable {
 			board.changeSize(board.getWidth() - 1, board.getHeight());
 			renderBoard();
 		});
+		//helper text
+		final Tooltip widthIncTip = new Tooltip("increase board width");
+		final Tooltip widthDecTip = new Tooltip("decrease board width");
+		widthIncTip.setStyle("-fx-font-size: 16");
+		widthDecTip.setStyle("-fx-font-size: 16");
+		showToolTip(widthIncreaseButton, widthIncTip);
+		showToolTip(widthDecreaseButton, widthDecTip);
+
 
 		bottomContainer.getChildren().addAll(width, widthIncreaseButton, widthDecreaseButton);
 
@@ -229,6 +236,13 @@ public class LevelEditorController implements Initializable {
 			board.changeSize(board.getWidth(), board.getHeight() - 1);
 			renderBoard();
 		});
+		//helper text
+		final Tooltip heightIncTip = new Tooltip("increase board height");
+		final Tooltip heightDecTip = new Tooltip("decrease board height");
+		heightIncTip.setStyle("-fx-font-size: 16");
+		heightDecTip.setStyle("-fx-font-size: 16");
+		showToolTip(heightIncreaseButton, heightIncTip);
+		showToolTip(heightDecreaseButton, heightDecTip);
 
 		bottomContainer.getChildren().addAll(height, heightIncreaseButton, heightDecreaseButton);
 
@@ -281,9 +295,12 @@ public class LevelEditorController implements Initializable {
 				fixedTile4.setFixed(true);
 				board.setTileAt(fixedTile4, newWidth / 2, newHeight / 2);
 			}
+
 			renderBoard();
 		});
-
+		final Tooltip submitTip = new Tooltip("Set the width and height of the board\nRequired a positive integer for both value");
+		submitTip.setStyle("-fx-font-size: 16");
+		showToolTip(submit, submitTip);
 
 		Button clear = new Button("Clear");
 		clear.setOnAction((event) -> {
@@ -301,6 +318,11 @@ public class LevelEditorController implements Initializable {
 			}
 		});
 
+		//helper text
+		final Tooltip clearTip = new Tooltip("destroy the whole board that you created above");
+		clearTip.setStyle("-fx-font-size: 16");
+		showToolTip(clear, clearTip);
+
 		bottomContainer.getChildren().add(clear);
 
 		/*Button defaultt = new Button("Default");
@@ -317,11 +339,11 @@ public class LevelEditorController implements Initializable {
 	private void addEvent() {
 		Scene scene = boardContainer.getScene();
 		scene.setOnKeyPressed((key) -> {
-			if(key.getCode() == KeyCode.A) {
+			if (key.getCode() == KeyCode.A) {
 				System.out.println("AAAAAAAAAAAAA");
 				rotateSelectedFloorTile(-1);
 			}
-			if(key.getCode() == KeyCode.D) {
+			if (key.getCode() == KeyCode.D) {
 				System.out.println("DDDDDDDDDDDDDDD");
 				rotateSelectedFloorTile(1);
 			}
@@ -334,6 +356,7 @@ public class LevelEditorController implements Initializable {
 			updateBottomContainer();
 		}
 	}
+
 	/**
 	 * Shows the 4 floor tiles (and a fifth empty one) that you can click and place. Assumed that
 	 * bottomContainer is cleared out already before this method is called.
@@ -345,6 +368,7 @@ public class LevelEditorController implements Initializable {
 		}
 		int TILE_RENDER_SIZE = 64;
 		int tileType = 0;
+		String tileTypeHelp = "";
 		for (FloorTile tile : fixedTilesControls) {
 			StackPane stackTile = tile.renderTile(TILE_RENDER_SIZE);
 			if (tileType == 0) {
@@ -359,7 +383,9 @@ public class LevelEditorController implements Initializable {
 			if (tileType == 3) {
 				tileTypeHelp = "Cross Tile:";
 			}
-			final Tooltip TileTip = new Tooltip(tileTypeHelp + "\nLeft click to select the tile");
+
+			//helper text
+			final Tooltip TileTip = new Tooltip(tileTypeHelp + "\nLeft click to select the tile\nClick an empty tile on board to place it\nClick an exist tile on board to replace with it.");
 			tileType++;
 			TileTip.setStyle("-fx-font-size: 16");
 			showToolTip(stackTile, TileTip);
@@ -382,9 +408,6 @@ public class LevelEditorController implements Initializable {
 
 		Image img = new Image("source/resources/img/tile_none.png", TILE_RENDER_SIZE, TILE_RENDER_SIZE, false, false);
 		StackPane stack = new StackPane(new ImageView(img));
-		final Tooltip clearTip = new Tooltip("Empty Tile:\n" + "Clear the selected tile on board\n" + "Left click to select the tile");
-		clearTip.setStyle("-fx-font-size: 16");
-		showToolTip(stack, clearTip);
 		stack.setOnMouseClicked(event -> {
 			setSelectedFloorTile(null);
 			updateBottomContainer();
@@ -394,6 +417,11 @@ public class LevelEditorController implements Initializable {
 			chosen.setOpacity(0.5);
 			stack.getChildren().add(chosen);
 		}
+		//helper text
+		final Tooltip clearTip = new Tooltip("Empty Tile:\n" + "Clear the selected tile on board\n" + "Left click to select the tile");
+		clearTip.setStyle("-fx-font-size: 16");
+		showToolTip(stack, clearTip);
+
 		bottomContainer.getChildren().add(stack);
 
 	}
@@ -431,6 +459,46 @@ public class LevelEditorController implements Initializable {
 			ImageView tileImg = new ImageView(new Image(imageURL, tileRenderSize, tileRenderSize, false, false));
 			imgAndControls.getChildren().add(tileImg);
 
+			//helper text
+			String tileHelp1 = "";//tile name
+			String tileHelp2 = "";//descriptions of that tile
+			if (tileTypeName.equals("STRAIGHT")) {
+				tileHelp1 = "Straight Tile";
+				tileHelp2 = "";
+			}
+			if (tileTypeName.equals("TSHAPE")) {
+				tileHelp1 = "T Tile";
+				tileHelp2 = "";
+			}
+			if (tileTypeName.equals("CORNER")) {
+				tileHelp1 = "Corner Tile";
+				tileHelp2 = "";
+			}
+			if (tileTypeName.equals("GOAL")) {
+				tileHelp1 = "Goal Tile";
+				tileHelp2 = "\n Player win when reach this tiles";
+			}
+			if (tileTypeName.equals("ICE")) {
+				tileHelp1 = "Ice Tile";
+				tileHelp2 = "\nFreeze a 3 x 3 area with a selected tiles as centre\nThe rows and columns that being affected will not able to move" +
+						"\n Players are still able to travel on these frozen tiles\n The frozen tiles melts away at the start of your next turn.";
+			}
+			if (tileTypeName.equals("FIRE")) {
+				tileHelp1 = "Fire Tile";
+				tileHelp2 = "\nBurn a 3 x 3 area with a selected tiles as centre\nPlayers are not able to end turn on a burning tile.\n Fire will be extinguished after your turn end.";
+			}
+			if (tileTypeName.equals("DOUBLEMOVE")) {
+				tileHelp1 = "Double Move Tile";
+				tileHelp2 = "\n Apply to move self twice";
+			}
+			if (tileTypeName.equals("BACKTRACK")) {
+				tileHelp1 = "Back Track Tile";
+				tileHelp2 = "\nMove a rival to the tile where they end up before 2 turns,\nwhich cannot be on fire currently.\nThe current tiles remain unchanged.";
+			}
+			final Tooltip TileTip = new Tooltip(tileHelp1 + tileHelp2);
+			TileTip.setStyle("-fx-font-size: 16");
+			showToolTip(tileImg, TileTip);
+
 			// Arrow/Button controls
 			VBox arrowButtonBox = new VBox();
 			arrowButtonBox.setMinWidth(40);
@@ -450,6 +518,10 @@ public class LevelEditorController implements Initializable {
 					numField.setText(silkbagAmounts.get(tileTypeName).toString());
 				}
 			});
+			//helper text
+			final Tooltip numTile = new Tooltip("Input an integer to set the number of " + tileHelp1 + " in silk bag.");
+			numTile.setStyle("-fx-font-size: 16");
+			showToolTip(numField, numTile);
 
 			// Increase button
 			Button increase = new Button("▲");
@@ -458,6 +530,10 @@ public class LevelEditorController implements Initializable {
 				silkbagAmounts.put(tileTypeName, newValue);
 				numField.setText(String.valueOf(newValue));
 			});
+			//helper text
+			final Tooltip incBtTip = new Tooltip("Increase number of " + tileHelp1 + " in Silk Bag");
+			incBtTip.setStyle("-fx-font-size: 16");
+			showToolTip(increase, incBtTip);
 
 			// Decrease button
 			Button decrease = new Button("▼");
@@ -468,6 +544,10 @@ public class LevelEditorController implements Initializable {
 					numField.setText(String.valueOf(newValue));
 				}
 			});
+			//helper text
+			final Tooltip decBtTip = new Tooltip("Decrease number of " + tileHelp1 + " in Silk Bag");
+			decBtTip.setStyle("-fx-font-size: 16");
+			showToolTip(decrease, decBtTip);
 
 			arrowButtonBox.getChildren().addAll(increase, decrease);
 			imgAndControls.getChildren().add(arrowButtonBox);
@@ -665,6 +745,7 @@ public class LevelEditorController implements Initializable {
 
 				if (current != null) {
 					stack = current.renderTile(tileRenderSize);
+					//helper text
 					if (currentState.equals(EditingState.FIXED_TILES)) {
 						final Tooltip TileTip = new Tooltip("Left click - replace tile\n" + "Right click - delete tile\n" + "Middle click - rotate");
 						TileTip.setStyle("-fx-font-size: 16");
@@ -675,6 +756,7 @@ public class LevelEditorController implements Initializable {
 					Image img = new Image("source/resources/img/tile_none.png", tileRenderSize, tileRenderSize, false, false);
 					ImageView iv = new ImageView(img);
 					stack = new StackPane(iv);
+					//helper text
 					if (currentState.equals(EditingState.FIXED_TILES)) {
 						final Tooltip emptyTip = new Tooltip("Left click - place tile");
 						emptyTip.setStyle("-fx-font-size: 16");

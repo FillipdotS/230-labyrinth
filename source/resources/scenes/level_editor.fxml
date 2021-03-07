@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="507.0" prefWidth="921.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="source.labyrinth.controllers.LevelEditorController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="507.0" prefWidth="921.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="source.labyrinth.controllers.LevelEditorController">
    <bottom>
       <HBox fx:id="bottomContainer" alignment="CENTER" prefHeight="121.0" prefWidth="741.0" spacing="10.0" style="-fx-background-color: grey;" BorderPane.alignment="CENTER">
          <children>
