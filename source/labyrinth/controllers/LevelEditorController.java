@@ -225,8 +225,11 @@ public class LevelEditorController implements Initializable {
 		TextInputDialog textDialog = new TextInputDialog();
 		textDialog.setTitle("Save your Level");
 		textDialog.setHeaderText("Give Your Level A Name");
-		textDialog.showAndWait();
-		textDialogOk(textDialog);
+
+		Optional<String> result = textDialog.showAndWait();
+		if(result.isPresent()){//check if user pressed ok button
+			textDialogOk(textDialog);
+		}
 		/*NOT TOO SURE IF THIS WORKS YET
 		Button okButton = (Button) textDialog.getDialogPane().lookupButton(ButtonType.OK);
 		okButton.addEventFilter(ActionEvent.ACTION, e ->
