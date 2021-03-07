@@ -363,42 +363,49 @@ public class LevelEditorController implements Initializable {
 	 * bottomContainer is cleared out already before this method is called.
 	 */
 	private void showFixedTileControls() {
+		int fixedTileImageSize = 64;
+
 		ArrayList<FloorTile> tiles = new ArrayList<FloorTile>();
 		for (FloorTile.FloorType type : FloorTile.FloorType.values()) {
-			tiles.add(new FloorTile(2, type, true));
+			tiles.add(new FloorTile(0, type, true));
 		}
-		int TILE_RENDER_SIZE = 64;
-		int tileType = 0;
-		String tileTypeHelp = "";
+
+		// We'll place this overlay on whatever we have selected, which we will figure out below
+		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", fixedTileImageSize, fixedTileImageSize, false, false));
+		chosen.setOpacity(0.5);
+
+		// Create image buttons for the four types of floor tile
 		for (FloorTile tile : fixedTilesControls) {
-			StackPane stackTile = tile.renderTile(TILE_RENDER_SIZE);
-			if (tileType == 0) {
-				tileTypeHelp = "Straight Tile:";
-			}
-			if (tileType == 1) {
-				tileTypeHelp = "Corner Tile:";
-			}
-			if (tileType == 2) {
-				tileTypeHelp = "T Tile:";
-			}
-			if (tileType == 3) {
-				tileTypeHelp = "Cross Tile:";
+			StackPane stackTile = tile.renderTile(fixedTileImageSize);
+
+			String tileTypeHelp = "";
+			switch (tile.getFloorType()) {
+				case STRAIGHT:
+					tileTypeHelp = "Straight Tile:";
+					break;
+				case CORNER:
+					tileTypeHelp = "Corner Tile:";
+					break;
+				case TSHAPE:
+					tileTypeHelp = "T Tile:";
+					break;
+				case GOAL:
+					tileTypeHelp = "Goal Tile:";
+					break;
 			}
 
-			//helper text
-			final Tooltip TileTip = new Tooltip(tileTypeHelp + "\nLeft click to select the tile\nClick an empty tile on board to place it\nClick an exist tile on board to replace with it.");
-			tileType++;
-			TileTip.setStyle("-fx-font-size: 16");
-			showToolTip(stackTile, TileTip);
+			// Tool tip text
+			final Tooltip tileTip = new Tooltip(tileTypeHelp + "\nLeft click to select the tile\nClick an empty tile on board to place it\nClick an exist tile on board to replace with it.");
+			tileTip.setStyle("-fx-font-size: 16");
+			showToolTip(stackTile, tileTip);
 
 			stackTile.setOnMouseClicked(event -> {
-//				setSelectedFloorTile(new FloorTile(tile.getOrientation(), tile.getFloorType(), true));
+				// setSelectedFloorTile(new FloorTile(tile.getOrientation(), tile.getFloorType(), true));
 				setSelectedFloorTile(tile);
 				updateBottomContainer();
 			});
+
 			if ((selectedFloorTile != null) && (tile.getFloorType() == selectedFloorTile.getFloorType())) {
-				ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", TILE_RENDER_SIZE, TILE_RENDER_SIZE, false, false));
-				chosen.setOpacity(0.5);
 				stackTile.getChildren().add(chosen);
 			}
 
@@ -407,24 +414,24 @@ public class LevelEditorController implements Initializable {
 			bottomContainer.getChildren().add(stackTile);
 		}
 
-		Image img = new Image("source/resources/img/tile_none.png", TILE_RENDER_SIZE, TILE_RENDER_SIZE, false, false);
+		// Add a fifth option, which will place an "empty" tile (basically deletion)
+		Image img = new Image("source/resources/img/tile_none.png", fixedTileImageSize, fixedTileImageSize, false, false);
 		StackPane stack = new StackPane(new ImageView(img));
 		stack.setOnMouseClicked(event -> {
 			setSelectedFloorTile(null);
 			updateBottomContainer();
 		});
+
 		if (selectedFloorTile == null) {
-			ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", TILE_RENDER_SIZE, TILE_RENDER_SIZE, false, false));
-			chosen.setOpacity(0.5);
 			stack.getChildren().add(chosen);
 		}
-		//helper text
+
+		// Tool tip text
 		final Tooltip clearTip = new Tooltip("Empty Tile:\n" + "Clear the selected tile on board\n" + "Left click to select the tile");
 		clearTip.setStyle("-fx-font-size: 16");
 		showToolTip(stack, clearTip);
 
 		bottomContainer.getChildren().add(stack);
-
 	}
 
 	/**
