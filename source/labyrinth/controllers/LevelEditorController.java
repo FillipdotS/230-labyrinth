@@ -419,6 +419,7 @@ public class LevelEditorController implements Initializable {
 				FloorTile fixedTile4 = new FloorTile(0, FloorTile.FloorType.GOAL);
 				fixedTile4.setFixed(true);
 				board.setTileAt(fixedTile4, newWidth / 2, newHeight / 2);
+                playerLocations[newWidth / 2][newHeight / 2] = 2;
 			}
 
 			renderBoard();
@@ -709,7 +710,10 @@ public class LevelEditorController implements Initializable {
 		//Check if there is more than 4 player
 		if (playerLocations[x][y] == 1) {
 			System.out.println("There is already a Player in that location");
-		} else {
+		} else if(playerLocations[x][y]==2){
+		    System.out.println("That was a Goal Tile.");
+        }
+		else {
 			if (playerCount < 5) {
 				playerLocations[x][y] = 1;
 				playerCount++;
