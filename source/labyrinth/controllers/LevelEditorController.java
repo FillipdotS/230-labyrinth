@@ -13,7 +13,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import source.labyrinth.*;
@@ -22,7 +25,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * LevelEditorController is used when editing a game board.
@@ -50,8 +56,7 @@ public class LevelEditorController implements Initializable {
 		SAVE
 	}
 
-	private int[][] playerLocations = new int[0][0];
-	private int playerCount = 1;
+	private int[][] boardLocations = new int[0][0];
 	private Board board;
 	private EditingState currentState;
 	private FloorTile selectedFloorTile; // A copy of this is placed onto the board
@@ -396,7 +401,7 @@ public class LevelEditorController implements Initializable {
 				return;
 			}
 
-			playerLocations = new int[newWidth][newHeight];
+			boardLocations = new int[newWidth][newHeight];
 			board = new Board(newWidth, newHeight);
 
 			FloorTile fixedTile = new FloorTile(1, FloorTile.FloorType.CORNER);
@@ -419,7 +424,7 @@ public class LevelEditorController implements Initializable {
 				FloorTile fixedTile4 = new FloorTile(0, FloorTile.FloorType.GOAL);
 				fixedTile4.setFixed(true);
 				board.setTileAt(fixedTile4, newWidth / 2, newHeight / 2);
-                playerLocations[newWidth / 2][newHeight / 2] = 2;
+                boardLocations[newWidth / 2][newHeight / 2] = 2;
 			}
 
 			renderBoard();
@@ -707,52 +712,30 @@ public class LevelEditorController implements Initializable {
 	 * @param y Y-coord
 	 */
 	private void placePlayerAt(int x, int y) {
-		//Check if there is more than 4 player
-		if (playerLocations[x][y] == 1) {
+		//Check how many player have been add
+        int playerCount = 0;
+        for(int i=0;i<boardLocations[0].length;i++){
+            for(int j=0;j<boardLocations[1].length;j++){
+                if(boardLocations[i][j]==1){
+                    playerCount++;
+                }
+            }
+        }
+        //Check if there is a player or it is a Goal tile
+		if (boardLocations[x][y] == 1) {
 			System.out.println("There is already a Player in that location");
-		} else if(playerLocations[x][y]==2){
+		} else if(boardLocations[x][y]==2){
 		    System.out.println("That was a Goal Tile.");
         }
 		else {
-			if (playerCount < 5) {
-				playerLocations[x][y] = 1;
-				playerCount++;
+            //Check if there is more than 4 player
+			if (playerCount < 4) {
+				boardLocations[x][y] = 1;
 				System.out.println("Player placed at " + x + "," + y);
 			} else {
 				System.out.println("Maximum Player!");
 			}
 		}
-        /*int playercounter=0;
-        boolean exist=false;
-        for(int i=0;i<playerLocations[0].length;i++){
-            for(int j=0;j<playerLocations[1].length;j++){
-                if(playerLocations[i][j]>0){
-
-                    playercounter+=1;
-                }
-                }
-            }
-
-        if(playercounter<4) {
-            for (int k = 1; k < 5; k++) {
-                exist=false;
-                for (int i = 0; i < playerLocations[0].length; i++) {
-                    for (int j = 0; j < playerLocations[1].length; j++) {
-                        if (playerLocations[i][j] != 0) {
-                            if (playerLocations[i][j] == k) {
-                                exist=true;
-                            }
-                            if(!exist){
-                                playerCount=k;
-                                System.out.println("Not exist Player No."+playerCount);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }*/
-
 	}
 
 	/**
@@ -763,10 +746,9 @@ public class LevelEditorController implements Initializable {
 	 */
 	private void removePlayerAt(int x, int y) {
 		//Check if there is any player
-		if (playerLocations[x][y] == 1) {
-			playerCount--;
-			//playerCount =  playerLocations[x][y];
-			playerLocations[x][y] = 0;
+		if (boardLocations[x][y] == 1) {
+			//playerCount =  boardLocations[x][y];
+			boardLocations[x][y] = 0;
 			System.out.println("Player removed at " + x + "," + y);
 		} else {
 			System.out.println("There is no player at that location!");
@@ -779,9 +761,9 @@ public class LevelEditorController implements Initializable {
 	private String[] getPlayerLocations() {
 		String[] output = new String[4];
 		int k = 0;
-		for (int x = 0; x < playerLocations[0].length; x++) {
-			for (int y = 0; y < playerLocations[1].length; y++) {
-				if (playerLocations[x][y] == 1) {
+		for (int x = 0; x < boardLocations[0].length; x++) {
+			for (int y = 0; y < boardLocations[1].length; y++) {
+				if (boardLocations[x][y] == 1) {
 					output[k] = x + "," + y;
 				}
 			}
@@ -799,6 +781,9 @@ public class LevelEditorController implements Initializable {
 		// Deep copy the floor tile, otherwise rotating one will rotate them all
 		if (selectedFloorTile != null) {
 			FloorTile copy = new FloorTile(selectedFloorTile.getOrientation(), selectedFloorTile.getFloorType(), selectedFloorTile.getFixed());
+			if (copy.getFloorType() == FloorTile.FloorType.GOAL) {
+                boardLocations[x][y] = 2;
+            }
 			board.setTileAt(copy, x, y);
 		} else {
 			deleteFixedTileAt(x, y);
@@ -812,6 +797,9 @@ public class LevelEditorController implements Initializable {
 	 * @param y Y-coord
 	 */
 	private void deleteFixedTileAt(int x, int y) {
+	    if(boardLocations[x][y]==2){
+	        boardLocations[x][y]=0;
+        }
 		board.setTileAt(null, x, y);
 	}
 
