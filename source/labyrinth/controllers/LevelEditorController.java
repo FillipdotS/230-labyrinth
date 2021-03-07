@@ -114,7 +114,8 @@ public class LevelEditorController implements Initializable {
 
 	@FXML
 	public void saveChanges(ActionEvent event) {
-		// Stuff to save work that user has done on the level editor
+		int width = board.getWidth();
+		int height = board.getHeight();
 	}
 
 	/**
