@@ -116,6 +116,14 @@ public class LevelEditorController implements Initializable {
         renderBoard();
     }
 
+	/**
+	 * Validates that level is correct before writing to file
+	 * Checks:
+	 * -> Enough tiles in silkbag for the board
+	 * -> There is at least one goal tile
+	 * -> That four player positions have been selected
+	 * @return: Alert - Returns an alert if conditions not me; if null then program continues
+	 */
     private Alert validateLevel() {
         String errorTitle = "The following errors have occured in your board settings:\n";
         String errorLog = "";
