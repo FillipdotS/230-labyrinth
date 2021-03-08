@@ -127,27 +127,36 @@ public class LevelEditorController implements Initializable {
 	private Alert validateLevel() {
 		String errorTitle = "The following errors have occured in your board settings:\n";
 		String errorLog = "";
-		int silkBagAccumulator;
-		int boardArea = board.getHeight() * board.getWidth();
-		int goalCount = silkbagAmounts.get("GOAL");
-		silkBagAccumulator = silkbagAmounts.get("STRAIGHT") + silkbagAmounts.get("TSHAPE") +
-				silkbagAmounts.get("CORNER") + silkbagAmounts.get("GOAL") + silkbagAmounts.get("ICE")
-				+ silkbagAmounts.get("FIRE") + silkbagAmounts.get("DOUBLEMOVE") + silkbagAmounts.get("BACKTRACK");
 
-		if (silkBagAccumulator < boardArea) {
-			errorLog += "-> There are not enough tiles in the silk bag, " +
-					"please increase this to atleast the area of the board\n";
+		int boardAreaToFill = (board.getHeight() * board.getWidth()) - getCurrentFixedTileAmount();
+		int silkBagAccumulator = silkbagAmounts.get("STRAIGHT") + silkbagAmounts.get("TSHAPE") +
+				silkbagAmounts.get("CORNER") + silkbagAmounts.get("GOAL");
+
+		boolean hasAtLeastOneGoal = false;
+		for (int x = 0; x < board.getWidth(); x++) {
+			// TODO: Inefficient, loops through everything even if goal already found
+			for (int y = 0; y < board.getHeight(); y++) {
+				if (board.getTileAt(x, y) != null && board.getTileAt(x, y).getFloorType() == FloorTile.FloorType.GOAL) {
+					hasAtLeastOneGoal = true;
+				}
+			}
 		}
 
-		if (goalCount < 1) {
-			errorLog += "-> There has to be AT LEAST ONE goal tile, please add a goal tile\n";
+		if (silkBagAccumulator < boardAreaToFill) {
+			errorLog += "-> There are not enough floor tiles in the silk bag, " +
+					"please increase this to at least the area of the board\n";
 		}
 
+		if (!hasAtLeastOneGoal) {
+			errorLog += "-> There has to be AT LEAST ONE goal tile on the board, please add a goal tile\n";
+		}
+
+		// TODO: Doesnt work properly
 		if (getPlayerLocations().length != 4) {
 			errorLog += "-> All player positions have to be defined, please define them\n";
 		}
 
-		if (errorLog == null || errorLog.isEmpty() || errorLog.contains(" ")) {
+		if (errorLog.isEmpty()) {
 			return null;
 		} else {
 			Alert errorAlert = new Alert(Alert.AlertType.ERROR);
@@ -289,7 +298,6 @@ public class LevelEditorController implements Initializable {
 		);*/
 
 	}
-
 
 	/**
 	 * Go back to the editor menu
@@ -523,6 +531,24 @@ public class LevelEditorController implements Initializable {
 				rotateSelectedFloorTile(1);
 			}
 		});
+	}
+
+	/**
+	 * Get the amount of placed fixed tiles on the board right now
+	 * @return Amonut of fixed tiles on the board
+	 */
+	private int getCurrentFixedTileAmount() {
+		int amountOfFixedTiles = 0;
+
+		for (int x = 0; x < board.getWidth(); x++) {
+			for (int y = 0; y < board.getHeight(); y++) {
+				if (board.getTileAt(x, y) != null) {
+					amountOfFixedTiles++;
+				}
+			}
+		}
+
+		return amountOfFixedTiles;
 	}
 
 	private void rotateSelectedFloorTile(int rot) {
