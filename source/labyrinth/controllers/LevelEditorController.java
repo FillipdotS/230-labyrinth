@@ -21,6 +21,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import source.labyrinth.*;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -397,13 +398,21 @@ public class LevelEditorController implements Initializable {
 
 		Button widthIncreaseButton = new Button("+");
 		widthIncreaseButton.setOnAction(event -> {
-			board.changeSize(board.getWidth() + 1, board.getHeight());
+		    int newWidth = board.getWidth() + 1;
+            int newHeight = board.getHeight();
+            board.changeSize(newWidth, newHeight);
+			//board.changeSize(board.getWidth() + 1, board.getHeight());
+			setResizeBoard(newWidth,newHeight);
 			renderBoard();
 		});
 
 		Button widthDecreaseButton = new Button("-");
 		widthDecreaseButton.setOnAction(event -> {
-			board.changeSize(board.getWidth() - 1, board.getHeight());
+            int newWidth = board.getWidth() - 1;
+            int newHeight = board.getHeight();
+            board.changeSize(newWidth, newHeight);
+			//board.changeSize(board.getWidth() - 1, board.getHeight());
+            setResizeBoard(newWidth, newHeight);
 			renderBoard();
 		});
 		//helper text
@@ -422,13 +431,21 @@ public class LevelEditorController implements Initializable {
 
 		Button heightIncreaseButton = new Button("+");
 		heightIncreaseButton.setOnAction(event -> {
-			board.changeSize(board.getWidth(), board.getHeight() + 1);
+            int newWidth = board.getWidth();
+            int newHeight = board.getHeight() + 1;
+            board.changeSize(newWidth, newHeight);
+			//board.changeSize(board.getWidth(), board.getHeight() + 1);
+            setResizeBoard(newWidth,newHeight);
 			renderBoard();
 		});
 
 		Button heightDecreaseButton = new Button("-");
 		heightDecreaseButton.setOnAction(event -> {
-			board.changeSize(board.getWidth(), board.getHeight() - 1);
+            int newWidth = board.getWidth();
+            int newHeight = board.getHeight() - 1;
+            board.changeSize(newWidth, newHeight);
+			//board.changeSize(board.getWidth(), board.getHeight() - 1);
+            setResizeBoard(newWidth,newHeight);
 			renderBoard();
 		});
 		//helper text
@@ -457,6 +474,7 @@ public class LevelEditorController implements Initializable {
 				}
 				newWidth = Integer.parseInt(width.getText());
 				newHeight = Integer.parseInt(height.getText());
+                boardLocations = new int[newWidth][newHeight];
 			} catch (NumberFormatException e) {
 				alert.setHeaderText("Are you trying to break me?");
 				alert.setContentText("You have to enter INTEGER, not other things!");
@@ -466,7 +484,7 @@ public class LevelEditorController implements Initializable {
 				return;
 			}
 
-			boardLocations = new int[newWidth][newHeight];
+
 			board = new Board(newWidth, newHeight);
 
 			FloorTile fixedTile = new FloorTile(1, FloorTile.FloorType.CORNER);
@@ -790,8 +808,8 @@ public class LevelEditorController implements Initializable {
 	private void placePlayerAt(int x, int y) {
 		//Check how many player have been add
 		int playerCount = 0;
-		for (int i = 0; i < boardLocations[0].length; i++) {
-			for (int j = 0; j < boardLocations[1].length; j++) {
+		for (int i = 0; i < boardLocations.length; i++) {
+			for (int j = 0; j < boardLocations[0].length; j++) {
 				if (boardLocations[i][j] == 1) {
 					playerCount++;
 				}
@@ -836,7 +854,7 @@ public class LevelEditorController implements Initializable {
 	private String[] getPlayerLocations() {
 		String[] output = new String[4];
 		int k = 0;
-		for (int x = 0; x < boardLocations[0].length; x++) {
+		for (int x = 0; x < boardLocations.length; x++) {
 			for (int y = 0; y < boardLocations[1].length; y++) {
 				if (boardLocations[x][y] == 1) {
 					output[k] = x + "," + y;
@@ -846,7 +864,43 @@ public class LevelEditorController implements Initializable {
 		return output;
 	}
 
-	/**
+	/** Resize the board into smaller or larger size(boardx,boardy)
+     * @param boardx X-coord
+     * @param boardy Y-coord
+	 */
+    private void setResizeBoard(int boardx, int boardy){
+        int[][] tempBoard = new int[boardLocations.length][boardLocations[0].length];
+        tempBoard = boardLocations;
+        //check if the board is smaller
+        //System.out.println("newWidth: "+boardx+ " newHeight: "+boardy);
+        if(boardx>0&&boardy>0){
+            if(boardx<boardLocations.length||boardy<boardLocations[0].length){
+                boardLocations = new int[boardx][boardy];
+                System.out.println("From Larger to smaller");
+                for(int x=0;x<boardx;x++){
+                    for(int y=0;y<boardy;y++){
+                        boardLocations[x][y] = tempBoard[x][y];
+                    }
+                }
+                //System.out.println("Width: "+boardLocations.length+ " Height: "+boardLocations[0].length);
+            }else{
+                System.out.println("From smaller to larger");
+                boardLocations = new int[boardx][boardy];
+                for(int x=0;x<tempBoard[0].length;x++){
+                    for(int y=0;y< tempBoard[1].length;y++){
+                        boardLocations[x][y] = tempBoard[x][y];
+                    }
+                }
+                //System.out.println("Width: "+boardLocations.length+ " Height: "+boardLocations[0].length);
+            }
+        }else{
+            System.out.println("Error");
+        }
+
+
+    }
+
+    /**
 	 * Places the currently selected tile at (x, y)
 	 *
 	 * @param x X-coord
