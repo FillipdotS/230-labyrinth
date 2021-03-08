@@ -975,45 +975,37 @@ public class LevelEditorController implements Initializable {
 	@FXML
 	private void fileWriter(File filename) throws IOException {
 		FileWriter writer = new FileWriter(filename);
-		int numOfFixedTiles = 0;
-		int posInX = 0;
-		int posInY = 0;
-		for (int i = 0; i < board.getHeight(); i++) {
-			for (int j = 0; j < board.getWidth(); j++) {
-				Tile currentTile = board.getTileAt(i, j);
-				if (currentTile != null) {
-					posInY = i;
-					posInX = j;
-					numOfFixedTiles += 1;
-				}
-			}
-		}
+
 		Alert errorDialog = validateLevel();
 		if (errorDialog != null) {
 			errorDialog.showAndWait();
 		} else {
-			writer.write(board.getWidth() + "," + board.getHeight());
-			writer.write(numOfFixedTiles);
+			writer.write(board.getWidth() + "," + board.getHeight() + "\n");
+			writer.write(getCurrentFixedTileAmount() + "\n");
 
-			writer.write(board.getTileAt(posInX, posInY) + "," + selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
-			writer.write(board.getTileAt(posInX, posInY) + "," + selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
-			writer.write(board.getTileAt(posInX, posInY) + "," + selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
-			writer.write(board.getTileAt(posInX, posInY) + "," + selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
-			writer.write(board.getTileAt(posInX, posInY) + "," + selectedFloorTile.getFloorType() + "," + selectedFloorTile.getOrientation());
+			for (int x = 0; x < board.getWidth(); x++) {
+				for (int y = 0; y < board.getHeight(); y++) {
+					if (board.getTileAt(x, y) != null) {
+						FloorTile fixedTile = board.getTileAt(x, y);
+						writer.write(x + "," + y + "," + fixedTile.getFloorType() + "," + fixedTile.getOrientation() + "\n");
+					}
+				}
+			}
 
-			writer.write(String.valueOf(getPlayerLocations()));
+			// TODO: Fix player positions (might change how we handle them, so won't bother for now)
+			// temp values that would work
+			writer.write("0,0" + "\n");
+			writer.write("0,1" + "\n");
+			writer.write("1,0" + "\n");
+			writer.write("1,1" + "\n");
 
-			writer.write(silkbagAmounts.get("STRAIGHT") + "," + "Straight: ");
-			writer.write(silkbagAmounts.get("TSHAPE") + "," + "TShape: ");
-			writer.write(silkbagAmounts.get("CORNER") + "," + "Corner: ");
-			writer.write(silkbagAmounts.get("GOAL") + "," + "Goal: ");
-			writer.write(silkbagAmounts.get("ICE") + "," + "ICE: ");
-			writer.write(silkbagAmounts.get("FIRE") + "," + "Fire: ");
-			writer.write(silkbagAmounts.get("DOUBLEMOVE") + "," + "DoubleMove: ");
-			writer.write(silkbagAmounts.get("BACKTRACK") + "," + "BackTrack: ");
+			String[] writeOrder = {"STRAIGHT", "TSHAPE", "CORNER", "GOAL", "ICE", "FIRE", "DOUBLEMOVE", "BACKTRACK"};
+			for (String tileType : writeOrder) {
+				writer.write(silkbagAmounts.get(tileType) + "," + tileType + "\n");
+			}
 		}
 
-
+		writer.close();
 	}
 
 
