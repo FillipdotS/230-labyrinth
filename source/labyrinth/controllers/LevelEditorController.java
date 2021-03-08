@@ -1073,6 +1073,8 @@ public class LevelEditorController implements Initializable {
 			writer.write("1,0" + "\n");
 			writer.write("1,1" + "\n");
 
+			// Git test
+
 			String[] writeOrder = {"STRAIGHT", "TSHAPE", "CORNER", "GOAL", "ICE", "FIRE", "DOUBLEMOVE", "BACKTRACK"};
 			for (String tileType : writeOrder) {
 				writer.write(silkbagAmounts.get(tileType) + "," + tileType + "\n");
