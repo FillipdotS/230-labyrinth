@@ -565,11 +565,6 @@ public class LevelEditorController implements Initializable {
 	private void showFixedTileControls() {
 		int fixedTileImageSize = 64;
 
-		ArrayList<FloorTile> tiles = new ArrayList<FloorTile>();
-		for (FloorTile.FloorType type : FloorTile.FloorType.values()) {
-			tiles.add(new FloorTile(0, type, true));
-		}
-
 		// We'll place this overlay on whatever we have selected, which we will figure out below
 		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", fixedTileImageSize, fixedTileImageSize, false, false));
 		chosen.setOpacity(0.5);
