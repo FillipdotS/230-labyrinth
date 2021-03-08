@@ -39,6 +39,7 @@ import java.util.ResourceBundle;
 public class LevelEditorController implements Initializable {
 	private static String nextFileToLoad; // null if completely new board, name of custom board file otherwise
 	private static int tileRenderSize = 64;
+	private static float playerToTileScale = 0.6f;
 
 	@FXML
 	private VBox boardContainer;
@@ -948,6 +949,10 @@ public class LevelEditorController implements Initializable {
 
 
 				// TODO: Render player positions onto the grid here
+//				if (boardLocations[x][y] == 1) {
+//					ImageView playerImage = new ImageView(new Image("source/resources/img/player_default.png", tileRenderSize * playerToTileScale, tileRenderSize * playerToTileScale, false, false));
+//					stack.getChildren().add(playerImage);
+//				}
 
 				// Uncomment for coordinates
 				// stack.getChildren().add(new Text("(" + x + ", " + y + ")"));
