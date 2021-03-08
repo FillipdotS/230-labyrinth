@@ -171,6 +171,12 @@ public class LevelEditorController implements Initializable {
 
 	}
 
+	/**
+	 * Checks whether the given string is a valid filename
+	 *
+	 * @param fileName Filename to check
+	 * @return An instance of Alert if an error was found, null otherwise
+	 */
 	private Alert validateFileName(String fileName) {
 		String errorTitle = "The following errors have occured in your file name:\n";
 		String errorLog = "";
@@ -249,9 +255,9 @@ public class LevelEditorController implements Initializable {
 
 	public void textDialogOk(TextInputDialog textDialog) throws IOException {
 		String fileName = textDialog.getEditor().getText();
-		System.out.println(fileName);
-		System.out.println("Call validate");
+		System.out.println("User gave filename: " + fileName);
 		Alert errorDialog = validateFileName(fileName);
+
 		if (errorDialog != null) {
 			errorDialog.showAndWait();
 			saveChanges();//show up the textDialog again for user to re-enter the name
@@ -263,6 +269,7 @@ public class LevelEditorController implements Initializable {
 				String dialogMsg = fileName + " already exists. Are you sure you want to overwrite it?";
 				Alert overwriteDialog = new Alert(Alert.AlertType.CONFIRMATION, dialogMsg, ButtonType.YES, ButtonType.CANCEL);
 				overwriteDialog.showAndWait();
+
 				if (overwriteDialog.getResult() == ButtonType.YES) {
 					fileWriter(filePath);
 				} else {
@@ -274,6 +281,11 @@ public class LevelEditorController implements Initializable {
 		}
 	}
 
+	/**
+	 * Begins the process to save a custom level to file, dealing with level validation, filename validation,
+	 * checking for existing files along the way
+	 * @throws IOException If a file error occured
+	 */
 	@FXML
 	public void saveChanges() throws IOException {//removed unused Action event parameter, unexpected problem may happen
 		TextInputDialog textDialog = new TextInputDialog();
@@ -538,6 +550,10 @@ public class LevelEditorController implements Initializable {
 		return amountOfFixedTiles;
 	}
 
+	/**
+	 * Rotates the currently selected floor tile (if it's a real tile)
+	 * @param rot Amount to rotate by, can be negative
+	 */
 	private void rotateSelectedFloorTile(int rot) {
 		if ((currentState == EditingState.FIXED_TILES) && (selectedFloorTile != null)) {
 			selectedFloorTile.rotateBy(rot);
@@ -971,6 +987,11 @@ public class LevelEditorController implements Initializable {
 		boardContainer.getChildren().add(renderedBoard);
 	}
 
+	/**
+	 * Takes the current board that the user has been editing and saves it to file.
+	 * @param filename Filename to save to
+	 * @throws IOException If a file error occurs
+	 */
 	@FXML
 	private void fileWriter(File filename) throws IOException {
 		FileWriter writer = new FileWriter(filename);
@@ -1006,8 +1027,7 @@ public class LevelEditorController implements Initializable {
 
 		writer.close();
 	}
-
-
+	
 	/**
 	 * replace the original install method from tooltips to remove delay time
 	 *
@@ -1023,5 +1043,4 @@ public class LevelEditorController implements Initializable {
 			tooltip.hide();
 		});
 	}
-
 }
