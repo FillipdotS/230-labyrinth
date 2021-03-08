@@ -519,20 +519,6 @@ public class LevelEditorController implements Initializable {
 		bottomContainer.getChildren().add(defaultt);*/
 	}
 
-	private void addEvent() {
-		Scene scene = boardContainer.getScene();
-		scene.setOnKeyPressed((key) -> {
-			if (key.getCode() == KeyCode.A) {
-				System.out.println("AAAAAAAAAAAAA");
-				rotateSelectedFloorTile(-1);
-			}
-			if (key.getCode() == KeyCode.D) {
-				System.out.println("DDDDDDDDDDDDDDD");
-				rotateSelectedFloorTile(1);
-			}
-		});
-	}
-
 	/**
 	 * Get the amount of placed fixed tiles on the board right now
 	 * @return Amonut of fixed tiles on the board
@@ -604,7 +590,15 @@ public class LevelEditorController implements Initializable {
 				stackTile.getChildren().add(chosen);
 			}
 
-			addEvent();
+			Scene scene = boardContainer.getScene();
+			scene.setOnKeyPressed((key) -> {
+				if (key.getCode() == KeyCode.A) {
+					rotateSelectedFloorTile(-1);
+				}
+				if (key.getCode() == KeyCode.D) {
+					rotateSelectedFloorTile(1);
+				}
+			});
 
 			bottomContainer.getChildren().add(stackTile);
 		}
