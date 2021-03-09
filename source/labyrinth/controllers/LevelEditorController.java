@@ -940,6 +940,7 @@ public class LevelEditorController implements Initializable {
 						showToolTip(stack, TileTip);
 					}
 
+
 				} else {
 					Image img = new Image("source/resources/img/tile_none.png", tileRenderSize, tileRenderSize, false, false);
 					ImageView iv = new ImageView(img);
@@ -950,6 +951,11 @@ public class LevelEditorController implements Initializable {
 						emptyTip.setStyle("-fx-font-size: 16");
 						showToolTip(stack, emptyTip);
 					}
+				}
+				if (currentState.equals(EditingState.PLAYERS)) {
+					final Tooltip playerTip = new Tooltip("Left click - place player");
+					playerTip.setStyle("-fx-font-size: 16");
+					showToolTip(stack, playerTip);
 				}
 
 				// Uncomment for coordinates
@@ -970,9 +976,15 @@ public class LevelEditorController implements Initializable {
 			// There is no way to get a gridpane node via coordinates, so have to use a little hacky calculation
 			int stackpaneLocation = location[0] * board.getHeight() + location[1];
 			StackPane relevantStackPane = (StackPane) renderedBoard.getChildren().get(stackpaneLocation);
+			if (currentState.equals(EditingState.PLAYERS)) {
+				final Tooltip player2Tip = new Tooltip("Right click - delete player");
+				player2Tip.setStyle("-fx-font-size: 16");
+				showToolTip(relevantStackPane, player2Tip);
+			}
 
 			ImageView playerImage = new ImageView(new Image("source/resources/img/player_default.png", tileRenderSize * playerToTileScale, tileRenderSize * playerToTileScale, false, false));
 			relevantStackPane.getChildren().add(playerImage);
+
 		});
 
 		boardContainer.getChildren().clear();
