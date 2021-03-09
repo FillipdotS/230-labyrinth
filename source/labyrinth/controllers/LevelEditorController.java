@@ -500,6 +500,22 @@ public class LevelEditorController implements Initializable {
 					alert.showAndWait();
 					return;
 				}
+				else if(Integer.parseInt(width.getText())<0 || Integer.parseInt(width.getText())<0){
+					alert.setHeaderText("Are you trying to create a 4-Dimension board?");
+					alert.setContentText("You have to enter a positive integer, negative value is not allowed.");
+					alert.showAndWait();
+					width.clear();
+					height.clear();
+					return;
+				}
+				else if(Integer.parseInt(width.getText())==0 || Integer.parseInt(width.getText())==0){
+					alert.setHeaderText("you created a 0-Dimension board ?");
+					alert.setContentText("You have to enter a positive integer, but not trying to create a void world");
+					alert.showAndWait();
+					width.clear();
+					height.clear();
+					return;
+				}
 				newWidth = Integer.parseInt(width.getText());
 				newHeight = Integer.parseInt(height.getText());
 			} catch (NumberFormatException e) {
