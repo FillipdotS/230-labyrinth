@@ -311,6 +311,7 @@ public class LevelEditorController implements Initializable {
 	/**
 	 * Begins the process to save a custom level to file, dealing with level validation, filename validation,
 	 * checking for existing files along the way
+	 *
 	 * @throws IOException If a file error occured
 	 */
 	@FXML
@@ -318,9 +319,29 @@ public class LevelEditorController implements Initializable {
 		TextInputDialog textDialog = new TextInputDialog();
 		textDialog.setTitle("Save your Level");
 		textDialog.setHeaderText("Give Your Level A Name");
-		Optional<String> result = textDialog.showAndWait();
-		if (result.isPresent()) {
-			textDialogOk(textDialog);
+
+		Boolean isEmpty = false;
+		for (int x = 0; x < this.board.getWidth(); x++) {
+			for (int y = 0; y < this.board.getHeight(); y++) {
+				FloorTile current = this.board.getTileAt(x, y);
+				if (current == null) {
+					isEmpty = true;
+					break;
+				}
+			}
+		}
+		if (isEmpty) {
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+			alert.setTitle("Random Tiles For Empty Tiles");
+			alert.setHeaderText("Notice");
+			alert.setContentText("Empty tiles will be filled randomly with tiles from silk bag, ready to save?");
+			Optional<ButtonType> random = alert.showAndWait();
+			if (random.get() == ButtonType.OK) {
+				Optional<String> result = textDialog.showAndWait();
+				if (result.isPresent()) {
+					textDialogOk(textDialog);
+				}
+			}
 		}
 
 
@@ -562,6 +583,7 @@ public class LevelEditorController implements Initializable {
 
 	/**
 	 * Get the amount of placed fixed tiles on the board right now
+	 *
 	 * @return Amonut of fixed tiles on the board
 	 */
 	private int getCurrentFixedTileAmount() {
@@ -580,6 +602,7 @@ public class LevelEditorController implements Initializable {
 
 	/**
 	 * Rotates the currently selected floor tile (if it's a real tile)
+	 *
 	 * @param rot Amount to rotate by, can be negative
 	 */
 	private void rotateSelectedFloorTile(int rot) {
@@ -841,7 +864,7 @@ public class LevelEditorController implements Initializable {
 		playerLocations.removeIf(location -> location[0] == x && location[1] == y);
 	}
 
-    /**
+	/**
 	 * Places the currently selected tile at (x, y)
 	 *
 	 * @param x X-coord
@@ -993,6 +1016,7 @@ public class LevelEditorController implements Initializable {
 
 	/**
 	 * Takes the current board that the user has been editing and saves it to file.
+	 *
 	 * @param filename Filename to save to
 	 * @throws IOException If a file error occurs
 	 */
@@ -1022,7 +1046,7 @@ public class LevelEditorController implements Initializable {
 		writer.close();
 	}
 
-	
+
 	/**
 	 * replace the original install method from tooltips to remove delay time
 	 *
