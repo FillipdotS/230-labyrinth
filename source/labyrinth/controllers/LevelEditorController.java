@@ -395,7 +395,9 @@ public class LevelEditorController implements Initializable {
 				showSilkbagControls();
 				break;
 			case PLAYERS:
-				bottomContainer.getChildren().add(new Text("Left click to put player"));
+				bottomContainer.getChildren().add(new Text("Left click to place a player\n" +
+						"Right click to remove a player\n" +
+						"There can be at most " + maximumPlayerAmount + " player positions"));
 				break;
 			case SAVE:
 				bottomContainer.getChildren().add(new Text("Save stuff"));
