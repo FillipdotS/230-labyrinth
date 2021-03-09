@@ -35,6 +35,11 @@ import java.util.ResourceBundle;
  *
  * @author Fillip Serov
  * @author Morgan Firkins
+ * @author Ian Lavin Rady
+ * @author Max Lui
+ * @author Erik Miller
+ * @author Narcis Spanache
+ * @author Matthew Fok
  */
 public class LevelEditorController implements Initializable {
 	private final int maximumPlayerAmount = 4;
