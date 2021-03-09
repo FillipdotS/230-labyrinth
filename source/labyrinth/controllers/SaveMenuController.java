@@ -61,8 +61,14 @@ public class SaveMenuController implements Initializable {
 				deleteSaveButton.setDisable(false);
 				loadSaveButton.setDisable(false);
 
-				saveDetailTextArea.setText("SaveData name:" + "\n" + savName);
 				System.out.println(savName);
+
+				File levelsFiles = new File("./source/resources/saves");
+				for (File f : Objects.requireNonNull(levelsFiles.listFiles())) {
+					if (savName.equals(f.getName()))
+						saveDetailTextArea.setText("file location:\n"+f.getAbsolutePath());
+				}
+
 
 				if (selectedSaveHBox != null) {
 					selectedSaveHBox.setStyle("-fx-border-color: #c4fffd");

@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -29,6 +30,7 @@ import java.util.*;
 /**
  * LevelController acts as both a controller for the scene in which the game happens, and as a "Game Manager"
  * type of class for tracking the current game.
+ *
  * @author Fillip Serov, Erik Miller
  */
 public class LevelController implements Initializable {
@@ -46,10 +48,14 @@ public class LevelController implements Initializable {
 	private static String nextFileToLoad; // Either a save file or level file
 	private static String[] nextLevelProfiles; // This will be used if we are loading a completely new game
 
-	@FXML private Button saveButton;
-	@FXML private VBox boardContainer;
-	@FXML private VBox leftVBox;
-	@FXML private HBox bottomContainer;
+	@FXML
+	private Button saveButton;
+	@FXML
+	private VBox boardContainer;
+	@FXML
+	private VBox leftVBox;
+	@FXML
+	private HBox bottomContainer;
 
 	/**
 	 * Represent what "phase" of the game we are in. Allow save files to know what stage of the game they
@@ -75,6 +81,7 @@ public class LevelController implements Initializable {
 
 	/**
 	 * Get the current game time as an int. Will always be above 0.
+	 *
 	 * @return int representing the game time.
 	 */
 	public static int getCurrentTime() {
@@ -84,6 +91,7 @@ public class LevelController implements Initializable {
 	/**
 	 * Get the amount of time it takes for all players to complete a turn in this specific game, as this will
 	 * change depending on the amount of players.
+	 *
 	 * @return int showing the time it takes for all players to do a one turn.
 	 */
 	public static int getTimeForFullLoop() {
@@ -92,7 +100,8 @@ public class LevelController implements Initializable {
 
 	/**
 	 * Next time the level scene is loaded, it will build a new game from this level file.
-	 * @param levelName Level name
+	 *
+	 * @param levelName     Level name
 	 * @param profilesToUse Array of profile names (the length of which is the amount of players)
 	 */
 	public static void setNextLevelToLoad(String levelName, String[] profilesToUse) {
@@ -103,6 +112,7 @@ public class LevelController implements Initializable {
 
 	/**
 	 * Next time the level scene is loaded, it will rebuild the game from the given save name.
+	 *
 	 * @param saveName Name of save file
 	 */
 	public static void setNextSaveToLoad(String saveName) {
@@ -127,27 +137,37 @@ public class LevelController implements Initializable {
 
 	/**
 	 * Go to the level menu
+	 *
 	 * @param event Click event to get current window.
 	 */
-	@FXML public void goToLevelMenu(ActionEvent event) {
+	@FXML
+	public void goToLevelMenu(ActionEvent event) {
 		System.out.println("Going to level menu...");
-		try {
-			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level_menu.fxml"));
-			Scene profileMenuScene = new Scene(profileMenuParent);
-			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setTitle("Leaving game");
+		alert.setHeaderText("You are about to leave this game");
+		alert.setContentText("Are you sure to exit? All unsaved progress will be lost!");
+		Optional<ButtonType> leave = alert.showAndWait();
+		if (leave.get() == ButtonType.OK) {
+			try {
+				Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level_menu.fxml"));
+				Scene profileMenuScene = new Scene(profileMenuParent);
+				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-			window.setScene(profileMenuScene);
-			window.setTitle("Level Select");
-			window.show();
-		} catch (IOException e) {
-			e.printStackTrace();
+				window.setScene(profileMenuScene);
+				window.setTitle("Level Select");
+				window.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	/**
 	 * Increases the size at which tiles render at, maximum of 100.
 	 */
-	@FXML public void increaseZoom() {
+	@FXML
+	public void increaseZoom() {
 		tileRenderSize = Math.min(100, tileRenderSize + 10);
 		renderBoard();
 		if (currentTurnPhase == TurnPhases.MOVEMENT || (currentTurnPhase == TurnPhases.PLAYACTION && usedAction == ActionTile.ActionType.DOUBLEMOVE)) {
@@ -158,7 +178,8 @@ public class LevelController implements Initializable {
 	/**
 	 * Decreases the size at which tiles render, minimum of 20.
 	 */
-	@FXML public void decreaseZoom() {
+	@FXML
+	public void decreaseZoom() {
 		tileRenderSize = Math.max(20, tileRenderSize - 10);
 		renderBoard();
 		if (currentTurnPhase == TurnPhases.MOVEMENT || (currentTurnPhase == TurnPhases.PLAYACTION && usedAction == ActionTile.ActionType.DOUBLEMOVE)) {
@@ -169,41 +190,53 @@ public class LevelController implements Initializable {
 	/**
 	 * exportToSave will collect all necessary information about the game and save it to a file. An alert
 	 * will popup to show the save name.
+	 *
 	 * @throws IOException If it cannot save to file
 	 */
 	public void exportToSave() throws IOException {
-		String timeStamp = new SimpleDateFormat("ss-mm-HH-dd-MM-yyyy").format(new Date());
-		String saveFileName = "save_" + timeStamp + ".ser"; // temp, just take level name
-		System.out.println(saveFileName);
-		System.out.println("Saving game state to file " + saveFileName);
 
-		// Setup output
-		FileOutputStream fos = new FileOutputStream("source/resources/saves/" + saveFileName);
-		ObjectOutputStream objectOutputStream = new ObjectOutputStream(fos);
+		Alert saveAlert = new Alert(Alert.AlertType.CONFIRMATION);
+		saveAlert.setTitle("Save");
+		saveAlert.setHeaderText("You are about to save this game");
+		saveAlert.setContentText("Are you sure you want to save this game now?");
 
-		// Serialize the objects from which we could later rebuild the entire game state
-		objectOutputStream.writeObject(currentTime);
-		objectOutputStream.writeObject(this.currentLevelName);
-		objectOutputStream.writeObject(this.players);
-		objectOutputStream.writeObject(this.currentPlayer);
-		objectOutputStream.writeObject(this.board);
-		objectOutputStream.writeObject(this.floorTileToInsert);
-		objectOutputStream.writeObject(this.currentTurnPhase);
-		objectOutputStream.writeObject(SilkBag.getEntireBag());
-		objectOutputStream.flush();
-		objectOutputStream.close();
+		Optional<ButtonType> result = saveAlert.showAndWait();
+		if (result.get() == ButtonType.OK) {
+			String timeStamp = new SimpleDateFormat("ss-mm-HH-dd-MM-yyyy").format(new Date());
+			String saveFileName = "save_" + timeStamp + ".ser"; // temp, just take level name
+			System.out.println(saveFileName);
+			System.out.println("Saving game state to file " + saveFileName);
 
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setContentText("Game saved to save file: " + saveFileName + ". You can load it from the level menu.");
-		alert.setTitle("Game Saved");
-		alert.setHeaderText(null);
-		alert.showAndWait();
+			// Setup output
+			FileOutputStream fos = new FileOutputStream("source/resources/saves/" + saveFileName);
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fos);
+
+			// Serialize the objects from which we could later rebuild the entire game state
+			objectOutputStream.writeObject(currentTime);
+			objectOutputStream.writeObject(this.currentLevelName);
+			objectOutputStream.writeObject(this.players);
+			objectOutputStream.writeObject(this.currentPlayer);
+			objectOutputStream.writeObject(this.board);
+			objectOutputStream.writeObject(this.floorTileToInsert);
+			objectOutputStream.writeObject(this.currentTurnPhase);
+			objectOutputStream.writeObject(SilkBag.getEntireBag());
+			objectOutputStream.flush();
+			objectOutputStream.close();
+
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.setContentText("Game saved to save file: " + saveFileName + ". You can load it from the level menu.");
+			alert.setTitle("Game Saved");
+			alert.setHeaderText(null);
+			alert.showAndWait();
+		}
+
 	}
 
 	/**
 	 * setupNewLevel will build a completely fresh level. Players will be put on their starting locations and
 	 * they will have no action tiles. The game will then begin with drawingPhase being called.
-	 * @param levelName The file name of the level to load from scratch
+	 *
+	 * @param levelName   The file name of the level to load from scratch
 	 * @param profileInfo String array of profile names to use for this game (they can be null)
 	 */
 	private void setupFromLevelFile(String levelName, String[] profileInfo) {
@@ -236,7 +269,7 @@ public class LevelController implements Initializable {
 		for (int x = 0; x < this.board.getWidth(); x++) {
 			for (int y = 0; y < this.board.getHeight(); y++) {
 				if (this.board.getTileAt(x, y) == null) {
-					this.board.setTileAt((FloorTile)SilkBag.getRandomTile(), x, y);
+					this.board.setTileAt((FloorTile) SilkBag.getRandomTile(), x, y);
 				}
 			}
 		}
@@ -268,9 +301,9 @@ public class LevelController implements Initializable {
 			int[] startingPosition = ld.getPlayerStartingPositions()[i];
 			newPlayer.setStandingOn(this.board.getTileAt(startingPosition[0], startingPosition[1]));
 
-			newPlayer.addToPastPositions(startingPosition[0],startingPosition[1]);
-			newPlayer.addToPastPositions(startingPosition[0],startingPosition[1]);
-			newPlayer.addToPastPositions(startingPosition[0],startingPosition[1]);
+			newPlayer.addToPastPositions(startingPosition[0], startingPosition[1]);
+			newPlayer.addToPastPositions(startingPosition[0], startingPosition[1]);
+			newPlayer.addToPastPositions(startingPosition[0], startingPosition[1]);
 
 			players[i] = newPlayer;
 		}
@@ -284,6 +317,7 @@ public class LevelController implements Initializable {
 
 	/**
 	 * setupFromSaveFile will rebuild a previous game from a serialized save file.
+	 *
 	 * @param saveName The file name of the save file
 	 */
 	private void setupFromSaveFile(String saveName) {
@@ -379,6 +413,7 @@ public class LevelController implements Initializable {
 
 	/**
 	 * Loads interface for placing and rotating the nextFloorTileToInsert
+	 *
 	 * @param nextFloorTileToInsert FloorTile to insert
 	 */
 	private void placementPhase(FloorTile nextFloorTileToInsert) {
@@ -425,14 +460,15 @@ public class LevelController implements Initializable {
 		rotationControls.add(clockwise, 0, 0);
 		rotationControls.add(floorTileToInsert.renderTile(rotationControlSize), 1, 0);
 		rotationControls.add(aClockwise, 2, 0);
-		
+
 		bottomContainer.getChildren().add(rotationControls);
 	}
 
 	/**
 	 * inserts floor tile renders board and starts playActionPhase
+	 *
 	 * @param insertionDirection int from 0 to 3 representing the cardinal directions
-	 * @param insertionPoint int from 0 to max width/height, represents in which row/column to insert into.
+	 * @param insertionPoint     int from 0 to max width/height, represents in which row/column to insert into.
 	 */
 	private void endPlacementPhase(int insertionDirection, int insertionPoint) {
 		this.board.insertFloorTile(this.floorTileToInsert, insertionDirection, insertionPoint);
@@ -469,8 +505,8 @@ public class LevelController implements Initializable {
 			iv.setFitHeight(Region.USE_COMPUTED_SIZE);
 
 			// When we re-render we highlight the currently chosen action
-			if (at == usedAction){
-				ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png",actionImageRenderSize,actionImageRenderSize,false,false));
+			if (at == usedAction) {
+				ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", actionImageRenderSize, actionImageRenderSize, false, false));
 				chosen.setOpacity(0.5);
 				stack.getChildren().addAll(chosen);
 			}
@@ -552,6 +588,7 @@ public class LevelController implements Initializable {
 	/**
 	 * When a player steps onto a Goal, we call this method, which will deal with updating profiles and stopping
 	 * the game from progressing.
+	 *
 	 * @param winningID The player id of the player that won
 	 */
 	private void playerHasWon(int winningID) {
@@ -576,7 +613,7 @@ public class LevelController implements Initializable {
 		// Update the leaderboard
 		// Get profiles that played
 		ArrayList<Integer> profilesThatPlayed = new ArrayList<>();
-		for (Player p: players) {
+		for (Player p : players) {
 			if (p.getAssociatedProfile() != null) {
 				profilesThatPlayed.add(p.getAssociatedProfile().getID());
 			}
@@ -605,6 +642,7 @@ public class LevelController implements Initializable {
 
 	/**
 	 * A dirty hacky method to very slowly find a Player somewhere in a Board. TODO: Replace
+	 *
 	 * @param playerID playerID
 	 * @return index 0 is x coordinate 1 is y
 	 */
@@ -613,7 +651,7 @@ public class LevelController implements Initializable {
 			for (int y = 0; y < this.board.getHeight(); y++) {
 				FloorTile ft = this.board.getTileAt(x, y);
 				if (ft.getPlayer() != null && ft.getPlayer().getIdInGame() == playerID) {
-					return new int[] {x, y};
+					return new int[]{x, y};
 				}
 			}
 		}
@@ -622,7 +660,8 @@ public class LevelController implements Initializable {
 
 	/**
 	 * gets positions of all players on board
-	 * @return first index is players ID, second coordinates 0 for x, 1 for y 
+	 *
+	 * @return first index is players ID, second coordinates 0 for x, 1 for y
 	 */
 	private int[][] getAllPlayersXYPosition() {
 		int[][] result = new int[players.length][2];
@@ -630,8 +669,8 @@ public class LevelController implements Initializable {
 			for (int y = 0; y < this.board.getHeight(); y++) {
 				FloorTile ft = this.board.getTileAt(x, y);
 				if (ft.getPlayer() != null) {
-					result[ft.getPlayer().getIdInGame()][0]= x;
-					result[ft.getPlayer().getIdInGame()][1]= y;
+					result[ft.getPlayer().getIdInGame()][0] = x;
+					result[ft.getPlayer().getIdInGame()][1] = y;
 				}
 			}
 		}
@@ -661,25 +700,26 @@ public class LevelController implements Initializable {
 		for (int i = 0; i < positions.length; i++) {
 			int index = canPlayerBeBacktracked(players[i]);
 			if (index > 0) {
-				setAsBacktrackOption(i, index,positions[i][0], positions[i][1]);
+				setAsBacktrackOption(i, index, positions[i][0], positions[i][1]);
 			}
 		}
 	}
 
 	/**
 	 * highlights player to be backtracked
+	 *
 	 * @param player player ID
-	 * @param index how many turns back
-	 * @param x current position
-	 * @param y current position
+	 * @param index  how many turns back
+	 * @param x      current position
+	 * @param y      current position
 	 */
 	private void setAsBacktrackOption(int player, int index, int x, int y) {
-		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png",tileRenderSize,tileRenderSize, false, false));
+		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", tileRenderSize, tileRenderSize, false, false));
 		chosen.setOpacity(0.5);
 		StackPane optionTile = getStackPaneTileByXY(x, y);
 		optionTile.getChildren().add(chosen);
 
-		FloorTile backTile = board.getTileAt(players[player].getPastPositions()[index][0],players[player].getPastPositions()[index][1]);
+		FloorTile backTile = board.getTileAt(players[player].getPastPositions()[index][0], players[player].getPastPositions()[index][1]);
 		optionTile.setOnMouseClicked(event -> {
 			players[player].setStandingOn(backTile);
 			players[player].setHasBeenBacktracked(true);
@@ -690,16 +730,15 @@ public class LevelController implements Initializable {
 	}
 
 	/**
-	 *
 	 * @param player Player
 	 * @return turns to backtrack
 	 */
 	private int canPlayerBeBacktracked(Player player) {
 		int howFar = 0;
 		if (!player.getHasBeenBacktracked()) {
-			int [][] pos = player.getPastPositions();
+			int[][] pos = player.getPastPositions();
 			howFar = (board.getTileAt(pos[2][0], pos[2][1]).canMoveTo()) ? 1 : 0;
-			howFar = (board.getTileAt(pos[1][0],pos[1][1]).canMoveTo()) ? howFar + 1: 0;
+			howFar = (board.getTileAt(pos[1][0], pos[1][1]).canMoveTo()) ? howFar + 1 : 0;
 		}
 		return howFar;
 	}
@@ -709,7 +748,7 @@ public class LevelController implements Initializable {
 	 */
 	private void showWay() {
 		int[] pos = getPlayerXYPosition(currentPlayer);
-		Boolean[] moveMask = board.getMovableFrom(pos[0],pos[1]);
+		Boolean[] moveMask = board.getMovableFrom(pos[0], pos[1]);
 		boolean isThereAWay = false;
 		/*
 		 runs setAsWay on neighbours if they exist and player can move there
@@ -719,9 +758,9 @@ public class LevelController implements Initializable {
 			if (moveMask[i]) {
 				isThereAWay = true;
 				if (i % 2 == 0) {
-					setAsWay(pos[0],(pos[1]-1+i));
+					setAsWay(pos[0], (pos[1] - 1 + i));
 				} else {
-					setAsWay((pos[0]+2-i),pos[1]);
+					setAsWay((pos[0] + 2 - i), pos[1]);
 				}
 			}
 		}
@@ -738,11 +777,12 @@ public class LevelController implements Initializable {
 
 	/**
 	 * set tile as way to go
+	 *
 	 * @param x coordinate
 	 * @param y coordinate
 	 */
 	private void setAsWay(int x, int y) {
-		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", tileRenderSize,tileRenderSize,false,false));
+		ImageView chosen = new ImageView(new Image("source/resources/img/chosen_one.png", tileRenderSize, tileRenderSize, false, false));
 		chosen.setOpacity(0.5);
 		StackPane wayTile = getStackPaneTileByXY(x, y);
 		wayTile.getChildren().add(chosen);
@@ -751,16 +791,17 @@ public class LevelController implements Initializable {
 
 	/**
 	 * moves player
+	 *
 	 * @param player Player
-	 * @param x X-position of new tile to move on
-	 * @param y X-position of new tile to move on
+	 * @param x      X-position of new tile to move on
+	 * @param y      X-position of new tile to move on
 	 */
-	private void move(Player player,int x,int y) {
+	private void move(Player player, int x, int y) {
 		player.setStandingOn(board.getTileAt(x, y));
 		player.addToPastPositions(x, y);
 
 		// Check if we moved to a Goal and won. Otherwise continue the phases.
-		if (board.getTileAt(x,y).isItGoal()) {
+		if (board.getTileAt(x, y).isItGoal()) {
 			System.out.println("Player " + currentPlayer + " has won.");
 			playerHasWon(currentPlayer);
 			currentTurnPhase = TurnPhases.END;
@@ -783,22 +824,24 @@ public class LevelController implements Initializable {
 
 	/**
 	 * move currentPlayer
+	 *
 	 * @param x X-position of new tile to move on
 	 * @param y X-position of new tile to move on
 	 */
-	private void move(int x,int y) {
-		move(players[currentPlayer],x,y);
+	private void move(int x, int y) {
+		move(players[currentPlayer], x, y);
 	}
 
 	/**
 	 * returns tile as stackPane by coordinates
+	 *
 	 * @param col column
 	 * @param row row
 	 * @return StackPane tile
 	 */
 	private StackPane getStackPaneTileByXY(int col, int row) {
 		for (Node node : renderedBoard.getChildren()) {
-			if (GridPane.getColumnIndex(node) == col+1 && GridPane.getRowIndex(node) == row+1) {
+			if (GridPane.getColumnIndex(node) == col + 1 && GridPane.getRowIndex(node) == row + 1) {
 				return (StackPane) node;
 			}
 		}
@@ -807,6 +850,7 @@ public class LevelController implements Initializable {
 
 	/**
 	 * handles click events on tiles
+	 *
 	 * @param x coordinate
 	 * @param y coordinate
 	 */
@@ -837,6 +881,7 @@ public class LevelController implements Initializable {
 
 	/**
 	 * checks if clicks
+	 *
 	 * @param x coordinate
 	 * @param y coordinate
 	 */
@@ -937,7 +982,7 @@ public class LevelController implements Initializable {
 	}
 
 	/**
-	 * updates player info 
+	 * updates player info
 	 */
 	private void updateSubInfoVBoxes() {
 		for (int i = 0; i < playerSubInfoVBoxes.length; i++) {

@@ -108,7 +108,7 @@ public class MainMenuController {//extends Application (original)
 	public void goToLevelEditorMenu(ActionEvent event) {
 		System.out.println("Going to level editor menu...");
 		try {
-			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/editor_menu.fxml"));
+			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level_editor_menu.fxml"));
 			Scene profileMenuScene = new Scene(profileMenuParent);
 			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 

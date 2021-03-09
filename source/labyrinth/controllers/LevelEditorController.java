@@ -368,7 +368,7 @@ public class LevelEditorController implements Initializable {
 
 			System.out.println("Editor Menu");
 			try {
-				Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/editor_menu.fxml"));
+				Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level_editor_menu.fxml"));
 				Scene profileMenuScene = new Scene(profileMenuParent);
 				Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
