@@ -995,13 +995,10 @@ public class LevelEditorController implements Initializable {
 					}
 				}
 			}
-
-			// TODO: Fix player positions (might change how we handle them, so won't bother for now)
-			// temp values that would work
-			writer.write("0,0" + "\n");
-			writer.write("0,1" + "\n");
-			writer.write("1,0" + "\n");
-			writer.write("1,1" + "\n");
+			
+			for (int[] location : playerLocations) {
+				writer.write(location[0] + "," + location[1] + "\n");
+			}
 
 			String[] writeOrder = {"STRAIGHT", "TSHAPE", "CORNER", "GOAL", "ICE", "FIRE", "DOUBLEMOVE", "BACKTRACK"};
 			for (String tileType : writeOrder) {
