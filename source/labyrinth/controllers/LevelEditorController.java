@@ -165,6 +165,15 @@ public class LevelEditorController implements Initializable {
 			errorLog += "-> All player positions have to be defined, please define them\n";
 		}
 
+		boolean playerStartsOnGoal = playerLocations.stream().anyMatch(location -> {
+			// Prevent null pointer exceptions doing it this way
+			FloorTile maybeGoal = board.getTileAt(location[0], location[1]);
+			return maybeGoal != null && maybeGoal.getFloorType() == FloorTile.FloorType.GOAL;
+		});
+		if (playerStartsOnGoal) {
+			errorLog += "-> One of your players will start on a goal tile, please move them elsewhere\n";
+		}
+
 		if (errorLog.isEmpty()) {
 			return null;
 		} else {
