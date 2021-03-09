@@ -649,7 +649,10 @@ public class LevelEditorController implements Initializable {
 			}
 
 			// Tool tip text
-			final Tooltip tileTip = new Tooltip(tileTypeHelp + "\nLeft click to select the tile\nClick an empty tile on board to place it\nClick an exist tile on board to replace with it.");
+			final Tooltip tileTip = new Tooltip(tileTypeHelp + "\nLeft click to select the tile" +
+					"\nClick an empty tile on board to place it" +
+					"\nClick an exist tile on board to replace with it." +
+					"\nPress 'A' to rotate tile to left\nPress 'D' to rotate tile to right");
 			tileTip.setStyle("-fx-font-size: 16");
 			showToolTip(stackTile, tileTip);
 
