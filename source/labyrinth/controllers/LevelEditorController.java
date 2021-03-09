@@ -288,12 +288,22 @@ public class LevelEditorController implements Initializable {
 				overwriteDialog.showAndWait();
 
 				if (overwriteDialog.getResult() == ButtonType.YES) {
-					fileWriter(filePath);
+					Alert validateDialog = validateLevel();
+					if (validateDialog != null) {
+						validateDialog.showAndWait();
+					} else {
+						fileWriter(filePath);
+					}
 				} else {
 					overwriteDialog.close();
 				}
 			} else {
-				fileWriter(filePath);
+				Alert validateDialog = validateLevel();
+				if (validateDialog != null) {
+					validateDialog.showAndWait();
+				} else {
+					fileWriter(filePath);
+				}
 			}
 		}
 	}
@@ -308,24 +318,11 @@ public class LevelEditorController implements Initializable {
 		TextInputDialog textDialog = new TextInputDialog();
 		textDialog.setTitle("Save your Level");
 		textDialog.setHeaderText("Give Your Level A Name");
-
 		Optional<String> result = textDialog.showAndWait();
-		if (result.isPresent()) {//check if user pressed ok button
+		if (result.isPresent()) {
 			textDialogOk(textDialog);
 		}
-		/* NOT TOO SURE IF IT WORKS, ISSUE WITH CANCEL BUTTON OF DIALOG
-		Button okButton = (Button) textDialog.getDialogPane().lookupButton(ButtonType.OK);
-		Button cancelButton = (Button) textDialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-		okButton.addEventFilter(ActionEvent.ACTION, e ->
-				{
-					try {
-						System.out.println("Call method");
-						textDialogOk(textDialog);
-					} catch (IOException ioException) {
-						System.out.println("Error with textDialog to textDialogOk method");
-					}
-				}
-		);*/
+
 
 	}
 
@@ -990,35 +987,29 @@ public class LevelEditorController implements Initializable {
 	@FXML
 	private void fileWriter(File filename) throws IOException {
 		FileWriter writer = new FileWriter(filename);
+		writer.write(board.getWidth() + "," + board.getHeight() + "\n");
+		writer.write(getCurrentFixedTileAmount() + "\n");
 
-		Alert errorDialog = validateLevel();
-		if (errorDialog != null) {
-			errorDialog.showAndWait();
-		} else {
-			writer.write(board.getWidth() + "," + board.getHeight() + "\n");
-			writer.write(getCurrentFixedTileAmount() + "\n");
-
-			for (int x = 0; x < board.getWidth(); x++) {
-				for (int y = 0; y < board.getHeight(); y++) {
-					if (board.getTileAt(x, y) != null) {
-						FloorTile fixedTile = board.getTileAt(x, y);
-						writer.write(x + "," + y + "," + fixedTile.getFloorType() + "," + fixedTile.getOrientation() + "\n");
-					}
+		for (int x = 0; x < board.getWidth(); x++) {
+			for (int y = 0; y < board.getHeight(); y++) {
+				if (board.getTileAt(x, y) != null) {
+					FloorTile fixedTile = board.getTileAt(x, y);
+					writer.write(x + "," + y + "," + fixedTile.getFloorType() + "," + fixedTile.getOrientation() + "\n");
 				}
-			}
-			
-			for (int[] location : playerLocations) {
-				writer.write(location[0] + "," + location[1] + "\n");
-			}
-
-			String[] writeOrder = {"STRAIGHT", "TSHAPE", "CORNER", "GOAL", "ICE", "FIRE", "DOUBLEMOVE", "BACKTRACK"};
-			for (String tileType : writeOrder) {
-				writer.write(silkbagAmounts.get(tileType) + "," + tileType + "\n");
 			}
 		}
 
+		for (int[] location : playerLocations) {
+			writer.write(location[0] + "," + location[1] + "\n");
+		}
+
+		String[] writeOrder = {"STRAIGHT", "TSHAPE", "CORNER", "GOAL", "ICE", "FIRE", "DOUBLEMOVE", "BACKTRACK"};
+		for (String tileType : writeOrder) {
+			writer.write(silkbagAmounts.get(tileType) + "," + tileType + "\n");
+		}
 		writer.close();
 	}
+
 	
 	/**
 	 * replace the original install method from tooltips to remove delay time
