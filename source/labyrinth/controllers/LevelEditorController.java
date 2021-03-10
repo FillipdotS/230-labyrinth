@@ -93,7 +93,6 @@ public class LevelEditorController implements Initializable {
 		if (nextFileToLoad != null) {
 			ld = LevelIO.readDataFile("source/resources/custom_levels/" + nextFileToLoad + ".txt");
 			board = ld.getBoard();
-			nextFileToLoad = null;//have to reset each time, otherwise keep loading the same level
 		} else {
 			board = new Board(0, 0);
 		}
@@ -321,10 +320,12 @@ public class LevelEditorController implements Initializable {
 	 */
 	@FXML
 	public void saveChanges() throws IOException {//removed unused Action event parameter, unexpected problem may happen
-		TextInputDialog textDialog = new TextInputDialog();
+		// If nextFileToLoad is null, it will just be empty, otherwise shows the name of the level we loaded
+		TextInputDialog textDialog = new TextInputDialog(nextFileToLoad);
+
 		textDialog.setTitle("Save your Level");
 		textDialog.setHeaderText("Give Your Level A Name");
-
+		
 		Boolean isEmpty = false;
 		for (int x = 0; x < this.board.getWidth(); x++) {
 			for (int y = 0; y < this.board.getHeight(); y++) {

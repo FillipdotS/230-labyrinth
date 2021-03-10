@@ -45,6 +45,9 @@ public class LevelEditorMenuController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		// In case this is after we have already once loaded a custom level in this session
+		LevelEditorController.setNextFileToLoad(null);
+
 		renderLevels();
 		System.out.println("Created LevelMenuController");
 		edit.setDisable(true);
@@ -109,9 +112,8 @@ public class LevelEditorMenuController implements Initializable {
 	@FXML
 	public void goToLevelEditorExist(ActionEvent event) {
 		System.out.println("Exist Board Editor");
-		LevelEditorController loadExist = new LevelEditorController();
 		System.out.println("Loading an exist board to edit...");
-		loadExist.setNextFileToLoad(selectedLevel);
+		LevelEditorController.setNextFileToLoad(selectedLevel);
 
 		try {
 			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level_editor.fxml"));
