@@ -766,20 +766,20 @@ public class LevelEditorController implements Initializable {
 			}
 			if (tileTypeName.equals("GOAL")) {
 				tileHelp1 = "Goal Tile";
-				tileHelp2 = "\n Player win when reach this tiles";
+				tileHelp2 = "\nPlayer win when reach this tiles";
 			}
 			if (tileTypeName.equals("ICE")) {
 				tileHelp1 = "Ice Tile";
 				tileHelp2 = "\nFreeze a 3 x 3 area with a selected tiles as centre\nThe rows and columns that being affected will not able to move" +
-						"\n Players are still able to travel on these frozen tiles\n The frozen tiles melts away at the start of your next turn.";
+						"\nPlayers are still able to travel on these frozen tiles\nThe frozen tiles melts away at the start of your next turn.";
 			}
 			if (tileTypeName.equals("FIRE")) {
 				tileHelp1 = "Fire Tile";
-				tileHelp2 = "\nBurn a 3 x 3 area with a selected tiles as centre\nPlayers are not able to end turn on a burning tile.\n Fire will be extinguished after your turn end.";
+				tileHelp2 = "\nBurn a 3 x 3 area with a selected tiles as centre\nPlayers are not able to end turn on a burning tile.\nFire will be extinguished after your turn end.";
 			}
 			if (tileTypeName.equals("DOUBLEMOVE")) {
 				tileHelp1 = "Double Move Tile";
-				tileHelp2 = "\n Apply to move self twice";
+				tileHelp2 = "\nApply to move self twice";
 			}
 			if (tileTypeName.equals("BACKTRACK")) {
 				tileHelp1 = "Back Track Tile";
