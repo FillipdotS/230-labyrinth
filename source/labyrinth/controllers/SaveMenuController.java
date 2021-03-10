@@ -27,16 +27,21 @@ import java.util.ResourceBundle;
 
 /**
  * SaveMenuController are able to load or delete saves.
+ *
  * @author Max
  */
 public class SaveMenuController implements Initializable {
 	private static String selectedSaveName;
 	private static HBox selectedSaveHBox;
 
-	@FXML private VBox vboxSaves;
-	@FXML private Button deleteSaveButton;
-	@FXML private TextArea saveDetailTextArea;
-	@FXML private Button loadSaveButton;
+	@FXML
+	private VBox vboxSaves;
+	@FXML
+	private Button deleteSaveButton;
+	@FXML
+	private TextArea saveDetailTextArea;
+	@FXML
+	private Button loadSaveButton;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -66,7 +71,7 @@ public class SaveMenuController implements Initializable {
 				File levelsFiles = new File("./source/resources/saves");
 				for (File f : Objects.requireNonNull(levelsFiles.listFiles())) {
 					if (savName.equals(f.getName()))
-						saveDetailTextArea.setText("file location:\n"+f.getAbsolutePath());
+						saveDetailTextArea.setText("Save Name:\n" + f.getName() + "\n\nSave location:\n" + f.getAbsolutePath());
 				}
 
 
@@ -84,6 +89,7 @@ public class SaveMenuController implements Initializable {
 
 	/**
 	 * Get a list of all saves.
+	 *
 	 * @return ArrayList of save files
 	 */
 	private ArrayList<String> getSaves() {
@@ -97,6 +103,7 @@ public class SaveMenuController implements Initializable {
 
 	/**
 	 * Goes to the main menu.
+	 *
 	 * @param event Click event to get current window
 	 */
 	@FXML
@@ -145,8 +152,7 @@ public class SaveMenuController implements Initializable {
 				deleteSaveButton.setDisable(true);
 				loadSaveButton.setDisable(true);
 				showSaveFile();//refresh the saveData list
-			}
-			else {
+			} else {
 				System.out.println("Delete Cancelled");
 			}
 		} else {
@@ -157,6 +163,7 @@ public class SaveMenuController implements Initializable {
 
 	/**
 	 * Loads the currently selected save.
+	 *
 	 * @param event Event to find current window.
 	 */
 	@FXML
@@ -180,8 +187,7 @@ public class SaveMenuController implements Initializable {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}
-			else {
+			} else {
 				System.out.println("Load Cancelled");
 			}
 		}

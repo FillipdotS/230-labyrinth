@@ -8,7 +8,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -27,7 +30,7 @@ import java.util.ResourceBundle;
  * @author Max
  * menu to select existing level to edit
  * reused functions to get level file
- * In progress: make a real editor that can read level and edit it
+ * this class can create, load and delete level file
  */
 public class LevelEditorMenuController implements Initializable {
 	private static String selectedLevel;
@@ -40,6 +43,8 @@ public class LevelEditorMenuController implements Initializable {
 	@FXML
 	private Button edit;
 	@FXML
+	private Button deleteLv;
+	@FXML
 	private TextArea detail;
 
 
@@ -48,9 +53,12 @@ public class LevelEditorMenuController implements Initializable {
 		// In case this is after we have already once loaded a custom level in this session
 		LevelEditorController.setNextFileToLoad(null);
 
-		renderLevels();
+
 		System.out.println("Created LevelMenuController");
 		edit.setDisable(true);
+		deleteLv.setDisable(true);
+		detail.setText("");
+		renderLevels();
 	}
 
 	/**
@@ -65,9 +73,13 @@ public class LevelEditorMenuController implements Initializable {
 			levelHBox.setAlignment(Pos.CENTER_LEFT);
 			levelHBox.setStyle("-fx-border-color: black");
 			levelHBox.setOnMouseClicked(event -> {
+				edit.setDisable(false);
+				deleteLv.setDisable(false);
+
 				if (selectedHBox != null) {
 					selectedHBox.setStyle("-fx-border-color: black");
 				}
+
 				selectedHBox = levelHBox;
 				selectedLevel = value.substring(0, value.length() - 4);
 				System.out.println(selectedLevel);
@@ -76,12 +88,11 @@ public class LevelEditorMenuController implements Initializable {
 				File levelsFiles = new File("./source/resources/custom_levels");
 				for (File f : Objects.requireNonNull(levelsFiles.listFiles())) {
 					if (value.equals(f.getName()))
-						detail.setText("file location:\n"+f.getAbsolutePath());
+						detail.setText("Level name:\n" + f.getName() + "\n\nLevel location:\n" + f.getAbsolutePath());
 				}
 
 
-				edit.setDisable(false);
-				levelHBox.setStyle("-fx-border-color: black;-fx-background-color: #c4ffd5;");
+				levelHBox.setStyle("-fx-border-color: black;-fx-background-color: #00FFFF;");
 				//renderLeaderBoard();
 			});
 			vboxLevels.getChildren().addAll(levelHBox);
@@ -103,6 +114,45 @@ public class LevelEditorMenuController implements Initializable {
 		}
 		return levels;
 	}
+
+	/**
+	 * Delete the currently selected level.
+	 */
+	@FXML
+	public void deleteLevel() {
+		if (selectedHBox != null) {
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+			alert.setTitle("Delete Level");
+			alert.setHeaderText("Warning !");
+			alert.setContentText("Are you sure you want to delete this level?");
+
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == ButtonType.OK) {
+				File delFile = new File("./source/resources/custom_levels/" + selectedLevel + ".txt");
+				delFile.delete();
+
+				Alert deleted = new Alert(Alert.AlertType.INFORMATION);
+				deleted.setTitle("Delete Level");
+				deleted.setHeaderText("Level deleted");
+				deleted.setContentText("Level " + selectedLevel + " deleted");
+				deleted.showAndWait();
+
+				// avoid to load a deleted file
+				selectedLevel = null;
+				selectedHBox = null;
+				detail = null;
+
+				deleteLv.setDisable(true);
+				edit.setDisable(true);
+				renderLevels();//refresh the saveData list
+			} else {
+				System.out.println("Delete Cancelled");
+			}
+		} else {
+			System.out.println("Error Selection");
+		}
+	}
+
 
 	/**
 	 * go to level editor with exist level

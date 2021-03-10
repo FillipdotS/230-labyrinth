@@ -38,7 +38,7 @@
                                     </Pane>
                                     <ScrollPane prefHeight="363.0" prefWidth="278.0">
                                         <content>
-                                            <VBox fx:id="vboxSaves" prefHeight="362.0" prefWidth="327.0" style="-fx-background-color: #fff0a3;" />
+                                            <VBox fx:id="vboxSaves" prefHeight="362.0" prefWidth="327.0" />
                                         </content>
                                     </ScrollPane>
                                 </children>
