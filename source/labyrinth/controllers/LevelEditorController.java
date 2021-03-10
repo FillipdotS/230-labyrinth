@@ -278,7 +278,8 @@ public class LevelEditorController implements Initializable {
 		String fileName = textDialog.getEditor().getText();
 		System.out.println("User gave filename: " + fileName);
 		Alert errorDialog = validateFileName(fileName);
-
+		Alert confirmDialog = new Alert(Alert.AlertType.INFORMATION, "Level saved", ButtonType.OK);
+		confirmDialog.setHeaderText("Level " + fileName + " saved successfully");
 		if (errorDialog != null) {
 			errorDialog.showAndWait();
 			saveChanges();//show up the textDialog again for user to re-enter the name
@@ -297,6 +298,7 @@ public class LevelEditorController implements Initializable {
 						validateDialog.showAndWait();
 					} else {
 						fileWriter(filePath);
+						confirmDialog.showAndWait();
 					}
 				} else {
 					overwriteDialog.close();
@@ -307,6 +309,7 @@ public class LevelEditorController implements Initializable {
 					validateDialog.showAndWait();
 				} else {
 					fileWriter(filePath);
+					confirmDialog.showAndWait();
 				}
 			}
 		}
@@ -325,7 +328,7 @@ public class LevelEditorController implements Initializable {
 
 		textDialog.setTitle("Save your Level");
 		textDialog.setHeaderText("Give Your Level A Name");
-		
+
 		Boolean isEmpty = false;
 		for (int x = 0; x < this.board.getWidth(); x++) {
 			for (int y = 0; y < this.board.getHeight(); y++) {
@@ -346,8 +349,15 @@ public class LevelEditorController implements Initializable {
 				Optional<String> result = textDialog.showAndWait();
 				if (result.isPresent()) {
 					textDialogOk(textDialog);
+
 				}
 			}
+		} else {
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.setTitle("Non-Playable Board");
+			alert.setHeaderText("No empty tiles for silk bag");
+			alert.setContentText("You have to put some empty tiles on board so as to draw and put tiles during a game.");
+			alert.showAndWait();
 		}
 
 
@@ -500,16 +510,14 @@ public class LevelEditorController implements Initializable {
 					alert.setContentText("You have to enter integer for both width and height before submitting the size.");
 					alert.showAndWait();
 					return;
-				}
-				else if(Integer.parseInt(width.getText())<0 || Integer.parseInt(width.getText())<0){
+				} else if (Integer.parseInt(width.getText()) < 0 || Integer.parseInt(width.getText()) < 0) {
 					alert.setHeaderText("Are you trying to create a 4-Dimension board?");
 					alert.setContentText("You have to enter a positive integer, negative value is not allowed.");
 					alert.showAndWait();
 					width.clear();
 					height.clear();
 					return;
-				}
-				else if(Integer.parseInt(width.getText())==0 || Integer.parseInt(width.getText())==0){
+				} else if (Integer.parseInt(width.getText()) == 0 || Integer.parseInt(width.getText()) == 0) {
 					alert.setHeaderText("you created a 0-Dimension board ?");
 					alert.setContentText("You have to enter a positive integer, but not trying to create a void world");
 					alert.showAndWait();

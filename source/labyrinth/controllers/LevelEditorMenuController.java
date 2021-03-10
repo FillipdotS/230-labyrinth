@@ -140,7 +140,7 @@ public class LevelEditorMenuController implements Initializable {
 				// avoid to load a deleted file
 				selectedLevel = null;
 				selectedHBox = null;
-				detail = null;
+				detail.setText("");
 
 				deleteLv.setDisable(true);
 				edit.setDisable(true);
