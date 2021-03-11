@@ -55,6 +55,10 @@ public class LevelEditorController implements Initializable {
 	@FXML
 	private ToggleGroup editingState;
 
+	/**
+	 * Represents what editing state we are in right now. From this we can decide what to do on certain events.
+	 * i.e. if we are in PLAYERS, clicking should place players, whereas in FIXED_TILES we would place a floortile.
+	 */
 	private enum EditingState {
 		BOARD_SIZE,
 		FIXED_TILES,

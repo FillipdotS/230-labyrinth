@@ -24,10 +24,8 @@ import java.util.ResourceBundle;
 
 
 /**
+ * Controller for the editor menu, where the user can edit custom boards, create new ones, and delete them.
  * @author Max
- * menu to select existing level to edit
- * reused functions to get level file
- * this class can create, load and delete level file
  */
 public class LevelEditorMenuController implements Initializable {
 	private static String selectedLevel;
