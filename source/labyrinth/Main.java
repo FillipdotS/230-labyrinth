@@ -7,8 +7,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * author Max
- * simply create main to run MainMenu
+ * Start point for the application. Puts the user into the main menu.
+ * Initializes things like the ProfileManager.
+ * @author Max
  */
 public class Main extends Application {
 	@Override
@@ -24,6 +25,10 @@ public class Main extends Application {
 		ProfileManager.performSetup();
 	}
 
+	/**
+	 * Start point for the application
+	 * @param args Args (not used)
+	 */
 	public static void main(String[] args) {
 		Application.launch(args);
 	}
