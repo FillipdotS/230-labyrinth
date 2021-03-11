@@ -67,9 +67,9 @@ public class FloorTile extends Tile implements Serializable {
 
 	/**
 	 * Create a new FloorTile with a certain orientation, FloorType and isFixed value
-	 * @param orientation
-	 * @param floorType
-	 * @param isFixed
+	 * @param orientation Orientation of this tile, 0 to 3
+	 * @param floorType FloorType of this tile
+	 * @param isFixed boolean for whether this floortile is fixed or not
 	 */
 	public FloorTile(int orientation, FloorType floorType, boolean isFixed) {
 		this.orientation = orientation;

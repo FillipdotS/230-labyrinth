@@ -132,9 +132,9 @@ public class LevelEditorController implements Initializable {
 	/**
 	 * Validates that level is correct before writing to file
 	 * Checks:
-	 * -> Enough tiles in silkbag for the board
-	 * -> There is at least one goal tile
-	 * -> That four player positions have been selected
+	 * - Enough tiles in silkbag for the board
+	 * - There is at least one goal tile
+	 * - That four player positions have been selected
 	 *
 	 * @return Alert - Returns an alert if conditions not me; if null then program continues
 	 */
@@ -1088,8 +1088,8 @@ public class LevelEditorController implements Initializable {
 	/**
 	 * replace the original install method from tooltips to remove delay time
 	 *
-	 * @param tile
-	 * @param tooltip
+	 * @param tile Node object
+	 * @param tooltip Tooltip object
 	 */
 	private void showToolTip(final Node tile, final Tooltip tooltip) {
 		tile.setOnMouseMoved(event -> {

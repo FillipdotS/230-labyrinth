@@ -101,6 +101,7 @@ public class LevelEditorMenuController implements Initializable {
 
 	/**
 	 * from level menu
+	 * @return ArrayList of strings (which are level names)
 	 */
 	private ArrayList<String> getLevels() {
 		File levelsFiles = new File("./source/resources/custom_levels");
@@ -155,7 +156,7 @@ public class LevelEditorMenuController implements Initializable {
 	/**
 	 * go to level editor with exist level
 	 *
-	 * @param event
+	 * @param event Event to grab scene from
 	 */
 	@FXML
 	public void goToLevelEditorExist(ActionEvent event) {
