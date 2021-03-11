@@ -429,7 +429,7 @@ public class LevelController implements Initializable {
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
 			alert.setContentText("You have drawn a floor tile, but unfortunately there are no rows or columns you can currently insert into. Your floor tile will be returned to the silk bag.");
 			alert.showAndWait();
-			SilkBag.addTile(floorTileToInsert);
+			SilkBag.addTile(new FloorTile(nextFloorTileToInsert.getOrientation(),nextFloorTileToInsert.getFloorType()));
 			floorTileToInsert = null;
 			playActionPhase();
 		}
