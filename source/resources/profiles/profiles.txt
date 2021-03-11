@@ -1,6 +1,4 @@
 4
-loh
-3,2,0,2
 John
 0,5,3,2
 Fillip
