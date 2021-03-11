@@ -328,7 +328,6 @@ public class LevelEditorController implements Initializable {
 
 		textDialog.setTitle("Save your Level");
 		textDialog.setHeaderText("Give Your Level A Name");
-		textDialog.getEditor().setOnMouseClicked(event -> textDialog.getEditor().selectAll());
 
 		Boolean isEmpty = false;
 		for (int x = 0; x < this.board.getWidth(); x++) {
