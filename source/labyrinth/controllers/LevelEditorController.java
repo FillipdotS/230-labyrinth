@@ -328,6 +328,7 @@ public class LevelEditorController implements Initializable {
 
 		textDialog.setTitle("Save your Level");
 		textDialog.setHeaderText("Give Your Level A Name");
+		textDialog.getEditor().setOnMouseClicked(event -> textDialog.getEditor().selectAll());
 
 		Boolean isEmpty = false;
 		for (int x = 0; x < this.board.getWidth(); x++) {
@@ -805,19 +806,24 @@ public class LevelEditorController implements Initializable {
 			// Number field, needs to be initialized earlier than arrow buttons
 			TextField numField = new TextField(silkbagAmounts.get(tileTypeName).toString());
 			numField.setMaxWidth(50);
-			numField.setOnAction(event -> {
-				try {
-					int newValue = Integer.parseInt(numField.getText());
-					newValue = newValue > -1 ? newValue : 0; // If user put negative number, make it 0
+			numField.setOnKeyReleased(event -> {
+				if (event.getCode() == KeyCode.ENTER) {
+					try {
+						int newValue = Integer.parseInt(numField.getText());
+						newValue = newValue > -1 ? newValue : 0; // If user put negative number, make it 0
 
-					silkbagAmounts.put(tileTypeName, newValue);
-					numField.setText(String.valueOf(newValue)); // User could have put "025" or something similar
-				} catch (NumberFormatException e) {
-					numField.setText(silkbagAmounts.get(tileTypeName).toString());
+						silkbagAmounts.put(tileTypeName, newValue);
+						numField.setText(String.valueOf(newValue)); // User could have put "025" or something similar
+						System.out.println(tileTypeName+"tiles number set");
+					} catch (NumberFormatException e) {
+						numField.setText(silkbagAmounts.get(tileTypeName).toString());
+					}
 				}
 			});
+			//easier for user to change value
+			numField.setOnMouseClicked(event2 ->numField.selectAll());
 			//helper text
-			final Tooltip numTile = new Tooltip("Input an integer to set the number of " + tileHelp1 + " in silk bag.");
+			final Tooltip numTile = new Tooltip("Input an integer to set the number of " + tileHelp1 + " in silk bag.\nPress 'Enter' to set the number for that tiles");
 			numTile.setStyle("-fx-font-size: 16");
 			showToolTip(numField, numTile);
 

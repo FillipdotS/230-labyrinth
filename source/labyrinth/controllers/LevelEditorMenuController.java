@@ -8,10 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -131,12 +128,6 @@ public class LevelEditorMenuController implements Initializable {
 				File delFile = new File("./source/resources/custom_levels/" + selectedLevel + ".txt");
 				delFile.delete();
 
-				Alert deleted = new Alert(Alert.AlertType.INFORMATION);
-				deleted.setTitle("Delete Level");
-				deleted.setHeaderText("Level deleted");
-				deleted.setContentText("Level " + selectedLevel + " deleted");
-				deleted.showAndWait();
-
 				// avoid to load a deleted file
 				selectedLevel = null;
 				selectedHBox = null;
@@ -145,6 +136,13 @@ public class LevelEditorMenuController implements Initializable {
 				deleteLv.setDisable(true);
 				edit.setDisable(true);
 				renderLevels();//refresh the saveData list
+
+				Alert deleted = new Alert(Alert.AlertType.INFORMATION);
+				deleted.setTitle("Delete Level");
+				deleted.setHeaderText("Level deleted");
+				deleted.showAndWait();
+				alert.setOnCloseRequest(this::refresh);
+
 			} else {
 				System.out.println("Delete Cancelled");
 			}
@@ -211,6 +209,21 @@ public class LevelEditorMenuController implements Initializable {
 
 			window.setScene(profileMenuScene);
 			window.setTitle("Main Menu");
+			window.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void refresh(DialogEvent event) {
+		System.out.println("Reload Level Editor");
+		try {
+			Parent profileMenuParent = FXMLLoader.load(getClass().getResource("../../resources/scenes/level_editor_menu.fxml"));
+			Scene profileMenuScene = new Scene(profileMenuParent);
+			Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+			window.setScene(profileMenuScene);
+			window.setTitle("Refreshed");
 			window.show();
 		} catch (IOException e) {
 			e.printStackTrace();
